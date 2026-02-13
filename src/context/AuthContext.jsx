@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: false, message: res.message };
     } catch (err) {
+      console.log("error login", err);
       return { success: false, message: "Connection Error" };
     }
   };

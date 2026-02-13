@@ -1,3 +1,53 @@
+// import { useState } from "react";
+
+// export default function TreeNode({ node, onSelect, activeId }) {
+//   const [isOpen, setIsOpen] = useState(false);
+//   const hasChildren = node.children && node.children.length > 0;
+//   const isActive = node.id === activeId;
+
+//   const handleClick = (e) => {
+//     e.stopPropagation();
+//     if (hasChildren) setIsOpen(!isOpen);
+//     onSelect(node.id);
+//   };
+
+//   return (
+//     <div style={{ marginLeft: "12px" }}>
+//       <div
+//         onClick={handleClick}
+//         style={{
+//           cursor: "pointer",
+//           padding: "6px 8px",
+//           color: isActive ? "#fff" : "#ccc",
+//           backgroundColor: isActive ? "#0078d4" : "transparent",
+//           borderRadius: "4px",
+//           display: "flex",
+//           alignItems: "center",
+//           fontSize: "14px",
+//           marginBottom: "2px",
+//         }}
+//       >
+//         <span style={{ marginRight: "8px", width: "12px" }}>
+//           {hasChildren ? (isOpen ? "▼" : "▶") : "•"}
+//         </span>
+//         {node.title}
+//       </div>
+
+//       {isOpen && hasChildren && (
+//         <div style={{ borderLeft: "1px solid #444", marginLeft: "6px" }}>
+//           {node.children.map((child) => (
+//             <TreeNode
+//               key={child.id}
+//               node={child}
+//               onSelect={onSelect}
+//               activeId={activeId}
+//             />
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
 import { useState } from "react";
 
 export default function TreeNode({ node, onSelect, activeId }) {
@@ -12,29 +62,22 @@ export default function TreeNode({ node, onSelect, activeId }) {
   };
 
   return (
-    <div style={{ marginLeft: "12px" }}>
+    <div className="ml-2 select-none">
       <div
         onClick={handleClick}
-        style={{
-          cursor: "pointer",
-          padding: "6px 8px",
-          color: isActive ? "#fff" : "#ccc",
-          backgroundColor: isActive ? "#0078d4" : "transparent",
-          borderRadius: "4px",
-          display: "flex",
-          alignItems: "center",
-          fontSize: "14px",
-          marginBottom: "2px",
-        }}
+        className={`
+          flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors duration-150 mb-0.5
+          ${isActive ? "bg-blue-700 text-white font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white"}
+        `}
       >
-        <span style={{ marginRight: "8px", width: "12px" }}>
+        <span className="mr-2 w-4 text-center text-[10px] text-gray-500">
           {hasChildren ? (isOpen ? "▼" : "▶") : "•"}
         </span>
-        {node.title}
+        <span className="truncate">{node.title}</span>
       </div>
 
       {isOpen && hasChildren && (
-        <div style={{ borderLeft: "1px solid #444", marginLeft: "6px" }}>
+        <div className="ml-2 border-l border-gray-700 pl-1">
           {node.children.map((child) => (
             <TreeNode
               key={child.id}

@@ -139,13 +139,14 @@
 //   if (process.platform !== "darwin") app.quit();
 // });
 // electron/main.js
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { app, BrowserWindow, ipcMain, dialog, protocol, net } from "electron";
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import process from "node:process";
-import { db, initDb } from './database.js';
-import { encryptData, decryptData } from './crypto.js'; // Ensure this file exists
-import bcrypt from 'bcryptjs';
+import { db, initDb } from "./database.js";
+import { encryptData, decryptData } from "./crypto.js"; // Ensure this file exists
+import bcrypt from "bcryptjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -153,126 +154,355 @@ const __dirname = path.dirname(__filename);
 // Initialize DB
 initDb();
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: "ietm",
+    privileges: {
+      secure: true,
+      standard: true,
+      supportFetchAPI: true,
+      corsEnabled: true,
+      stream: true,
+    },
+  },
+]);
+
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1280, 
+    width: 1280,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.mjs'), // Points to .mjs
-      contextIsolation: true, 
-      nodeIntegration: false, 
+      preload: path.join(__dirname, "preload.mjs"), // Points to .mjs
+      contextIsolation: true,
+      nodeIntegration: false,
       // sandbox: false
     },
   });
 
-  if (process.env.NODE_ENV === 'development') {
-    win.loadURL('http://localhost:5173');
+  if (process.env.NODE_ENV === "development") {
+    win.loadURL("http://localhost:5173");
     win.webContents.openDevTools();
   } else {
-    win.loadFile(path.join(__dirname, '../dist/index.html'));
+    win.loadFile(path.join(__dirname, "../dist/index.html"));
   }
 }
 
 app.whenReady().then(() => {
   createWindow();
 
+  protocol.handle("ietm", (request) => {
+    // 1. Strip the scheme 'ietm:', 'ietm://', or 'ietm:///'
+    let pathPart = request.url.replace(/^ietm:\/*/, "");
+
+    // 2. Decode URI (spaces -> %20)
+    pathPart = decodeURIComponent(pathPart);
+
+    // 3. FIX: Check for "Drive Letter as Host" issue (Windows Only)
+    // If path starts with a letter like "c/" or "C/", it's missing the colon.
+    if (/^[a-zA-Z][\\/]/.test(pathPart)) {
+      // Inject the colon: "c/Users" -> "c:/Users"
+      pathPart = pathPart.slice(0, 1) + ":" + pathPart.slice(1);
+    }
+
+    // 4. Normalize to OS path (fixes slashes)
+    const filePath = path.normalize(pathPart);
+
+    // 5. Convert to valid file URL
+    const fileUrl = pathToFileURL(filePath).toString();
+
+    console.log("--------------------------------------------------");
+    console.log("🔵 RAW REQUEST:", request.url);
+    console.log("🔵 CLEANED PATH:", pathPart);
+    console.log("🔵 FINAL URL:", fileUrl);
+    console.log("--------------------------------------------------");
+
+    return net.fetch(fileUrl);
+  });
+
   // --- AUTH HANDLERS ---
-  ipcMain.handle('auth:login', (e, { username, password }) => {
+  ipcMain.handle("auth:login", (e, { username, password }) => {
     try {
-      const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+      const user = db
+        .prepare("SELECT * FROM users WHERE username = ?")
+        .get(username);
       if (!user || !bcrypt.compareSync(password, user.password)) {
-        return { success: false, message: 'Invalid credentials' };
+        return { success: false, message: "Invalid credentials" };
       }
-      return { success: true, user: { id: user.id, username: user.username, role: user.role } };
+      return {
+        success: true,
+        user: { id: user.id, username: user.username, role: user.role },
+      };
     } catch (err) {
-      return { success: false, message: 'Database Error: ' + err.message };
+      return { success: false, message: "Database Error: " + err.message };
     }
   });
 
   // Create User (Admin Only)
-  ipcMain.handle('auth:create-user', (e, { username, password, role }) => {
+  ipcMain.handle("auth:create-user", (e, { username, password, role }) => {
     try {
       const hash = bcrypt.hashSync(password, 10);
-      db.prepare('INSERT INTO users (username, password, role) VALUES (?, ?, ?)').run(username, hash, role);
+      db.prepare(
+        "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+      ).run(username, hash, role);
       return { success: true };
-    } catch (err) { 
-      return { success: false, message: 'Username likely exists' }; 
+    } catch (err) {
+      return { success: false, message: "Username likely exists" };
     }
   });
 
-  ipcMain.handle('auth:get-users', () => {
-    return db.prepare('SELECT id, username, role FROM users').all();
+  ipcMain.handle("auth:get-users", () => {
+    return db.prepare("SELECT id, username, role FROM users").all();
   });
 
   // --- MANUAL CRUD (Admin Only) ---
-  ipcMain.handle('ietm:get-manuals', () => db.prepare('SELECT * FROM manuals').all());
+  ipcMain.handle("ietm:get-manuals", () =>
+    db.prepare("SELECT * FROM manuals").all(),
+  );
 
-  ipcMain.handle('ietm:create-manual', (e, { title, description }) => {
-    try {
-      const info = db.prepare('INSERT INTO manuals (title, description) VALUES (?, ?)').run(title, description);
-      return { success: true, id: info.lastInsertRowid };
-    } catch (err) { return { success: false, message: err.message }; }
+  // UPDATED: Now accepts full Level 4 Metadata
+
+  ipcMain.handle("ietm:search", (e, query) => {
+    if (!query || query.length < 3) return [];
+
+    // Search titles, content, and part numbers (if you have them)
+    const results = db
+      .prepare(
+        `
+    SELECT id, manual_id, title, node_type, snippet(modules, 4, '<b>', '</b>', '...', 10) as snippet
+    FROM modules 
+    WHERE title LIKE ? OR content_html LIKE ?
+    LIMIT 20
+  `,
+      )
+      .all(`%${query}%`, `%${query}%`);
+
+    return results;
   });
 
-  ipcMain.handle('ietm:delete-manual', (e, id) => {
-    db.prepare('DELETE FROM manuals WHERE id = ?').run(id);
+  // --- 2. TROUBLESHOOTING LOGIC (Mock Logic for Demo) ---
+  ipcMain.handle("ietm:get-troubleshoot-node", (e, { nodeId, answer }) => {
+    // In a real IETM, this would query a 'decision_tree' table.
+    // Here we simulate a "Failure to Feed" logic flow.
+    const steps = {
+      start: {
+        question: "Is the magazine fully seated?",
+        yes: "step_2",
+        no: "fix_1",
+      },
+      step_2: {
+        question: "Is the ammunition clean and free of debris?",
+        yes: "step_3",
+        no: "fix_2",
+      },
+      step_3: {
+        question: "Check recoil spring tension. Is it weak?",
+        yes: "replace_spring",
+        no: "consult_armorer",
+      },
+      // Solutions
+      fix_1: { solution: "Insert magazine until it clicks." },
+      fix_2: { solution: "Clean ammunition with dry cloth." },
+      replace_spring: {
+        solution: "Replace Recoil Spring Assembly (Part #99-23).",
+      },
+      consult_armorer: {
+        solution: "Defect unknown. Evacuate weapon to 3rd Echelon Maintenance.",
+      },
+    };
+
+    return steps[nodeId] || steps["start"];
+  });
+
+  ipcMain.handle("ietm:create-manual", (e, data) => {
+    try {
+      const {
+        title,
+        description,
+        version,
+        weapon_system_id,
+        security_classification,
+      } = data;
+
+      const info = db
+        .prepare(
+          `
+          INSERT INTO manuals (
+            title, 
+            description, 
+            version, 
+            weapon_system_id, 
+            publication_date, 
+            security_classification
+          ) VALUES (?, ?, ?, ?, ?, ?)
+        `,
+        )
+        .run(
+          title,
+          description || "",
+          version || "1.0",
+          weapon_system_id || "UNKNOWN",
+          new Date().toISOString().split("T")[0], // Auto-set Publication Date
+          security_classification || "UNCLASSIFIED",
+        );
+
+      return { success: true, id: info.lastInsertRowid };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:delete-manual", (e, id) => {
+    db.prepare("DELETE FROM manuals WHERE id = ?").run(id);
     return { success: true };
   });
 
-  ipcMain.handle('ietm:add-module', (e, data) => {
+  ipcMain.handle("ietm:add-module", (e, data) => {
     const { manualId, parentId, title, type, content } = data;
-    db.prepare(`INSERT INTO modules (manual_id, parent_id, title, node_type, content_html) VALUES (?, ?, ?, ?, ?)`)
-      .run(manualId, parentId, title, type, content || '');
+    db.prepare(
+      `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html) VALUES (?, ?, ?, ?, ?)`,
+    ).run(manualId, parentId, title, type, content || "");
+    return { success: true };
+  });
+
+  ipcMain.handle("ietm:update-module", (e, { id, title, content }) => {
+    db.prepare(
+      "UPDATE modules SET title = ?, content_html = ? WHERE id = ?",
+    ).run(title, content, id);
     return { success: true };
   });
 
   // --- ENCRYPTED EXPORT/IMPORT ---
-  ipcMain.handle('ietm:export-manual', async (e, { manualId, passkey }) => {
-    const manual = db.prepare('SELECT * FROM manuals WHERE id = ?').get(manualId);
-    if (!manual) return { success: false, message: 'Manual not found' };
+  ipcMain.handle("ietm:export-manual", async (e, { manualId, passkey }) => {
+    const manual = db
+      .prepare("SELECT * FROM manuals WHERE id = ?")
+      .get(manualId);
+    if (!manual) return { success: false, message: "Manual not found" };
 
-    const modules = db.prepare('SELECT * FROM modules WHERE manual_id = ?').all(manualId);
-    const exportData = { manual, modules, version: '1.0', type: 'IETM_SECURE_PKG' };
+    const modules = db
+      .prepare("SELECT * FROM modules WHERE manual_id = ?")
+      .all(manualId);
 
-    const { filePath } = await dialog.showSaveDialog({
-      title: 'Export Encrypted Manual',
-      defaultPath: `${manual.title.replace(/\s+/g, '_')}_SECURE.ietm`,
-      filters: [{ name: 'IETM Secure Package', extensions: ['ietm'] }]
+    // 1. SCAN & BUNDLE ASSETS
+    const assets = []; // We will store file data here
+
+    modules.forEach((mod) => {
+      // Find all ietm:// links in the HTML
+      const matches = mod.content_html
+        ? mod.content_html.match(/ietm:\/\/[^"]+/g)
+        : null;
+
+      if (matches) {
+        matches.forEach((url) => {
+          // Clean the URL to get local path
+          let rawPath = url.replace(/^ietm:\/\//, "");
+          rawPath = decodeURIComponent(rawPath);
+          // Fix "c/Users" -> "c:/Users"
+          if (/^[a-zA-Z][\\/]/.test(rawPath)) {
+            rawPath = rawPath.slice(0, 1) + ":" + rawPath.slice(1);
+          }
+          const localPath = path.normalize(rawPath);
+
+          // Read file and encode to Base64
+          if (fs.existsSync(localPath)) {
+            const fileData = fs.readFileSync(localPath).toString("base64");
+            const fileName = path.basename(localPath);
+
+            assets.push({
+              originalUrl: url, // We need this to find/replace later
+              fileName: fileName,
+              data: fileData,
+            });
+          }
+        });
+      }
     });
 
-    if (!filePath) return { success: false, message: 'Cancelled' };
+    const exportData = {
+      manual,
+      modules,
+      assets, // <--- The actual images are now inside this JSON
+      version: "1.0",
+      type: "IETM_SECURE_PKG",
+    };
+
+    const { filePath } = await dialog.showSaveDialog({
+      title: "Export Encrypted Manual",
+      defaultPath: `${manual.title.replace(/\s+/g, "_")}_SECURE.ietm`,
+      filters: [{ name: "IETM Secure Package", extensions: ["ietm"] }],
+    });
+
+    if (!filePath) return { success: false, message: "Cancelled" };
 
     try {
       encryptData(exportData, passkey, filePath);
       return { success: true, path: filePath };
     } catch (err) {
-      return { success: false, message: 'Encryption failed: ' + err.message };
+      return { success: false, message: "Encryption failed: " + err.message };
     }
   });
 
-  ipcMain.handle('ietm:import-manual', async (e, { passkey }) => {
+  // ---------------------------------------------------------
+  // 🟢 LEVEL 4 IMPORT: Unpacks & Rewrites Paths
+  // ---------------------------------------------------------
+  ipcMain.handle("ietm:import-manual", async (e, { passkey }) => {
     const { filePaths } = await dialog.showOpenDialog({
-      properties: ['openFile'],
-      filters: [{ name: 'IETM Secure Package', extensions: ['ietm'] }]
+      properties: ["openFile"],
+      filters: [{ name: "IETM Secure Package", extensions: ["ietm"] }],
     });
 
-    if (filePaths.length === 0) return { success: false, message: 'Cancelled' };
+    if (filePaths.length === 0) return { success: false, message: "Cancelled" };
 
     try {
       const data = decryptData(filePaths[0], passkey);
-      if (data.type !== 'IETM_SECURE_PKG') throw new Error('Invalid File Format');
-
-      const existing = db.prepare('SELECT id FROM manuals WHERE title = ?').get(data.manual.title);
-      if (existing) return { success: false, message: 'Manual already exists!' };
 
       const insert = db.transaction(() => {
-        const info = db.prepare('INSERT INTO manuals (title, description) VALUES (?, ?)').run(data.manual.title, data.manual.description);
+        // 1. Insert Manual
+        const info = db
+          .prepare("INSERT INTO manuals (title, description) VALUES (?, ?)")
+          .run(data.manual.title, data.manual.description || "");
         const newManualId = info.lastInsertRowid;
-        const insertModule = db.prepare(`INSERT INTO modules (manual_id, parent_id, title, node_type, content_html, order_index) VALUES (?, ?, ?, ?, ?, ?)`);
-        
-        // Simple flat import (IDs are not re-mapped for hierarchy in this simple version)
-        data.modules.forEach(mod => {
-           insertModule.run(newManualId, null, mod.title, mod.node_type, mod.content_html, mod.order_index);
+
+        // 2. Unpack Assets (If any)
+        const urlMap = {}; // Maps Old Computer URL -> New Computer URL
+        const assetsDir = path.join(app.getPath("userData"), "assets");
+        if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir);
+
+        if (data.assets && Array.isArray(data.assets)) {
+          data.assets.forEach((asset) => {
+            // Generate unique name to prevent overwriting existing files
+            const newName = `${Date.now()}_${asset.fileName}`;
+            const newPath = path.join(assetsDir, newName);
+
+            // Write binary file to User B's disk
+            fs.writeFileSync(newPath, Buffer.from(asset.data, "base64"));
+
+            // Create the NEW protocol link
+            const newUrl = `ietm:///${newPath.replace(/\\/g, "/")}`;
+            urlMap[asset.originalUrl] = newUrl;
+          });
+        }
+
+        // 3. Insert Modules & Rewrite Links
+        const insertModule = db.prepare(
+          `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html) VALUES (?, ?, ?, ?, ?)`,
+        );
+
+        data.modules.forEach((mod) => {
+          let content = mod.content_html || "";
+
+          // REWRITE HISTORY: Replace User A's paths with User B's paths
+          Object.keys(urlMap).forEach((oldUrl) => {
+            // Global string replace
+            content = content.split(oldUrl).join(urlMap[oldUrl]);
+          });
+
+          insertModule.run(
+            newManualId,
+            null,
+            mod.title,
+            mod.node_type,
+            content,
+          );
         });
       });
 
@@ -280,18 +510,54 @@ app.whenReady().then(() => {
       return { success: true };
     } catch (err) {
       console.error(err);
-      return { success: false, message: 'Import Failed: Invalid Password or File' };
+      return { success: false, message: "Import Failed: " + err.message };
     }
   });
-  
+
   // --- VIEWER HANDLERS ---
-  ipcMain.handle('ietm:get-tree', (e, manualId) => {
-    const nodes = db.prepare('SELECT id, parent_id, title, node_type FROM modules WHERE manual_id = ? ORDER BY order_index').all(manualId);
-    const buildTree = (pid) => nodes.filter(n => n.parent_id === pid).map(n => ({ ...n, children: buildTree(n.id) }));
+  ipcMain.handle("ietm:get-tree", (e, manualId) => {
+    const nodes = db
+      .prepare(
+        "SELECT id, parent_id, title, node_type FROM modules WHERE manual_id = ? ORDER BY order_index",
+      )
+      .all(manualId);
+    const buildTree = (pid) =>
+      nodes
+        .filter((n) => n.parent_id === pid)
+        .map((n) => ({ ...n, children: buildTree(n.id) }));
     return buildTree(null);
   });
-  
-  ipcMain.handle('ietm:get-content', (e, moduleId) => db.prepare('SELECT * FROM modules WHERE id = ?').get(moduleId));
+
+  ipcMain.handle("ietm:get-content", (e, moduleId) =>
+    db.prepare("SELECT * FROM modules WHERE id = ?").get(moduleId),
+  );
+
+  ipcMain.handle("ietm:upload-asset", async (e) => {
+    const result = await dialog.showOpenDialog({
+      properties: ["openFile"],
+      filters: [{ name: "Images", extensions: ["jpg", "png", "svg"] }],
+    });
+    if (result.canceled) return null;
+
+    const sourcePath = result.filePaths[0];
+    const fileName = `${Date.now()}_${path.basename(sourcePath)}`;
+    // Store in UserData/assets
+    const assetsDir = path.join(app.getPath("userData"), "assets");
+    if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir);
+
+    const destPath = path.join(assetsDir, fileName);
+    fs.copyFileSync(sourcePath, destPath);
+
+    // Return the "ietm://" URL to save in the DB
+    const finalUrl = `ietm:///${destPath.replace(/\\/g, "/")}`;
+
+    console.log("🟡 Main: File Saved at:", destPath);
+    console.log("🟡 Main: Returning URL:", finalUrl);
+
+    return finalUrl;
+  });
 });
 
-app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});

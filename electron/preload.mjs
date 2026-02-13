@@ -21,4 +21,7 @@ contextBridge.exposeInMainWorld("api", {
   // Viewer
   getManualTree: (id) => ipcRenderer.invoke("ietm:get-tree", id),
   getModuleContent: (id) => ipcRenderer.invoke("ietm:get-content", id),
+
+  updateModule: (data) => ipcRenderer.invoke("ietm:update-module", data),
+  uploadAsset: () => ipcRenderer.invoke("ietm:upload-asset"),
 });
