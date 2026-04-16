@@ -443,9 +443,9 @@ app.whenReady().then(() => {
     const assets = []; // We will store file data here
 
     modules.forEach((mod) => {
-      // Find all ietm:// links in the HTML
+      // Find both abstract and old paths (Removed \s to safely capture spaces in filenames)
       const matches = mod.content_html
-        ? mod.content_html.match(/ietm:\/\/[^"'\s<>]+/g)
+        ? mod.content_html.match(/ietm:\/\/[^"'<>]+/g)
         : null;
 
       if (matches) {
@@ -626,7 +626,7 @@ app.whenReady().then(() => {
   ipcMain.handle("ietm:upload-asset", async (e) => {
     const result = await dialog.showOpenDialog({
       properties: ["openFile"],
-      filters: [{ name: "Images", extensions: ["jpg", "png", "svg"] }],
+      filters: [{ name: "Media Files", extensions: ["jpg", "jpeg", "png", "svg", "gif", "mp4", "webm", "pdf"] }],
     });
     if (result.canceled) return null;
 
@@ -639,8 +639,8 @@ app.whenReady().then(() => {
     const destPath = path.join(assetsDir, fileName);
     fs.copyFileSync(sourcePath, destPath);
 
-    // FORCE Abstract Routing System
-    const finalUrl = `ietm://asset/${fileName}`;
+    // FORCE Abstract Routing System (URL Encoded to protect against space breaks)
+    const finalUrl = `ietm://asset/${encodeURIComponent(fileName)}`;
 
     console.log("🟡 Main: File Saved at:", destPath);
     console.log("🟡 Main: Returning Portable URL:", finalUrl);

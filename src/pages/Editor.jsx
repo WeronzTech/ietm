@@ -282,8 +282,12 @@ export default function Editor({ manualId, onBack }) {
   const insertImage = async () => {
     const url = await window.api.uploadAsset();
     if (url) {
-      // Append image and let user drag/resize it organically via Jodit
-      setContent((prev) => prev + `<p><br></p><img src="${url}" alt="mission-asset" width="400" />`);
+      const decoded = decodeURIComponent(url);
+      if (decoded.match(/\.(mp4|webm)$/i)) {
+        setContent((prev) => prev + `<p><br></p><video src="${url}" controls style="max-width:100%; border-radius:4px; border:1px solid #333;"></video>`);
+      } else {
+        setContent((prev) => prev + `<p><br></p><img src="${url}" alt="mission-asset" width="400" />`);
+      }
     }
   };
 
