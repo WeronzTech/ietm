@@ -211,11 +211,13 @@
 //   );
 // }
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import Editor from "./Editor";
 import toast from "react-hot-toast";
-import { Users, ShieldAlert, Lock, Edit3, Download, PlusCircle } from "lucide-react";
+import { Users, ShieldAlert, Lock, Edit3, Download, PlusCircle, Trash2 } from "lucide-react";
 
 export default function AdminDashboard() {
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [manuals, setManuals] = useState([]);
   const [editingManualId, setEditingManualId] = useState(null);
@@ -242,7 +244,7 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     const u = await window.api.getUsers();
-    const m = await window.api.getManuals();
+    const m = await window.api.getManuals({ userId: user.id, role: user.role });
     setUsers(u);
     setManuals(m);
   };
@@ -263,7 +265,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    const res = await window.api.createManual(newManual);
+    const res = await window.api.createManual({ ...newManual, userId: user.id });
     if (res.success) {
       loadData();
       // Reset Form
@@ -286,6 +288,14 @@ export default function AdminDashboard() {
     setExportId(null);
     if (res.success) toast.success("Exported to: " + res.path);
     else toast.error("Failed: " + res.message);
+  };
+
+  const handleDeleteManual = async (id) => {
+    if (window.confirm("CRITICAL: Are you sure you want to permanently delete this Weapon System block? This destroys all associated modules.")) {
+      await window.api.deleteManual(id);
+      loadData();
+      toast.success("Manual permanently expunged.");
+    }
   };
 
   if (editingManualId) {
@@ -492,6 +502,13 @@ export default function AdminDashboard() {
                           title="Export"
                         >
                           <Download size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteManual(m.id)}
+                          className="text-vector-text-muted hover:text-vector-danger transition-colors flex flex-col items-center gap-1"
+                          title="Expunge Record"
+                        >
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </td>

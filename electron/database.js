@@ -51,6 +51,7 @@ export function initDb() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS manuals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      owner_id INTEGER,
       title TEXT,
       description TEXT,
       version TEXT,
@@ -59,6 +60,12 @@ export function initDb() {
       security_classification TEXT DEFAULT 'UNCLASSIFIED'
     );
   `);
+
+  try {
+    db.exec(`ALTER TABLE manuals ADD COLUMN owner_id INTEGER;`);
+  } catch (err) {
+    // Column already exists, safe to ignore
+  }
 
   // --- 3. MODULES (Data Modules - The Core IETM Unit) ---
   // UPGRADE: Added dm_code, applicability, and security_class

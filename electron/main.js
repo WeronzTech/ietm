@@ -192,30 +192,29 @@ app.whenReady().then(() => {
   createWindow();
 
   protocol.handle("ietm", (request) => {
-    // 1. Strip the scheme 'ietm:', 'ietm://', or 'ietm:///'
-    let pathPart = request.url.replace(/^ietm:\/*/, "");
+    let pathPart = request.url;
 
-    // 2. Decode URI (spaces -> %20)
-    pathPart = decodeURIComponent(pathPart);
-
-    // 3. FIX: Check for "Drive Letter as Host" issue (Windows Only)
-    // If path starts with a letter like "c/" or "C/", it's missing the colon.
-    if (/^[a-zA-Z][\\/]/.test(pathPart)) {
-      // Inject the colon: "c/Users" -> "c:/Users"
-      pathPart = pathPart.slice(0, 1) + ":" + pathPart.slice(1);
+    // 1. ABSTRACT ASSET PROTOCOL (NEW ARCHITECTURE)
+    if (pathPart.startsWith("ietm://asset/")) {
+      const fileName = decodeURIComponent(pathPart.replace("ietm://asset/", ""));
+      const filePath = path.join(app.getPath("userData"), "assets", fileName);
+      return net.fetch(pathToFileURL(filePath).toString());
     }
 
-    // 4. Normalize to OS path (fixes slashes)
-    const filePath = path.normalize(pathPart);
+    // 2. LEGACY ASSET PROTOCOL (Fallback for older corrupt PC links)
+    if (pathPart.includes("/assets/")) {
+      const fileName = decodeURIComponent(pathPart.split("/").pop());
+      const filePath = path.join(app.getPath("userData"), "assets", fileName);
+      return net.fetch(pathToFileURL(filePath).toString());
+    }
 
-    // 5. Convert to valid file URL
-    const fileUrl = pathToFileURL(filePath).toString();
-
-    console.log("--------------------------------------------------");
-    console.log("🔵 RAW REQUEST:", request.url);
-    console.log("🔵 CLEANED PATH:", pathPart);
-    console.log("🔵 FINAL URL:", fileUrl);
-    console.log("--------------------------------------------------");
+    // 3. Fallback for static unlinked elements
+    pathPart = pathPart.replace(/^ietm:\/*/, "");
+    pathPart = decodeURIComponent(pathPart);
+    if (/^[a-zA-Z][\\/]/.test(pathPart)) {
+      pathPart = pathPart.slice(0, 1) + ":" + pathPart.slice(1);
+    }
+    const fileUrl = pathToFileURL(path.normalize(pathPart)).toString();
 
     return net.fetch(fileUrl);
   });
@@ -255,10 +254,15 @@ app.whenReady().then(() => {
     return db.prepare("SELECT id, username, role FROM users").all();
   });
 
-  // --- MANUAL CRUD (Admin Only) ---
-  ipcMain.handle("ietm:get-manuals", () =>
-    db.prepare("SELECT * FROM manuals").all(),
-  );
+  // --- MANUAL CRUD ---
+  ipcMain.handle("ietm:get-manuals", (e, authData) => {
+    // Silo Logic: Admin sees all master copies (or everything). Operator only sees what they own.
+    if (authData?.role === "admin") {
+      return db.prepare("SELECT * FROM manuals").all();
+    } else {
+      return db.prepare("SELECT * FROM manuals WHERE owner_id = ?").all(authData?.userId);
+    }
+  });
 
   // UPDATED: Now accepts full Level 4 Metadata
 
@@ -346,22 +350,25 @@ app.whenReady().then(() => {
         version,
         weapon_system_id,
         security_classification,
+        userId,
       } = data;
 
       const info = db
         .prepare(
           `
           INSERT INTO manuals (
+            owner_id,
             title, 
             description, 
             version, 
             weapon_system_id, 
             publication_date, 
             security_classification
-          ) VALUES (?, ?, ?, ?, ?, ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?)
         `,
         )
         .run(
+          userId || null,
           title,
           description || "",
           version || "1.0",
@@ -418,22 +425,23 @@ app.whenReady().then(() => {
 
       if (matches) {
         matches.forEach((url) => {
-          // Clean the URL to get local path
-          let rawPath = url.replace(/^ietm:\/*/, "");
-          rawPath = decodeURIComponent(rawPath);
-          // Fix "c/Users" -> "c:/Users"
-          if (/^[a-zA-Z][\\/]/.test(rawPath)) {
-            rawPath = rawPath.slice(0, 1) + ":" + rawPath.slice(1);
-          }
-          const localPath = path.normalize(rawPath);
+          let localPath;
+          let fileName;
 
-          // Read file and encode to Base64
-          if (fs.existsSync(localPath)) {
+          // Decouple Physical paths to Abstract
+          if (url.startsWith("ietm://asset/")) {
+            fileName = decodeURIComponent(url.replace("ietm://asset/", ""));
+            localPath = path.join(app.getPath("userData"), "assets", fileName);
+          } else if (url.includes("/assets/")) {
+             fileName = decodeURIComponent(url.split("/").pop());
+             localPath = path.join(app.getPath("userData"), "assets", fileName);
+          }
+
+          if (localPath && fs.existsSync(localPath)) {
             const fileData = fs.readFileSync(localPath).toString("base64");
-            const fileName = path.basename(localPath);
 
             assets.push({
-              originalUrl: url, // We need this to find/replace later
+              originalUrl: url,
               fileName: fileName,
               data: fileData,
             });
@@ -469,7 +477,7 @@ app.whenReady().then(() => {
   // ---------------------------------------------------------
   // 🟢 LEVEL 4 IMPORT: Unpacks & Rewrites Paths
   // ---------------------------------------------------------
-  ipcMain.handle("ietm:import-manual", async (e, { passkey }) => {
+  ipcMain.handle("ietm:import-manual", async (e, { passkey, userId }) => {
     const { filePaths } = await dialog.showOpenDialog({
       properties: ["openFile"],
       filters: [{ name: "IETM Secure Package", extensions: ["ietm"] }],
@@ -481,10 +489,10 @@ app.whenReady().then(() => {
       const data = decryptData(filePaths[0], passkey);
 
       const insert = db.transaction(() => {
-        // 1. Insert Manual
+        // 1. Insert Manual with SILO LOGIC (Owner ID = Importer User ID)
         const info = db
-          .prepare("INSERT INTO manuals (title, description) VALUES (?, ?)")
-          .run(data.manual.title, data.manual.description || "");
+          .prepare("INSERT INTO manuals (owner_id, title, description) VALUES (?, ?, ?)")
+          .run(userId || null, data.manual.title, data.manual.description || "");
         const newManualId = info.lastInsertRowid;
 
         // 2. Unpack Assets (If any)
@@ -494,41 +502,74 @@ app.whenReady().then(() => {
 
         if (data.assets && Array.isArray(data.assets)) {
           data.assets.forEach((asset) => {
-            // Generate unique name to prevent overwriting existing files
-            const newName = `${Date.now()}_${asset.fileName}`;
-            const newPath = path.join(assetsDir, newName);
+            // Keep identical filename from Admin. Prevents corrupting hash links.
+            const newPath = path.join(assetsDir, asset.fileName);
 
-            // Write binary file to User B's disk
-            fs.writeFileSync(newPath, Buffer.from(asset.data, "base64"));
+            if (!fs.existsSync(newPath)) {
+               fs.writeFileSync(newPath, Buffer.from(asset.data, "base64"));
+            }
 
-            // Create the NEW protocol link
-            const newUrl = `ietm:///${newPath.replace(/\\/g, "/")}`;
-            urlMap[asset.originalUrl] = newUrl;
+            // ALWAYS upgrade legacy PC links to universally portable abstract links!
+            const newAbstractUrl = `ietm://asset/${asset.fileName}`;
+            urlMap[asset.originalUrl] = newAbstractUrl;
           });
         }
 
-        // 3. Insert Modules & Rewrite Links
+        // 3. Insert Modules & Rewrite Links (Preserving Hierarchy)
         const insertModule = db.prepare(
-          `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html) VALUES (?, ?, ?, ?, ?)`,
+          `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html, order_index) VALUES (?, ?, ?, ?, ?, ?)`
         );
 
-        data.modules.forEach((mod) => {
-          let content = mod.content_html || "";
+        const idMap = {}; // Maps Old Module ID -> New Module ID
+        let remaining = [...data.modules];
+        let iterations = 0;
+        const maxIterations = remaining.length + 5; // Failsafe for circular dependencies
 
-          // REWRITE HISTORY: Replace User A's paths with User B's paths
-          Object.keys(urlMap).forEach((oldUrl) => {
-            // Global string replace
-            content = content.split(oldUrl).join(urlMap[oldUrl]);
+        while (remaining.length > 0 && iterations < maxIterations) {
+          iterations++;
+
+          // Grab nodes whose parent has already been inserted, or are root nodes
+          const nextBatch = remaining.filter(
+            (m) => !m.parent_id || idMap[m.parent_id]
+          );
+
+          // If no clean parents are found, the tree is corrupt. Force remaining as roots to avoid crashing.
+          if (nextBatch.length === 0) {
+             remaining.forEach((m) => {
+              let content = m.content_html || "";
+              Object.keys(urlMap).forEach((oldUrl) => {
+                content = content.split(oldUrl).join(urlMap[oldUrl]);
+              });
+              const info = insertModule.run(newManualId, null, m.title, m.node_type, content, m.order_index || 0);
+              idMap[m.id] = info.lastInsertRowid;
+            });
+            break;
+          }
+
+          nextBatch.forEach((m) => {
+            const parentId = m.parent_id ? idMap[m.parent_id] : null;
+            let content = m.content_html || "";
+
+            // REWRITE HISTORY: Replace User A's paths with User B's paths
+            Object.keys(urlMap).forEach((oldUrl) => {
+              // Global string replace
+              content = content.split(oldUrl).join(urlMap[oldUrl]);
+            });
+
+            const info = insertModule.run(
+              newManualId,
+              parentId,
+              m.title,
+              m.node_type,
+              content,
+              m.order_index || 0
+            );
+            idMap[m.id] = info.lastInsertRowid; // Cache new ID internally
           });
 
-          insertModule.run(
-            newManualId,
-            null,
-            mod.title,
-            mod.node_type,
-            content,
-          );
-        });
+          // Filter out the inserted modules for the next pass
+          remaining = remaining.filter((m) => !idMap[m.id]);
+        }
       });
 
       insert();
@@ -573,11 +614,11 @@ app.whenReady().then(() => {
     const destPath = path.join(assetsDir, fileName);
     fs.copyFileSync(sourcePath, destPath);
 
-    // Return the "ietm://" URL to save in the DB
-    const finalUrl = `ietm:///${destPath.replace(/\\/g, "/")}`;
+    // FORCE Abstract Routing System
+    const finalUrl = `ietm://asset/${fileName}`;
 
     console.log("🟡 Main: File Saved at:", destPath);
-    console.log("🟡 Main: Returning URL:", finalUrl);
+    console.log("🟡 Main: Returning Portable URL:", finalUrl);
 
     return finalUrl;
   });

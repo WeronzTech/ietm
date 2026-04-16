@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld("api", {
   getUsers: () => ipcRenderer.invoke("auth:get-users"),
 
   // Manual CRUD
-  getManuals: () => ipcRenderer.invoke("ietm:get-manuals"),
+  getManuals: (data) => ipcRenderer.invoke("ietm:get-manuals", data),
   createManual: (data) => ipcRenderer.invoke("ietm:create-manual", data),
   deleteManual: (id) => ipcRenderer.invoke("ietm:delete-manual", id),
   addModule: (data) => ipcRenderer.invoke("ietm:add-module", data),

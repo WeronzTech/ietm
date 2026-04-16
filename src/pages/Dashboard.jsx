@@ -215,7 +215,7 @@ export default function Dashboard({ onOpenManual }) {
   const [passkey, setPasskey] = useState("");
 
   const loadManuals = async () => {
-    const m = await window.api.getManuals();
+    const m = await window.api.getManuals({ userId: user.id, role: user.role });
     setManuals(m);
   };
 
@@ -226,7 +226,7 @@ export default function Dashboard({ onOpenManual }) {
   const submitImport = async () => {
     if (!passkey) return toast.error("Passkey is required");
     setShowModal(false);
-    const res = await window.api.importManual({ passkey });
+    const res = await window.api.importManual({ passkey, userId: user.id });
     if (res.success) {
       toast.success("System Imported Successfully");
       loadManuals();
