@@ -49,6 +49,7 @@
 //   );
 // }
 import { useState } from "react";
+import { ChevronDown, ChevronRight, FileText } from "lucide-react";
 
 export default function TreeNode({ node, onSelect, activeId }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,12 +67,12 @@ export default function TreeNode({ node, onSelect, activeId }) {
       <div
         onClick={handleClick}
         className={`
-          flex cursor-pointer items-center rounded-md px-2 py-1.5 text-sm transition-colors duration-150 mb-0.5
-          ${isActive ? "bg-blue-700 text-white font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white"}
+          flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm transition-colors duration-150 mb-0.5
+          ${isActive ? "bg-vector-accent text-black font-bold tracking-wide" : "text-vector-text-muted hover:bg-vector-panel hover:text-vector-text font-mono"}
         `}
       >
-        <span className="mr-2 w-4 text-center text-[10px] text-gray-500">
-          {hasChildren ? (isOpen ? "▼" : "▶") : "•"}
+        <span className="mr-2 flex items-center justify-center w-4 text-center text-gray-500">
+          {hasChildren ? (isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : <FileText size={12} />}
         </span>
         <span className="truncate">{node.title}</span>
       </div>

@@ -24,4 +24,5 @@ contextBridge.exposeInMainWorld("api", {
 
   updateModule: (data) => ipcRenderer.invoke("ietm:update-module", data),
   uploadAsset: () => ipcRenderer.invoke("ietm:upload-asset"),
+  search: (query) => ipcRenderer.invoke("ietm:search", query),
 });

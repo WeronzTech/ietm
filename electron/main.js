@@ -143,6 +143,7 @@ import { app, BrowserWindow, ipcMain, dialog, protocol, net } from "electron";
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { Buffer } from "node:buffer";
 import process from "node:process";
 import { db, initDb } from "./database.js";
 import { encryptData, decryptData } from "./crypto.js"; // Ensure this file exists
@@ -264,19 +265,43 @@ app.whenReady().then(() => {
   ipcMain.handle("ietm:search", (e, query) => {
     if (!query || query.length < 3) return [];
 
-    // Search titles, content, and part numbers (if you have them)
     const results = db
       .prepare(
-        `
-    SELECT id, manual_id, title, node_type, snippet(modules, 4, '<b>', '</b>', '...', 10) as snippet
-    FROM modules 
-    WHERE title LIKE ? OR content_html LIKE ?
-    LIMIT 20
-  `,
+        `SELECT id, manual_id, title, node_type, content_html FROM modules WHERE title LIKE ? OR content_html LIKE ? LIMIT 20`,
       )
       .all(`%${query}%`, `%${query}%`);
 
-    return results;
+    return results.map((row) => {
+      // Clean HTML tags safely
+      let text = row.content_html ? row.content_html.replace(/<[^>]*>?/gm, "") : "";
+      let snippet = text;
+      
+      const lowerText = text.toLowerCase();
+      const lowerQuery = query.toLowerCase();
+      const matchIndex = lowerText.indexOf(lowerQuery);
+      
+      if (matchIndex > -1) {
+         let start = Math.max(0, matchIndex - 40);
+         let end = Math.min(text.length, matchIndex + query.length + 40);
+         snippet = text.slice(start, end);
+         if (start > 0) snippet = "..." + snippet;
+         if (end < text.length) snippet += "...";
+         
+         // Highlight using Vector Accent Color
+         const regex = new RegExp(`(${query})`, "gi");
+         snippet = snippet.replace(regex, '<b style="color: #00F5D4">$1</b>');
+      } else {
+         snippet = text.slice(0, 100) + "...";
+      }
+
+      return {
+        id: row.id,
+        manual_id: row.manual_id,
+        title: row.title,
+        node_type: row.node_type,
+        snippet: snippet || "Matches manual metadata",
+      };
+    });
   });
 
   // --- 2. TROUBLESHOOTING LOGIC (Mock Logic for Demo) ---
@@ -388,13 +413,13 @@ app.whenReady().then(() => {
     modules.forEach((mod) => {
       // Find all ietm:// links in the HTML
       const matches = mod.content_html
-        ? mod.content_html.match(/ietm:\/\/[^"]+/g)
+        ? mod.content_html.match(/ietm:\/\/[^"'\s<>]+/g)
         : null;
 
       if (matches) {
         matches.forEach((url) => {
           // Clean the URL to get local path
-          let rawPath = url.replace(/^ietm:\/\//, "");
+          let rawPath = url.replace(/^ietm:\/*/, "");
           rawPath = decodeURIComponent(rawPath);
           // Fix "c/Users" -> "c:/Users"
           if (/^[a-zA-Z][\\/]/.test(rawPath)) {

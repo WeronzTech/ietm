@@ -1,76 +1,78 @@
 @import "tailwindcss";
-/* @tailwind base;
-@tailwind components; */
-/* @tailwind utilities; */
 
-/* Optional: Keep your dark mode base styles */
-body {
-  background-color: #1e1e1e;
-  color: #ffffff;
+@theme {
+  --color-vector-bg: #0B0E11;
+  --color-vector-panel: #161B22;
+  --color-vector-accent: #00F5D4;
+  --color-vector-text: #FFFFFF;
+  --color-vector-text-muted: #8B949E;
+  --color-vector-danger: #FF4D4D;
+  --color-vector-success: #4ADE80;
+}
+html, body, #root {
+  width: 100%;
+  height: 100%;
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 100%;
-  min-height: 100vh;
+  padding: 0;
+  background-color: #0B0E11;
+  color: #FFFFFF;
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+::-webkit-scrollbar-track {
+  background: var(--color-vector-bg);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 4px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-vector-accent);
+}
+
+/* Jodit Component Overrides to stop background striping/line bugs & fix font contrast */
+.jodit-container {
+  background-color: #0B0E11 !important;
+  color: #FFFFFF !important;
+  border-radius: 4px !important;
+  border: 1px solid #30363d !important;
+}
+
+.jodit-workplace {
+  background-color: #0B0E11 !important;
+  background-image: none !important;
+}
+
+.jodit-wysiwyg {
+  background-image: none !important;
+  background-color: #0B0E11 !important;
+  color: #FFFFFF !important;
+}
+
+/* Fix popup/input contrast */
+.jodit-ui-popup__content, .jodit-dialog__panel {
+  background-color: #161B22 !important;
+  color: #FFFFFF !important;
+  border: 1px solid #30363d !important;
+}
+
+.jodit-input, .jodit-button__text, .jodit-select {
+  color: #FFFFFF !important;
+  background-color: #0B0E11 !important;
+}
+
+.jodit-toolbar__box {
+  background-color: #161B22 !important;
+  border-bottom: 1px solid #30363d !important;
 }

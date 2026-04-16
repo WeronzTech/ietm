@@ -95,33 +95,33 @@
 // };
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export default function Login() {
   const { login } = useAuth();
   const [form, setForm] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     const res = await login(form.username, form.password);
-    if (!res.success) setError(res.message);
+    if (!res.success) toast.error(res.message);
+    else toast.success("Access Granted");
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center bg-gray-950 text-gray-100">
-      <div className="w-96 rounded-lg border border-gray-800 bg-gray-900 p-8 shadow-2xl">
-        <h2 className="mb-6 text-center text-2xl font-bold tracking-wider text-blue-500">
+    <div className="flex h-screen flex-col items-center justify-center bg-vector-bg text-vector-text">
+      <div className="w-96 rounded-xl border border-gray-800 bg-vector-panel p-8 shadow-2xl">
+        <h2 className="mb-6 text-center text-xl font-bold tracking-[0.2em] text-vector-accent">
           IETM ACCESS
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
-              USERNAME
+            <label className="mb-1 block text-[10px] font-bold tracking-widest text-vector-text-muted uppercase">
+              Operator ID
             </label>
             <input
-              className="w-full rounded bg-gray-800 border border-gray-700 p-2.5 text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded bg-vector-bg border border-gray-800 p-3 text-vector-text focus:border-vector-accent focus:outline-none focus:ring-1 focus:ring-vector-accent transition-all font-mono text-sm"
               placeholder="Enter ID"
               value={form.username}
               onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -129,35 +129,31 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
-              PASSWORD
+            <label className="mb-1 block text-[10px] font-bold tracking-widest text-vector-text-muted uppercase">
+              Authentication Code
             </label>
             <input
               type="password"
-              className="w-full rounded bg-gray-800 border border-gray-700 p-2.5 text-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded bg-vector-bg border border-gray-800 p-3 text-vector-text focus:border-vector-accent focus:outline-none focus:ring-1 focus:ring-vector-accent transition-all font-mono text-sm"
               placeholder="••••••••"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />
           </div>
 
-          {error && (
-            <div className="rounded bg-red-900/30 p-2 text-center text-sm text-red-400 border border-red-900">
-              {error}
-            </div>
-          )}
-
           <button
             type="submit"
-            className="w-full rounded bg-blue-600 py-2.5 font-bold text-white transition hover:bg-blue-500"
+            className="w-full rounded bg-vector-accent py-3 font-bold text-black transition hover:brightness-110 tracking-widest text-sm mt-4"
           >
-            AUTHENTICATE
+            INITIALIZE SESSION
           </button>
         </form>
 
-        <p className="mt-6 text-center text-xs text-gray-600">
-          Restricted System. Unauthorized access is prohibited.
-        </p>
+        <div className="mt-8 pt-4 border-t border-gray-800 text-center">
+          <p className="text-[10px] text-vector-text-muted tracking-widest uppercase">
+            Restricted System. Logged Access.
+          </p>
+        </div>
       </div>
     </div>
   );

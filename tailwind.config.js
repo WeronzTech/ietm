@@ -8,10 +8,13 @@ export default {
     extend: {
       // Add custom military colors here for your IETM
       colors: {
-        "defense-dark": "#1e1e1e",
-        "defense-panel": "#252526",
-        "defense-accent": "#0078d4",
-        "defense-text": "#e0e0e0",
+        "vector-bg": "#0B0E11",
+        "vector-panel": "#161B22",
+        "vector-accent": "#00F5D4",
+        "vector-text": "#FFFFFF",
+        "vector-text-muted": "#8B949E",
+        "vector-danger": "#FF4D4D",
+        "vector-success": "#4ADE80",
       },
     },
   },

@@ -204,7 +204,9 @@
 // };
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 import AdminDashboard from "./AdminDashboard";
+import { Book, Plus } from "lucide-react";
 
 export default function Dashboard({ onOpenManual }) {
   const { user } = useAuth();
@@ -222,34 +224,34 @@ export default function Dashboard({ onOpenManual }) {
   }, []);
 
   const submitImport = async () => {
-    if (!passkey) return alert("Passkey is required");
+    if (!passkey) return toast.error("Passkey is required");
     setShowModal(false);
     const res = await window.api.importManual({ passkey });
     if (res.success) {
-      alert("Import Successful");
+      toast.success("System Imported Successfully");
       loadManuals();
     } else {
-      alert("Failed: " + res.message);
+      toast.error("Failed: " + res.message);
     }
   };
 
   if (user.role === "admin") return <AdminDashboard />;
 
   return (
-    <div className="h-full overflow-y-auto bg-gray-900 p-10 text-gray-100">
+    <div className="h-full overflow-y-auto bg-vector-bg p-10 text-vector-text">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-white">Mission Dashboard</h1>
-          <p className="text-gray-400">Select a technical manual to begin.</p>
+          <h1 className="text-3xl font-bold tracking-wide">Mission Dashboard</h1>
+          <p className="text-vector-text-muted font-mono text-sm mt-2">Select a technical manual system to initialize.</p>
         </div>
         <button
           onClick={() => {
             setPasskey("");
             setShowModal(true);
           }}
-          className="rounded bg-green-700 px-4 py-2 font-semibold text-white hover:bg-green-600 shadow-md transition"
+          className="flex items-center gap-2 rounded-sm bg-transparent border border-vector-accent px-5 py-2 font-mono text-sm font-bold text-vector-accent hover:bg-vector-accent hover:text-black shadow-[0_0_15px_rgba(0,245,212,0.2)] transition-all uppercase tracking-widest"
         >
-          + Import Manual
+          <Plus size={16} /> Import Data
         </button>
       </div>
 
@@ -259,13 +261,15 @@ export default function Dashboard({ onOpenManual }) {
           <div
             key={m.id}
             onClick={() => onOpenManual(m.id)}
-            className="group flex h-40 flex-col items-center justify-center rounded-lg border border-gray-700 bg-gray-800 cursor-pointer transition hover:bg-gray-700 hover:border-blue-500 hover:shadow-lg"
+            className="group flex h-40 flex-col items-center justify-center rounded-lg border border-gray-800 bg-vector-panel cursor-pointer transition-all hover:bg-gray-800 hover:border-vector-accent hover:shadow-[0_0_15px_rgba(0,245,212,0.15)]"
           >
-            <div className="mb-2 text-4xl">📘</div>
-            <h3 className="text-lg font-semibold text-gray-200 group-hover:text-white">
+            <div className="mb-3 text-vector-accent opacity-80 group-hover:opacity-100 transition-opacity">
+              <Book size={32} />
+            </div>
+            <h3 className="text-sm font-bold tracking-wider text-vector-text group-hover:text-vector-accent transition-colors uppercase text-center px-4">
               {m.title}
             </h3>
-            <span className="text-xs font-mono text-gray-500">ID: {m.id}</span>
+            <span className="text-[10px] font-mono text-vector-text-muted mt-2 tracking-widest">SYS.ID: {m.id}</span>
           </div>
         ))}
       </div>
@@ -273,30 +277,30 @@ export default function Dashboard({ onOpenManual }) {
       {/* Import Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <div className="w-96 rounded-lg bg-gray-800 border border-gray-600 p-6 shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-4">Secure Import</h3>
-            <p className="mb-4 text-sm text-gray-400">
-              Enter the decryption passkey for the .ietm package.
+          <div className="w-96 rounded-xl bg-vector-panel border border-gray-800 p-6 shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
+            <h3 className="text-lg font-bold tracking-widest text-vector-accent mb-2 uppercase">Secure Import</h3>
+            <p className="mb-6 text-xs text-vector-text-muted font-mono">
+              Authentication required. Enter decryption passkey.
             </p>
             <input
               type="password"
-              placeholder="Passkey"
+              placeholder="••••••••"
               value={passkey}
               onChange={(e) => setPasskey(e.target.value)}
-              className="w-full mb-4 rounded bg-gray-900 border border-gray-700 p-2 text-white focus:border-green-500 focus:outline-none"
+              className="w-full mb-6 rounded-sm bg-vector-bg border border-gray-700 p-3 text-vector-text focus:border-vector-accent focus:ring-1 focus:ring-vector-accent focus:outline-none font-mono text-sm"
             />
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-gray-400 hover:text-white"
+                className="px-4 py-2 text-xs font-bold tracking-widest text-vector-text-muted hover:text-vector-text uppercase"
               >
-                Cancel
+                Abort
               </button>
               <button
                 onClick={submitImport}
-                className="rounded bg-green-700 px-4 py-2 font-bold text-white hover:bg-green-600"
+                className="rounded-sm bg-vector-accent px-5 py-2 text-xs font-bold uppercase tracking-widest text-black hover:brightness-110"
               >
-                Decrypt & Import
+                Execute
               </button>
             </div>
           </div>

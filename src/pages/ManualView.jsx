@@ -66,29 +66,34 @@ import { useState, useEffect } from "react";
 import TreeView from "../components/Sidebar/TreeView";
 import ModuleViewer from "../components/Content/ModuleViewer";
 
-export default function ManualView({ manualId, onBack }) {
+export default function ManualView({ manualId, initialModuleId, onBack }) {
   const [treeData, setTreeData] = useState([]);
   const [activeModule, setActiveModule] = useState(null);
-
-  useEffect(() => {
-    window.api.getManualTree(manualId).then(setTreeData);
-  }, [manualId]);
 
   const handleSelect = async (moduleId) => {
     const content = await window.api.getModuleContent(moduleId);
     setActiveModule(content);
   };
 
+  useEffect(() => {
+    window.api.getManualTree(manualId).then((tree) => {
+      setTreeData(tree);
+      if (initialModuleId) {
+        handleSelect(initialModuleId);
+      }
+    });
+  }, [manualId, initialModuleId]);
+
   return (
-    <div className="flex h-full w-full overflow-hidden bg-gray-900">
+    <div className="flex h-full w-full overflow-hidden bg-vector-bg">
       {/* Sidebar */}
-      <aside className="flex w-80 flex-col border-r border-gray-700 bg-gray-800">
-        <div className="flex h-12 items-center border-b border-gray-700 px-4">
+      <aside className="flex w-80 flex-col border-r border-gray-800 bg-vector-panel">
+        <div className="flex h-14 items-center border-b border-gray-800 px-4">
           <button
             onClick={onBack}
-            className="flex items-center text-sm font-medium text-blue-400 hover:text-blue-300"
+            className="flex items-center text-xs font-bold tracking-widest text-vector-accent hover:brightness-110 uppercase font-mono"
           >
-            ← BACK TO INDEX
+            ← Back to Command
           </button>
         </div>
         <TreeView
@@ -99,7 +104,7 @@ export default function ManualView({ manualId, onBack }) {
       </aside>
 
       {/* Content Area */}
-      <main className="flex-1 overflow-y-auto bg-gray-900 p-8">
+      <main className="flex-1 overflow-y-auto bg-vector-bg p-8">
         <ModuleViewer module={activeModule} />
       </main>
     </div>
