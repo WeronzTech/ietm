@@ -384,8 +384,33 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("ietm:delete-manual", (e, id) => {
-    db.prepare("DELETE FROM manuals WHERE id = ?").run(id);
-    return { success: true };
+    try {
+      db.transaction(() => {
+        // Find all modules belonging to this manual
+        const mods = db.prepare("SELECT id FROM modules WHERE manual_id = ?").all(id);
+        const modIds = mods.map((m) => m.id);
+
+        if (modIds.length > 0) {
+          // SQLite IN clause hack for multiple parameters
+          const placeholders = modIds.map(() => "?").join(",");
+          
+          // Delete Module-level dependencies
+          db.prepare(`DELETE FROM parts WHERE module_id IN (${placeholders})`).run(...modIds);
+          db.prepare(`DELETE FROM media WHERE module_id IN (${placeholders})`).run(...modIds);
+          db.prepare(`DELETE FROM diagnostics WHERE module_id IN (${placeholders})`).run(...modIds);
+        }
+
+        // Delete the Modules themselves
+        db.prepare("DELETE FROM modules WHERE manual_id = ?").run(id);
+
+        // Finally, delete the root Manual
+        db.prepare("DELETE FROM manuals WHERE id = ?").run(id);
+      })();
+      return { success: true };
+    } catch (err) {
+      console.error("Delete Error:", err);
+      return { success: false, message: err.message };
+    }
   });
 
   ipcMain.handle("ietm:add-module", (e, data) => {
