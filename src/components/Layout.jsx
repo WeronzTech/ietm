@@ -33,7 +33,7 @@
 // }
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Search, LogOut } from "lucide-react";
+import { Search, LogOut, Shield } from "lucide-react";
 
 export default function Layout({ children, onSearchNavigate }) {
   const { user, logout } = useAuth();
@@ -64,24 +64,18 @@ export default function Layout({ children, onSearchNavigate }) {
 
   return (
     <div className="flex h-screen w-full flex-col font-sans bg-vector-bg text-vector-text overflow-hidden">
-      {/* 1. SECURITY BANNER (Top) - Standard Defense Requirement */}
-      <div className="bg-vector-danger text-black text-xs font-bold text-center tracking-[0.2em] py-0.5 select-none">
-        SECRET // NOFORN // WEAPON SYSTEM DATA
-      </div>
-
       {/* 2. HEADER BAR */}
       <header className="flex h-16 items-center justify-between bg-vector-panel px-6 border-b border-gray-800 shadow-md z-20 relative">
-        {/* OEM Branding & System Name */}
-        <div className="flex items-center gap-4">
-          <div className="h-10 w-10 bg-vector-bg rounded-full flex items-center justify-center font-bold border-2 border-vector-accent text-vector-accent shadow-[0_0_10px_rgba(0,245,212,0.3)]">
-            OEM
-          </div>
-          <div>
-            <div className="font-bold text-lg tracking-wider text-vector-text">
-              MK-19 MOD 3
-            </div>
-            <div className="text-[10px] text-vector-text-muted uppercase tracking-[0.2em]">
-              Interactive Electronic Technical Manual
+        {/* Company Branding */}
+        <div className="flex items-center gap-3">
+          <img 
+            src="/logo.png" 
+            alt="SSS Defence Logo" 
+            className="h-12 w-auto object-contain"
+          />
+          <div className="flex flex-col justify-center">
+            <div className="font-extrabold text-xl tracking-[0.15em] text-white uppercase leading-none">
+              SSS DEFENCE
             </div>
           </div>
         </div>
@@ -147,10 +141,6 @@ export default function Layout({ children, onSearchNavigate }) {
       {/* Main Body */}
       <div className="flex-1 overflow-y-auto relative">{children}</div>
 
-      {/* Bottom Security Banner */}
-      <div className="bg-vector-danger text-black text-[10px] font-bold text-center tracking-[0.2em] py-0.5 select-none">
-        SECRET // NOFORN
-      </div>
     </div>
   );
 }

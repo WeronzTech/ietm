@@ -144,6 +144,85 @@ export function initDb() {
     );
   `);
 
+  // --- 7. AUDIT LOGS (Compliance Tracking) ---
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      action TEXT,
+      target TEXT,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+  `);
+
+  // --- 8. BOOKMARKS (Operator UX) ---
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS bookmarks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      module_id INTEGER,
+      FOREIGN KEY(user_id) REFERENCES users(id),
+      FOREIGN KEY(module_id) REFERENCES modules(id),
+      UNIQUE(user_id, module_id)
+    );
+  `);
+
+  // --- 9. HOTSPOTS (IPB / Exploded Views) ---
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS hotspots (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      module_id INTEGER,
+      x REAL,
+      y REAL,
+      width REAL,
+      height REAL,
+      target_module_id INTEGER,
+      label TEXT,
+      FOREIGN KEY(module_id) REFERENCES modules(id),
+      FOREIGN KEY(target_module_id) REFERENCES modules(id)
+    );
+  `);
+
+  // --- 10. DIAGNOSTICS (Fault Trees) ---
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS diagnostics (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      module_id INTEGER UNIQUE,
+      question TEXT,
+      yes_module_id INTEGER,
+      no_module_id INTEGER,
+      FOREIGN KEY(module_id) REFERENCES modules(id),
+      FOREIGN KEY(yes_module_id) REFERENCES modules(id),
+      FOREIGN KEY(no_module_id) REFERENCES modules(id)
+    );
+  `);
+
+  // --- 11. INVENTORY (Logistics & Supply) ---
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS inventory (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      part_number TEXT UNIQUE,
+      nomenclature TEXT,
+      nsn_niin TEXT,
+      stock_level INTEGER DEFAULT 0,
+      critical_threshold INTEGER DEFAULT 5
+    );
+  `);
+
+  // --- 12. MODULE PARTS (IPD Cross-Reference) ---
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS module_parts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      module_id INTEGER,
+      inventory_id INTEGER,
+      quantity_required INTEGER DEFAULT 1,
+      reference_designator TEXT,
+      FOREIGN KEY(module_id) REFERENCES modules(id),
+      FOREIGN KEY(inventory_id) REFERENCES inventory(id)
+    );
+  `);
+
   // Seed Super User
   const admin = db
     .prepare("SELECT * FROM users WHERE username = 'superadmin'")

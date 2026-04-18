@@ -254,6 +254,160 @@ app.whenReady().then(() => {
     return db.prepare("SELECT id, username, role FROM users").all();
   });
 
+  // --- AUDIT SYSTEM ---
+  ipcMain.handle("ietm:log-audit", (e, { userId, action, target }) => {
+    try {
+       db.prepare("INSERT INTO audit_logs (user_id, action, target) VALUES (?, ?, ?)").run(userId || null, action, target);
+       return { success: true };
+    } catch(err) {
+       return { success: false }; // Silent fail for audit drops
+    }
+  });
+
+  ipcMain.handle("ietm:get-audits", () => {
+    return db.prepare(`
+      SELECT audit_logs.*, users.username, users.role 
+      FROM audit_logs 
+      LEFT JOIN users ON audit_logs.user_id = users.id 
+      ORDER BY audit_logs.timestamp DESC 
+      LIMIT 1000
+    `).all();
+  });
+
+  // --- BOOKMARKS ---
+  ipcMain.handle("ietm:toggle-bookmark", (e, { userId, moduleId }) => {
+    try {
+      const existing = db.prepare("SELECT id FROM bookmarks WHERE user_id = ? AND module_id = ?").get(userId, moduleId);
+      if (existing) {
+        db.prepare("DELETE FROM bookmarks WHERE id = ?").run(existing.id);
+        return { success: true, bookmarked: false };
+      } else {
+        db.prepare("INSERT INTO bookmarks (user_id, module_id) VALUES (?, ?)").run(userId, moduleId);
+        return { success: true, bookmarked: true };
+      }
+    } catch(err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:get-bookmarks", (e, userId) => {
+    return db.prepare(`
+      SELECT bookmarks.id as bookmark_id, modules.id, modules.title, modules.manual_id 
+      FROM bookmarks 
+      JOIN modules ON bookmarks.module_id = modules.id 
+      WHERE bookmarks.user_id = ?
+    `).all(userId);
+  });
+
+  // --- DIAGNOSTICS & HOTSPOTS ---
+  ipcMain.handle("ietm:save-hotspots", (e, { moduleId, hotspots }) => {
+    try {
+      const deleteStmt = db.prepare("DELETE FROM hotspots WHERE module_id = ?");
+      const insertStmt = db.prepare("INSERT INTO hotspots (module_id, x, y, width, height, target_module_id, label) VALUES (?, ?, ?, ?, ?, ?, ?)");
+      
+      db.transaction(() => {
+        deleteStmt.run(moduleId);
+        for (const h of hotspots) {
+          insertStmt.run(moduleId, h.x, h.y, h.width, h.height, h.target_module_id || null, h.label || "");
+        }
+      })();
+      return { success: true };
+    } catch(err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:get-hotspots", (e, moduleId) => {
+    return db.prepare("SELECT * FROM hotspots WHERE module_id = ?").all(moduleId);
+  });
+
+  ipcMain.handle("ietm:save-diagnostic", (e, { moduleId, question, yesModuleId, noModuleId }) => {
+    try {
+      const existing = db.prepare("SELECT id FROM diagnostics WHERE module_id = ?").get(moduleId);
+      if (existing) {
+        db.prepare("UPDATE diagnostics SET question = ?, yes_module_id = ?, no_module_id = ? WHERE module_id = ?").run(question, yesModuleId, noModuleId, moduleId);
+      } else {
+        db.prepare("INSERT INTO diagnostics (module_id, question, yes_module_id, no_module_id) VALUES (?, ?, ?, ?)").run(moduleId, question, yesModuleId, noModuleId);
+      }
+      return { success: true };
+    } catch(err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:get-diagnostic", (e, moduleId) => {
+    return db.prepare("SELECT * FROM diagnostics WHERE module_id = ?").get(moduleId) || null;
+  });
+
+  // --- LOGISTICS & INVENTORY ---
+  ipcMain.handle("ietm:get-inventory", () => {
+    return db.prepare("SELECT * FROM inventory").all();
+  });
+
+  ipcMain.handle("ietm:add-inventory", (e, { partNo, nomenclature, nsn, stock, threshold }) => {
+    try {
+      db.prepare("INSERT INTO inventory (part_number, nomenclature, nsn_niin, stock_level, critical_threshold) VALUES (?, ?, ?, ?, ?)").run(partNo, nomenclature, nsn, stock, threshold);
+      return { success: true };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:get-module-parts", (e, moduleId) => {
+    return db.prepare(`
+      SELECT mp.*, i.part_number, i.nomenclature, i.nsn_niin, i.stock_level, i.critical_threshold
+      FROM module_parts mp
+      JOIN inventory i ON mp.inventory_id = i.id
+      WHERE mp.module_id = ?
+    `).all(moduleId);
+  });
+
+  ipcMain.handle("ietm:add-module-part", (e, { moduleId, inventoryId, qty, refDes }) => {
+    try {
+      db.prepare("INSERT INTO module_parts (module_id, inventory_id, quantity_required, reference_designator) VALUES (?, ?, ?, ?)").run(moduleId, inventoryId, qty, refDes);
+      return { success: true };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:save-module-parts", (e, { moduleId, mappedParts }) => {
+    try {
+      db.prepare("DELETE FROM module_parts WHERE module_id = ?").run(moduleId);
+      const insert = db.prepare("INSERT INTO module_parts (module_id, inventory_id, reference_designator) VALUES (?, ?, ?)");
+      const tx = db.transaction(() => {
+        for (const p of mappedParts) {
+          insert.run(moduleId, p.inventory_id, p.reference_designator);
+        }
+      });
+      tx();
+      return { success: true };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:create-backup", async () => {
+    const { filePath } = await dialog.showSaveDialog({
+      title: "Save Secure Database Backup",
+      defaultPath: `IETM_DB_BACKUP_${Date.now()}.db`,
+      filters: [{ name: "Database Backup", extensions: ["db"] }]
+    });
+
+    if (!filePath) return { success: false, message: "Cancelled" };
+
+    try {
+      const dbSrcPath = path.join(app.getPath("userData"), "ietm_core_secure.db");
+      if (fs.existsSync(dbSrcPath)) {
+        fs.copyFileSync(dbSrcPath, filePath);
+        return { success: true, path: filePath };
+      }
+      return { success: false, message: "Source DB not found." };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  });
+
   // --- MANUAL CRUD ---
   ipcMain.handle("ietm:get-manuals", (e, authData) => {
     // Silo Logic: Admin sees all master copies (or everything). Operator only sees what they own.

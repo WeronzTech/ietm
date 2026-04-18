@@ -213,14 +213,17 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Editor from "./Editor";
+import InventoryManager from "./InventoryManager";
 import toast from "react-hot-toast";
-import { Users, ShieldAlert, Lock, Edit3, Download, PlusCircle, Trash2 } from "lucide-react";
+import { Users, ShieldAlert, Lock, Edit3, Download, PlusCircle, Trash2, Database, Activity, Box } from "lucide-react";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [manuals, setManuals] = useState([]);
+  const [audits, setAudits] = useState([]);
   const [editingManualId, setEditingManualId] = useState(null);
+  const [viewLogistics, setViewLogistics] = useState(false);
 
   // User State
   const [newUser, setNewUser] = useState({
@@ -245,8 +248,10 @@ export default function AdminDashboard() {
   const loadData = async () => {
     const u = await window.api.getUsers();
     const m = await window.api.getManuals({ userId: user.id, role: user.role });
+    const a = await window.api.getAudits?.() || [];
     setUsers(u);
     setManuals(m);
+    setAudits(a);
   };
 
   useEffect(() => {
@@ -307,11 +312,35 @@ export default function AdminDashboard() {
     );
   }
 
+  if (viewLogistics) return <InventoryManager onBack={() => setViewLogistics(false)} />;
+
+  const handleBackup = async () => {
+    const res = await window.api.createBackup?.();
+    if (res?.success) toast.success("System Backup created at: " + res.path);
+    else toast.error("Backup failed: " + (res?.message || "Unknown router error"));
+  };
+
   return (
-    <div className="min-h-full bg-vector-bg p-8 text-vector-text">
-      <h1 className="mb-8 text-3xl font-bold tracking-tight text-white border-b border-gray-800 pb-4">
-        Admin Control Center
-      </h1>
+    <div className="min-h-full bg-vector-bg p-8 text-vector-text space-y-8">
+      <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+        <h1 className="text-3xl font-bold tracking-tight text-white mb-0">
+          Admin Control Center
+        </h1>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setViewLogistics(true)}
+            className="rounded-sm bg-gray-800 border border-gray-700 px-5 py-2 text-xs font-bold tracking-widest text-white hover:text-vector-accent hover:border-vector-accent flex items-center gap-2 transition-colors uppercase"
+          >
+            <Box size={16} /> Global Logistics
+          </button>
+          <button
+            onClick={handleBackup}
+            className="rounded-sm bg-blue-600 px-5 py-2 text-xs font-bold tracking-widest text-white hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.2)] uppercase flex items-center gap-2 transition-colors"
+          >
+            <Database size={16} /> FULL SYSTEM BACKUP
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* --- USER MANAGEMENT --- */}
@@ -517,6 +546,36 @@ export default function AdminDashboard() {
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+
+      {/* --- LEVEL 4 FORENSICS & AUDIT ARRAY --- */}
+      <div className="rounded-lg border border-gray-800 bg-vector-panel p-6 shadow-md mt-8">
+        <h3 className="mb-4 text-xl font-semibold text-purple-400 border-b border-gray-800 pb-2 flex items-center gap-2">
+          <Activity size={20} /> Audit & Forensics Log
+        </h3>
+        
+        <div className="overflow-hidden rounded-sm border border-gray-800 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
+          <table className="w-full text-left text-sm text-gray-300">
+            <thead className="bg-gray-800 sticky top-0 text-[10px] tracking-widest uppercase text-vector-text-muted z-10 block w-full table-fixed">
+              <tr>
+                <th className="px-4 py-3 w-1/5">Timestamp</th>
+                <th className="px-4 py-3 w-1/5">Operator</th>
+                <th className="px-4 py-3 w-1/5">Action</th>
+                <th className="px-4 py-3 w-2/5">Target / Detail</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800 bg-vector-panel block w-full table-fixed">
+              {audits.map((log) => (
+                <tr key={log.id} className="hover:bg-gray-800 transition-colors">
+                  <td className="px-4 py-3 text-xs font-mono text-gray-500 w-1/5">{new Date(log.timestamp).toLocaleString()}</td>
+                  <td className="px-4 py-3 font-mono text-vector-accent w-1/5">{log.username || "UNKNOWN"}</td>
+                  <td className="px-4 py-3 text-[10px] font-bold tracking-widest text-purple-300 uppercase w-1/5">{log.action}</td>
+                  <td className="px-4 py-3 text-gray-400 truncate w-2/5">{log.target}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 

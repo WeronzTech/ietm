@@ -1,30 +1,18 @@
 import { useState, useEffect } from "react";
 
-export default function Troubleshooter({ startNodeId = "start" }) {
-  const [currentNode, setCurrentNode] = useState(null);
-  const [history, setHistory] = useState([]);
+export default function Troubleshooter({ module, onNavigate }) {
+  const [diagnostic, setDiagnostic] = useState(null);
 
   useEffect(() => {
-    loadStep(startNodeId);
-  }, [startNodeId]);
+    async function load() {
+      const diag = await window.api.getDiagnostic?.(module.id);
+      setDiagnostic(diag);
+    }
+    load();
+  }, [module.id]);
 
-  const loadStep = async (stepId, answer) => {
-    // Call the mock backend handler we created in main.js
-    const node = await window.api.getTroubleshootNode({
-      nodeId: stepId,
-      answer,
-    });
-    setCurrentNode(node);
-    if (stepId !== "start") setHistory((prev) => [...prev, { stepId, answer }]);
-  };
-
-  const handleReset = () => {
-    setHistory([]);
-    loadStep("start");
-  };
-
-  if (!currentNode)
-    return <div className="p-10 text-center">Loading Diagnostic Logic...</div>;
+  if (!diagnostic)
+    return <div className="p-10 text-center text-gray-500">No diagnostic matrix defined for this module. Author must construct logic.</div>;
 
   return (
     <div className="max-w-2xl mx-auto mt-10">
@@ -38,52 +26,35 @@ export default function Troubleshooter({ startNodeId = "start" }) {
 
         {/* Content Body */}
         <div className="p-8 text-center min-h-[300px] flex flex-col justify-center items-center">
-          {currentNode.solution ? (
-            // SOLUTION FOUND STATE
-            <div className="animate-fade-in">
-              <div className="w-16 h-16 bg-green-900 rounded-full flex items-center justify-center text-3xl mb-4 mx-auto border-2 border-green-500">
-                ✓
-              </div>
-              <h3 className="text-2xl font-bold text-green-400 mb-2">
-                Root Cause Identified
-              </h3>
-              <p className="text-xl text-white mb-6">{currentNode.solution}</p>
-              <button
-                onClick={handleReset}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded uppercase font-bold text-sm tracking-wider"
-              >
-                Restart Diagnosis
-              </button>
-            </div>
-          ) : (
-            // QUESTION STATE
+            {/* QUESTION STATE */}
             <div className="w-full">
               <h3 className="text-2xl font-medium text-white mb-8 leading-relaxed">
-                {currentNode.question}
+                {diagnostic.question}
               </h3>
 
               <div className="flex gap-4 justify-center">
                 <button
-                  onClick={() => loadStep(currentNode.yes, "yes")}
-                  className="w-32 py-4 bg-green-700 hover:bg-green-600 text-white font-bold rounded-lg shadow-lg transform hover:-translate-y-1 transition-all"
+                  disabled={!diagnostic.yes_module_id}
+                  onClick={() => onNavigate(diagnostic.yes_module_id)}
+                  className="w-32 py-4 bg-green-700 hover:bg-green-600 text-white font-bold rounded-lg shadow-lg transform hover:-translate-y-1 transition-all disabled:opacity-50"
                 >
                   YES
                 </button>
                 <button
-                  onClick={() => loadStep(currentNode.no, "no")}
-                  className="w-32 py-4 bg-red-700 hover:bg-red-600 text-white font-bold rounded-lg shadow-lg transform hover:-translate-y-1 transition-all"
+                  disabled={!diagnostic.no_module_id}
+                  onClick={() => onNavigate(diagnostic.no_module_id)}
+                  className="w-32 py-4 bg-red-700 hover:bg-red-600 text-white font-bold rounded-lg shadow-lg transform hover:-translate-y-1 transition-all disabled:opacity-50"
                 >
                   NO
                 </button>
               </div>
             </div>
-          )}
         </div>
 
         {/* Footer / Progress */}
-        <div className="bg-gray-900 p-4 text-xs text-gray-500 border-t border-gray-800 flex justify-between">
-          <span>Diagnostic Session ID: #882-Alpha</span>
-          <span>Steps Taken: {history.length}</span>
+        <div className="bg-gray-900 p-4 text-[10px] uppercase font-bold tracking-widest text-gray-500 border-t border-gray-800 flex justify-between">
+          <span>Diagnostic ID: #{module.id}-FaultLogic</span>
+          <span>Target Routes Active</span>
         </div>
       </div>
     </div>

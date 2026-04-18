@@ -70,24 +70,67 @@
 //     </div>
 //   );
 // }
+import { useState } from "react";
 import TreeNode from "./TreeNode";
 
-export default function TreeView({ data, onSelectModule, activeModuleId }) {
+export default function TreeView({ data, bookmarks, onSelectModule, activeModuleId }) {
+  const [tab, setTab] = useState("structure"); // "structure" or "bookmarks"
   if (!data || data.length === 0)
     return (
       <div className="p-5 text-sm text-gray-500 italic">No modules found.</div>
     );
 
   return (
-    <div className="h-full overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-600">
-      {data.map((node) => (
-        <TreeNode
-          key={node.id}
-          node={node}
-          onSelect={onSelectModule}
-          activeId={activeModuleId}
-        />
-      ))}
+    <div className="flex h-full flex-col">
+      <div className="flex border-b border-gray-800 bg-vector-panel">
+        <button
+          className={`flex-1 py-3 text-[10px] uppercase font-bold tracking-widest transition-colors ${
+            tab === "structure" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"
+          }`}
+          onClick={() => setTab("structure")}
+        >
+          Structure
+        </button>
+        <button
+          className={`flex-1 py-3 text-[10px] uppercase font-bold tracking-widest transition-colors ${
+            tab === "bookmarks" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"
+          }`}
+          onClick={() => setTab("bookmarks")}
+        >
+          Bookmarks
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-600">
+        {tab === "structure" && data.map((node) => (
+          <TreeNode
+            key={node.id}
+            node={node}
+            onSelect={onSelectModule}
+            activeId={activeModuleId}
+          />
+        ))}
+
+        {tab === "bookmarks" && (
+          <div className="space-y-1 mt-2">
+            {!bookmarks || bookmarks.length === 0 ? (
+              <div className="text-xs text-gray-500 italic p-4 text-center block">No bookmarks pinned.</div>
+            ) : (
+              bookmarks.map((bm) => (
+                <div
+                  key={bm.bookmark_id}
+                  onClick={() => onSelectModule(bm.id)}
+                  className={`cursor-pointer px-3 py-2 text-sm border-l-2 font-mono truncate transition-colors ${
+                    activeModuleId === bm.id ? "border-vector-accent bg-vector-bg text-white" : "border-transparent text-gray-400 hover:bg-gray-800"
+                  }`}
+                >
+                  📍 {bm.title}
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -54,6 +54,10 @@ export const AuthProvider = ({ children }) => {
       const res = await window.api.login({ username, password });
       if (res.success) {
         setUser(res.user);
+        // Level 4 Audit Tagging
+        if (window.api.logAudit) {
+          window.api.logAudit({ userId: res.user.id, action: "SESSION_START", target: "System Login" });
+        }
         return { success: true };
       }
       return { success: false, message: res.message };
@@ -64,6 +68,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    if (user && window.api.logAudit) {
+      window.api.logAudit({ userId: user.id, action: "SESSION_END", target: "System Logout" });
+    }
     setUser(null);
   };
 

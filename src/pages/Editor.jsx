@@ -183,6 +183,14 @@ export default function Editor({ manualId, onBack }) {
   const [newChapterTitle, setNewChapterTitle] = useState("");
   const [showSubTopicModal, setShowSubTopicModal] = useState(false);
   const [newSubTopicTitle, setNewSubTopicTitle] = useState("");
+  const [newSubTopicType, setNewSubTopicType] = useState("procedure");
+
+  // Advanced Editor States
+  const [diagnostic, setDiagnostic] = useState({ question: "", yesModuleId: "", noModuleId: "" });
+  const [hotspots, setHotspots] = useState([]);
+  const [mappedParts, setMappedParts] = useState([]);
+  const [globalInventory, setGlobalInventory] = useState([]);
+  const [activeTab, setActiveTab] = useState("content"); // 'content', 'advanced', 'logistics'
 
   const editorRef = useRef(null);
 
@@ -228,6 +236,23 @@ export default function Editor({ manualId, onBack }) {
     setSelectedNode(node);
     setContent(node.content_html || "");
     setNodeTitle(node.title);
+    setActiveTab("content");
+    
+    if (node.node_type === "troubleshooting") {
+      const diag = await window.api.getDiagnostic?.(id);
+      setDiagnostic(diag || { question: "", yesModuleId: "", noModuleId: "" });
+    }
+    
+    if (node.node_type === "exploded_view" || node.node_type === "ipb") {
+      const hots = await window.api.getHotspots?.(id);
+      setHotspots(hots || []);
+
+      const parts = await window.api.getModuleParts?.(id);
+      setMappedParts(parts || []);
+
+      const glob = await window.api.getInventory?.() || [];
+      setGlobalInventory(glob);
+    }
   };
 
   const handleSave = async () => {
@@ -237,6 +262,25 @@ export default function Editor({ manualId, onBack }) {
       content,
       title: nodeTitle,
     });
+    
+    if (selectedNode.node_type === "troubleshooting") {
+      await window.api.saveDiagnostic?.({
+        moduleId: selectedNode.id,
+        ...diagnostic
+      });
+    }
+
+    if (selectedNode.node_type === "exploded_view" || selectedNode.node_type === "ipb") {
+      await window.api.saveHotspots?.({
+        moduleId: selectedNode.id,
+        hotspots
+      });
+      await window.api.saveModuleParts?.({
+        moduleId: selectedNode.id,
+        mappedParts
+      });
+    }
+    
     loadTree();
     toast.success("Module saved securely");
   };
@@ -270,11 +314,12 @@ export default function Editor({ manualId, onBack }) {
       manualId,
       parentId: selectedNode.id, // Parent is the currently selected node
       title: newSubTopicTitle,
-      type: "topic",
+      type: newSubTopicType,
       content: "",
     });
 
     setNewSubTopicTitle("");
+    setNewSubTopicType("procedure");
     setShowSubTopicModal(false);
     loadTree();
   };
@@ -347,17 +392,168 @@ export default function Editor({ manualId, onBack }) {
               </button>
             </div>
 
-            {/* Editor Wrapper configured for Vector Theme */}
-            <div className="flex-1 p-4 relative h-full">
-              <div className="absolute inset-4 rounded-md shadow-lg border border-gray-800 bg-vector-bg custom-jodit-container">
-                <JoditEditor
-                  ref={editorRef}
-                  value={content}
-                  config={config}
-                  onBlur={(newContent) => setContent(newContent)} // Recommended approach for performance
-                  onChange={() => {}}
-                />
+            {/* TAB SWITCHER */}
+            {(selectedNode.node_type === "troubleshooting" || selectedNode.node_type === "exploded_view") && (
+              <div className="flex border-b border-gray-800 bg-vector-panel">
+                <button
+                  className={`px-6 py-2 text-xs font-bold tracking-widest uppercase ${activeTab === "content" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"}`}
+                  onClick={() => setActiveTab("content")}
+                >
+                  HTML Content
+                </button>
+                <button
+                  className={`px-6 py-2 text-xs font-bold tracking-widest uppercase ${activeTab === "advanced" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"}`}
+                  onClick={() => setActiveTab("advanced")}
+                >
+                  {selectedNode.node_type === "troubleshooting" ? "Diagnostic Logic" : "Hotspot Mapper"}
+                </button>
+                {(selectedNode.node_type === "exploded_view" || selectedNode.node_type === "ipb") && (
+                  <button
+                    className={`px-6 py-2 text-xs font-bold tracking-widest uppercase ${activeTab === "logistics" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"}`}
+                    onClick={() => setActiveTab("logistics")}
+                  >
+                    Logistics & IPD
+                  </button>
+                )}
               </div>
+            )}
+
+            {/* Editor Wrapper configured for Vector Theme */}
+            <div className="flex-1 p-4 relative h-full overflow-y-auto">
+              {activeTab === "content" && (
+                <div className="absolute inset-4 rounded-md shadow-lg border border-gray-800 bg-vector-bg custom-jodit-container">
+                  <JoditEditor
+                    ref={editorRef}
+                    value={content}
+                    config={config}
+                    onBlur={(newContent) => setContent(newContent)}
+                    onChange={() => {}}
+                  />
+                </div>
+              )}
+
+              {activeTab === "advanced" && selectedNode.node_type === "troubleshooting" && (
+                <div className="p-8 max-w-2xl mx-auto space-y-6">
+                  <h2 className="text-xl text-vector-accent mb-6">Diagnostic Node Builder</h2>
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Condition Question</label>
+                    <input 
+                      value={diagnostic.question || ""}
+                      onChange={(e) => setDiagnostic({ ...diagnostic, question: e.target.value })}
+                      placeholder="e.g. Is the voltage reading above 12.5V?"
+                      className="w-full bg-gray-900 border border-gray-700 rounded p-4 text-white focus:border-vector-accent outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 border border-green-900/50 rounded bg-green-900/10">
+                      <label className="block text-xs uppercase tracking-widest text-green-500 mb-2">YES Route (Target Module ID)</label>
+                      <input 
+                        value={diagnostic.yes_module_id || diagnostic.yesModuleId || ""}
+                        onChange={(e) => setDiagnostic({ ...diagnostic, yesModuleId: e.target.value })}
+                        placeholder="Module ID"
+                        className="w-full bg-gray-900 border border-green-900 rounded p-2 text-white font-mono"
+                      />
+                    </div>
+                    <div className="p-4 border border-red-900/50 rounded bg-red-900/10">
+                      <label className="block text-xs uppercase tracking-widest text-red-500 mb-2">NO Route (Target Module ID)</label>
+                      <input 
+                        value={diagnostic.no_module_id || diagnostic.noModuleId || ""}
+                        onChange={(e) => setDiagnostic({ ...diagnostic, noModuleId: e.target.value })}
+                        placeholder="Module ID"
+                        className="w-full bg-gray-900 border border-red-900 rounded p-2 text-white font-mono"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 italic mt-4">Save the module to commit logic routes to the decision matrix.</p>
+                </div>
+              )}
+
+              {activeTab === "advanced" && (selectedNode.node_type === "exploded_view" || selectedNode.node_type === "ipb") && (
+                <div className="p-8 max-w-4xl mx-auto space-y-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-xl text-vector-accent">Interactive Hotspot Matrix</h2>
+                    <button 
+                      onClick={() => setHotspots([...hotspots, { label: "New Area", x: 50, y: 50, width: 20, height: 20, target_module_id: "" }])}
+                      className="rounded bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500"
+                    >
+                      + ADD HOTSPOT
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {hotspots.map((h, i) => (
+                      <div key={i} className="flex gap-4 border border-gray-700 bg-gray-800 p-4 rounded items-end">
+                        <div className="flex-1">
+                          <label className="text-[10px] uppercase text-gray-500 block mb-1">Overlay Label</label>
+                          <input value={h.label} onChange={(e) => { const n = [...hotspots]; n[i].label = e.target.value; setHotspots(n); }} className="w-full p-2 bg-gray-900 text-white border border-gray-700 rounded text-sm"/>
+                        </div>
+                        <div className="w-20">
+                          <label className="text-[10px] uppercase text-gray-500 block mb-1">X (%)</label>
+                          <input value={h.x} onChange={(e) => { const n = [...hotspots]; n[i].x = e.target.value; setHotspots(n); }} className="w-full p-2 bg-gray-900 text-white border border-gray-700 rounded text-sm text-center"/>
+                        </div>
+                        <div className="w-20">
+                          <label className="text-[10px] uppercase text-gray-500 block mb-1">Y (%)</label>
+                          <input value={h.y} onChange={(e) => { const n = [...hotspots]; n[i].y = e.target.value; setHotspots(n); }} className="w-full p-2 bg-gray-900 text-white border border-gray-700 rounded text-sm text-center"/>
+                        </div>
+                        <div className="w-32">
+                          <label className="text-[10px] uppercase text-gray-500 block mb-1">Target Link (ID)</label>
+                          <input value={h.target_module_id || ""} onChange={(e) => { const n = [...hotspots]; n[i].target_module_id = e.target.value; setHotspots(n); }} className="w-full p-2 bg-gray-900 text-white border border-gray-700 rounded font-mono text-sm"/>
+                        </div>
+                        <button onClick={() => { const n = hotspots.filter((_, idx) => idx !== i); setHotspots(n); }} className="p-2 text-red-500 hover:text-red-400">✖</button>
+                      </div>
+                    ))}
+                    {hotspots.length === 0 && <p className="text-gray-500 italic text-center p-8 border border-dashed border-gray-700 rounded">No interactive overlays mapped. Add one to generate SVG bounding boxes.</p>}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "logistics" && (
+                <div className="p-8 max-w-4xl mx-auto space-y-6">
+                  <div className="flex justify-between items-center border-b border-gray-800 mb-6 pb-4">
+                    <h2 className="text-xl text-blue-400">Logistics & Supply Linkage</h2>
+                    <button 
+                      onClick={() => setMappedParts([...mappedParts, { inventory_id: "", reference_designator: "" }])}
+                      className="rounded bg-blue-600 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 uppercase tracking-widest"
+                    >
+                      + Link Global Part
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    {mappedParts.map((p, i) => (
+                      <div key={i} className="flex gap-4 border border-gray-700 bg-gray-800 p-4 rounded items-end">
+                        <div className="flex-[2]">
+                          <label className="text-[10px] uppercase text-gray-500 block mb-1 font-bold tracking-widest">Select Global Master Part</label>
+                          <select 
+                            value={p.inventory_id} 
+                            onChange={(e) => { const n = [...mappedParts]; n[i].inventory_id = e.target.value; setMappedParts(n); }} 
+                            className="w-full p-2 bg-gray-900 text-white border border-gray-700 rounded text-sm w-full outline-none"
+                          >
+                            <option value="">-- Choose Part Database Item --</option>
+                            {globalInventory.map(g => (
+                              <option key={g.id} value={g.id}>{g.part_number} - {g.nomenclature}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex-1">
+                          <label className="text-[10px] uppercase text-gray-500 block mb-1 font-bold tracking-widest">Reference Designator</label>
+                          <input 
+                            value={p.reference_designator || p.refDes || ""} 
+                            onChange={(e) => { const n = [...mappedParts]; n[i].reference_designator = e.target.value; setMappedParts(n); }} 
+                            className="w-full p-2 bg-gray-900 text-white border border-gray-700 rounded text-sm font-mono outline-none"
+                            placeholder="e.g. R4 or FIG1-A"
+                          />
+                        </div>
+                        <button onClick={() => { const n = mappedParts.filter((_, idx) => idx !== i); setMappedParts(n); }} className="p-2 text-red-500 hover:text-red-400 border border-transparent hover:border-red-500 rounded transition-colors">✖ Remove</button>
+                      </div>
+                    ))}
+                    {mappedParts.length === 0 && (
+                      <p className="text-gray-500 italic text-center p-8 border border-dashed border-gray-700 rounded">
+                        No logistics identified for this module. Operator IPB table will be empty.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </>
         ) : (
@@ -411,11 +607,20 @@ export default function Editor({ manualId, onBack }) {
             <input
               autoFocus
               placeholder="Topic Title (e.g., Maintenance Steps)"
-              className="w-full mb-6 mt-2 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
+              className="w-full mt-2 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
               value={newSubTopicTitle}
               onChange={(e) => setNewSubTopicTitle(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCreateSubTopic()}
             />
+            <select
+              value={newSubTopicType}
+              onChange={(e) => setNewSubTopicType(e.target.value)}
+              className="w-full my-4 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
+            >
+              <option value="procedure">Standard Procedure</option>
+              <option value="troubleshooting">Troubleshooting Node</option>
+              <option value="exploded_view">Exploded View (IPB)</option>
+            </select>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowSubTopicModal(false)}

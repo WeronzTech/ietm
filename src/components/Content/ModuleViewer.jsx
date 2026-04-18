@@ -85,7 +85,7 @@ import IPBViewer from "./IPBViewer";
 import Troubleshooter from "./Troubleshooter";
 import SafetyModal from "./SafetyModal";
 
-export default function ModuleViewer({ module }) {
+export default function ModuleViewer({ module, isBookmarked, onToggleBookmark, onNavigate }) {
   if (!module)
     return (
       <div className="text-gray-500 p-10 text-center">Select a module...</div>
@@ -100,12 +100,12 @@ export default function ModuleViewer({ module }) {
   switch (module.node_type) {
     case "ipb":
     case "exploded_view":
-      ContentComponent = <IPBViewer module={module} />;
+      ContentComponent = <IPBViewer module={module} onNavigate={onNavigate} />;
       break;
 
     case "troubleshooting":
     case "fault":
-      ContentComponent = <Troubleshooter />;
+      ContentComponent = <Troubleshooter module={module} onNavigate={onNavigate} />;
       break;
 
     default:
@@ -113,7 +113,19 @@ export default function ModuleViewer({ module }) {
       ContentComponent = (
         <div className="mx-auto max-w-4xl text-gray-200">
           {/* Standard HTML render code... */}
-          <h1 className="text-3xl font-bold mb-4">{module.title}</h1>
+          <div className="flex items-center justify-between mb-4 border-b border-gray-800 pb-2">
+            <h1 className="text-3xl font-bold text-vector-text uppercase tracking-widest">{module.title}</h1>
+            <button
+              onClick={onToggleBookmark}
+              className={`flex items-center gap-2 px-3 py-1 rounded text-xs font-bold tracking-widest uppercase transition-colors border ${
+                isBookmarked 
+                  ? "bg-vector-accent/20 border-vector-accent text-vector-accent" 
+                  : "bg-gray-800 border-gray-700 text-gray-500 hover:text-white"
+              }`}
+            >
+              {isBookmarked ? "📍 PINNED" : "📌 PIN TO BOOKMARKS"}
+            </button>
+          </div>
           <div
             className="prose prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: module.content_html }}

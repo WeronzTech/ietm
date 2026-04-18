@@ -76,3 +76,55 @@ html, body, #root {
   background-color: #161B22 !important;
   border-bottom: 1px solid #30363d !important;
 }
+
+/* ==================================================== */
+/* LEVEL 4 IETM NATIVE PRINT WATERMARK & STYLES         */
+/* ==================================================== */
+@media print {
+  /* Hide all interactive UI */
+  .hide-on-print,
+  .jodit-toolbar__box,
+  button {
+    display: none !important;
+  }
+
+  /* Reset layout for strict A4/Letter paper */
+  body, html {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Expand print area */
+  .print-area {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Force Deep Watermark */
+  .print-watermark {
+    display: block !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 48px;
+    font-weight: 900;
+    color: rgba(255, 0, 0, 0.15) !important;
+    font-family: monospace;
+    white-space: nowrap;
+    text-align: center;
+    z-index: 9999;
+    pointer-events: none;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Ensure Images don't cut across pages */
+  img, video, table {
+    page-break-inside: avoid;
+    max-width: 100% !important;
+  }
+}
