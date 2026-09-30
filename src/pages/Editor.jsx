@@ -179,6 +179,7 @@ export default function Editor({ manualId, onBack }) {
   const [selectedNode, setSelectedNode] = useState(null);
   const [content, setContent] = useState("");
   const [nodeTitle, setNodeTitle] = useState("");
+  const [nodeType, setNodeType] = useState("procedure");
   const [showChapterModal, setShowChapterModal] = useState(false);
   const [newChapterTitle, setNewChapterTitle] = useState("");
   const [showSubTopicModal, setShowSubTopicModal] = useState(false);
@@ -236,6 +237,7 @@ export default function Editor({ manualId, onBack }) {
     setSelectedNode(node);
     setContent(node.content_html || "");
     setNodeTitle(node.title);
+    setNodeType(node.node_type || "procedure");
     setActiveTab("content");
     
     if (node.node_type === "troubleshooting") {
@@ -255,22 +257,46 @@ export default function Editor({ manualId, onBack }) {
     }
   };
 
+  const handleNodeTypeChange = async (newType) => {
+    setNodeType(newType);
+    if ((newType === "exploded_view" || newType === "ipb") && selectedNode) {
+      const hots = await window.api.getHotspots?.(selectedNode.id);
+      setHotspots(hots || []);
+      const parts = await window.api.getModuleParts?.(selectedNode.id);
+      setMappedParts(parts || []);
+      const glob = await window.api.getInventory?.() || [];
+      setGlobalInventory(glob);
+    } else if (newType === "troubleshooting" && selectedNode) {
+      const diag = await window.api.getDiagnostic?.(selectedNode.id);
+      setDiagnostic(diag || { question: "", yesModuleId: "", noModuleId: "" });
+    }
+  };
+
   const handleSave = async () => {
     if (!selectedNode) return;
+    const finalType = nodeType === "exploded_view" ? "ipb" : nodeType;
     await window.api.updateModule({
       id: selectedNode.id,
       content,
       title: nodeTitle,
+      type: finalType,
     });
+
+    setSelectedNode((prev) => ({
+      ...prev,
+      title: nodeTitle,
+      node_type: finalType,
+      content_html: content,
+    }));
     
-    if (selectedNode.node_type === "troubleshooting") {
+    if (nodeType === "troubleshooting") {
       await window.api.saveDiagnostic?.({
         moduleId: selectedNode.id,
         ...diagnostic
       });
     }
 
-    if (selectedNode.node_type === "exploded_view" || selectedNode.node_type === "ipb") {
+    if (nodeType === "exploded_view" || nodeType === "ipb") {
       await window.api.saveHotspots?.({
         moduleId: selectedNode.id,
         hotspots
@@ -283,6 +309,20 @@ export default function Editor({ manualId, onBack }) {
     
     loadTree();
     toast.success("Module saved securely");
+  };
+
+  const handleDeleteModule = async () => {
+    if (!selectedNode) return;
+    if (window.confirm(`Are you sure you want to permanently delete "${selectedNode.title}" and any child topics?`)) {
+      const res = await window.api.deleteModule?.(selectedNode.id);
+      if (res?.success) {
+        toast.success("Module deleted");
+        setSelectedNode(null);
+        loadTree();
+      } else {
+        toast.error("Delete failed: " + (res?.message || "Unknown error"));
+      }
+    }
   };
 
   const handleCreateChapter = async () => {
@@ -366,34 +406,64 @@ export default function Editor({ manualId, onBack }) {
         {selectedNode ? (
           <>
             {/* Toolbar */}
-            <div className="flex items-center gap-3 border-b border-gray-800 bg-vector-panel p-3">
-              <input
-                value={nodeTitle}
-                onChange={(e) => setNodeTitle(e.target.value)}
-                className="flex-1 rounded-sm border border-gray-700 bg-vector-bg px-3 py-1.5 text-sm text-vector-text focus:border-vector-accent focus:ring-1 focus:ring-vector-accent font-mono outline-none transition-all"
-              />
-              <button
-                onClick={handleAddChild}
-                className="rounded-sm border border-gray-700 bg-transparent text-vector-text-muted px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase hover:text-vector-text hover:border-gray-500 transition-colors"
-              >
-                + SUB-TOPIC
-              </button>
-              <button
-                onClick={insertImage}
-                className="rounded-sm border border-vector-accent text-vector-accent bg-transparent px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase hover:bg-vector-accent hover:text-black transition-all shadow-[0_0_15px_rgba(0,245,212,0.1)]"
-              >
-                + MEDIA
-              </button>
-              <button
-                onClick={handleSave}
-                className="rounded-sm bg-vector-accent text-black px-6 py-1.5 text-xs font-bold tracking-widest uppercase hover:brightness-110 shadow-[0_0_10px_rgba(0,245,212,0.2)]"
-              >
-                SAVE
-              </button>
+            <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 bg-vector-panel p-3">
+              <div className="flex items-center gap-2 flex-1 min-w-[260px]">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-vector-text-muted">Title</span>
+                <input
+                  value={nodeTitle}
+                  onChange={(e) => setNodeTitle(e.target.value)}
+                  className="flex-1 rounded-sm border border-gray-700 bg-vector-bg px-3 py-1.5 text-sm text-vector-text focus:border-vector-accent focus:ring-1 focus:ring-vector-accent font-mono outline-none transition-all"
+                  placeholder="Module Title"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-vector-text-muted">Type</span>
+                <select
+                  value={nodeType === "exploded_view" ? "ipb" : nodeType}
+                  onChange={(e) => handleNodeTypeChange(e.target.value)}
+                  className="rounded-sm border border-gray-700 bg-vector-bg px-3 py-1.5 text-xs text-vector-accent font-mono outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
+                >
+                  <option value="procedure">Standard Procedure</option>
+                  <option value="ipb">Illustrated Parts Breakdown (IPB)</option>
+                  <option value="troubleshooting">Troubleshooting Node</option>
+                  <option value="topic">Topic (Information)</option>
+                  <option value="chapter">Chapter (Folder)</option>
+                </select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleAddChild}
+                  className="rounded-sm border border-gray-700 bg-transparent text-vector-text-muted px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase hover:text-vector-text hover:border-gray-500 transition-colors"
+                  title="Add Sub-Topic"
+                >
+                  + SUB-TOPIC
+                </button>
+                <button
+                  onClick={insertImage}
+                  className="rounded-sm border border-vector-accent text-vector-accent bg-transparent px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase hover:bg-vector-accent hover:text-black transition-all shadow-[0_0_15px_rgba(0,245,212,0.1)]"
+                >
+                  + MEDIA
+                </button>
+                <button
+                  onClick={handleDeleteModule}
+                  className="rounded-sm border border-red-500/40 text-red-400 bg-transparent px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase hover:bg-red-500/20 hover:text-red-300 transition-all"
+                  title="Delete this topic"
+                >
+                  DELETE
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="rounded-sm bg-vector-accent text-black px-5 py-1.5 text-xs font-bold tracking-widest uppercase hover:brightness-110 shadow-[0_0_10px_rgba(0,245,212,0.2)]"
+                >
+                  SAVE
+                </button>
+              </div>
             </div>
 
             {/* TAB SWITCHER */}
-            {(selectedNode.node_type === "troubleshooting" || selectedNode.node_type === "exploded_view") && (
+            {(nodeType === "troubleshooting" || nodeType === "exploded_view" || nodeType === "ipb") && (
               <div className="flex border-b border-gray-800 bg-vector-panel">
                 <button
                   className={`px-6 py-2 text-xs font-bold tracking-widest uppercase ${activeTab === "content" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"}`}
@@ -405,9 +475,9 @@ export default function Editor({ manualId, onBack }) {
                   className={`px-6 py-2 text-xs font-bold tracking-widest uppercase ${activeTab === "advanced" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"}`}
                   onClick={() => setActiveTab("advanced")}
                 >
-                  {selectedNode.node_type === "troubleshooting" ? "Diagnostic Logic" : "Hotspot Mapper"}
+                  {nodeType === "troubleshooting" ? "Diagnostic Logic" : "Hotspot Mapper"}
                 </button>
-                {(selectedNode.node_type === "exploded_view" || selectedNode.node_type === "ipb") && (
+                {(nodeType === "exploded_view" || nodeType === "ipb") && (
                   <button
                     className={`px-6 py-2 text-xs font-bold tracking-widest uppercase ${activeTab === "logistics" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"}`}
                     onClick={() => setActiveTab("logistics")}
@@ -432,7 +502,7 @@ export default function Editor({ manualId, onBack }) {
                 </div>
               )}
 
-              {activeTab === "advanced" && selectedNode.node_type === "troubleshooting" && (
+              {activeTab === "advanced" && nodeType === "troubleshooting" && (
                 <div className="p-8 max-w-2xl mx-auto space-y-6">
                   <h2 className="text-xl text-vector-accent mb-6">Diagnostic Node Builder</h2>
                   <div>
@@ -468,7 +538,7 @@ export default function Editor({ manualId, onBack }) {
                 </div>
               )}
 
-              {activeTab === "advanced" && (selectedNode.node_type === "exploded_view" || selectedNode.node_type === "ipb") && (
+              {activeTab === "advanced" && (nodeType === "exploded_view" || nodeType === "ipb") && (
                 <div className="p-8 max-w-4xl mx-auto space-y-6">
                   <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl text-vector-accent">Interactive Hotspot Matrix</h2>
@@ -506,7 +576,7 @@ export default function Editor({ manualId, onBack }) {
                 </div>
               )}
 
-              {activeTab === "logistics" && (
+              {activeTab === "logistics" && (nodeType === "exploded_view" || nodeType === "ipb") && (
                 <div className="p-8 max-w-4xl mx-auto space-y-6">
                   <div className="flex justify-between items-center border-b border-gray-800 mb-6 pb-4">
                     <h2 className="text-xl text-blue-400">Logistics & Supply Linkage</h2>
@@ -615,11 +685,13 @@ export default function Editor({ manualId, onBack }) {
             <select
               value={newSubTopicType}
               onChange={(e) => setNewSubTopicType(e.target.value)}
-              className="w-full my-4 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
+              className="w-full my-4 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors text-sm"
             >
               <option value="procedure">Standard Procedure</option>
-              <option value="troubleshooting">Troubleshooting Node</option>
+              <option value="topic">Topic / Information</option>
               <option value="exploded_view">Exploded View (IPB)</option>
+              <option value="troubleshooting">Troubleshooting Node</option>
+              <option value="chapter">Sub-Chapter / Group</option>
             </select>
             <div className="flex justify-end gap-3">
               <button

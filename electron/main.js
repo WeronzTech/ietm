@@ -575,11 +575,51 @@ app.whenReady().then(() => {
     return { success: true };
   });
 
-  ipcMain.handle("ietm:update-module", (e, { id, title, content }) => {
-    db.prepare(
-      "UPDATE modules SET title = ?, content_html = ? WHERE id = ?",
-    ).run(title, content, id);
-    return { success: true };
+  ipcMain.handle("ietm:update-module", (e, { id, title, content, type }) => {
+    try {
+      if (type) {
+        db.prepare(
+          "UPDATE modules SET title = ?, content_html = ?, node_type = ? WHERE id = ?",
+        ).run(title, content, type, id);
+      } else {
+        db.prepare(
+          "UPDATE modules SET title = ?, content_html = ? WHERE id = ?",
+        ).run(title, content, id);
+      }
+      return { success: true };
+    } catch (err) {
+      console.error("Update Module Error:", err);
+      return { success: false, message: err.message };
+    }
+  });
+
+  ipcMain.handle("ietm:delete-module", (e, id) => {
+    try {
+      db.transaction(() => {
+        const getDescendants = (parentId) => {
+          const children = db.prepare("SELECT id FROM modules WHERE parent_id = ?").all(parentId);
+          let all = [...children.map((c) => c.id)];
+          for (const child of children) {
+            all = all.concat(getDescendants(child.id));
+          }
+          return all;
+        };
+        const allIds = [id, ...getDescendants(id)];
+        const placeholders = allIds.map(() => "?").join(",");
+
+        db.prepare(`DELETE FROM parts WHERE module_id IN (${placeholders})`).run(...allIds);
+        db.prepare(`DELETE FROM media WHERE module_id IN (${placeholders})`).run(...allIds);
+        db.prepare(`DELETE FROM diagnostics WHERE module_id IN (${placeholders})`).run(...allIds);
+        db.prepare(`DELETE FROM bookmarks WHERE module_id IN (${placeholders})`).run(...allIds);
+        db.prepare(`DELETE FROM hotspots WHERE module_id IN (${placeholders})`).run(...allIds);
+        db.prepare(`DELETE FROM module_parts WHERE module_id IN (${placeholders})`).run(...allIds);
+        db.prepare(`DELETE FROM modules WHERE id IN (${placeholders})`).run(...allIds);
+      })();
+      return { success: true };
+    } catch (err) {
+      console.error("Delete Module Error:", err);
+      return { success: false, message: err.message };
+    }
   });
 
   // --- ENCRYPTED EXPORT/IMPORT ---

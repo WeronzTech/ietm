@@ -41,6 +41,7 @@ contextBridge.exposeInMainWorld("api", {
   saveModuleParts: (data) => ipcRenderer.invoke("ietm:save-module-parts", data),
 
   updateModule: (data) => ipcRenderer.invoke("ietm:update-module", data),
+  deleteModule: (id) => ipcRenderer.invoke("ietm:delete-module", id),
   uploadAsset: () => ipcRenderer.invoke("ietm:upload-asset"),
   search: (query) => ipcRenderer.invoke("ietm:search", query),
 });

@@ -74,7 +74,17 @@ export default function TreeNode({ node, onSelect, activeId }) {
         <span className="mr-2 flex items-center justify-center w-4 text-center text-gray-500">
           {hasChildren ? (isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : <FileText size={12} />}
         </span>
-        <span className="truncate">{node.title}</span>
+        <span className="truncate flex-1">{node.title}</span>
+        {(node.node_type === "ipb" || node.node_type === "exploded_view") && (
+          <span className={`ml-2 text-[9px] px-1.5 py-0.5 rounded font-mono font-bold tracking-wider ${isActive ? "bg-black text-vector-accent" : "bg-blue-950/80 text-blue-400 border border-blue-800/60"}`}>
+            IPB
+          </span>
+        )}
+        {node.node_type === "troubleshooting" && (
+          <span className={`ml-2 text-[9px] px-1.5 py-0.5 rounded font-mono font-bold tracking-wider ${isActive ? "bg-black text-amber-400" : "bg-amber-950/80 text-amber-400 border border-amber-800/60"}`}>
+            DIAG
+          </span>
+        )}
       </div>
 
       {isOpen && hasChildren && (
