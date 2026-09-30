@@ -108,30 +108,62 @@ export default function ModuleViewer({ module, isBookmarked, onToggleBookmark, o
       ContentComponent = <Troubleshooter module={module} onNavigate={onNavigate} />;
       break;
 
-    default:
+    default: {
       // Standard Text/Procedure View
+      const effectiveBg = module.bg_color || (() => {
+        const m = module.content_html?.match(/<!-- ietm-page-bg:\s*(#[A-Fa-f0-9]{3,8}) -->/);
+        return m ? m[1] : null;
+      })();
+
+      const isLight = (() => {
+        if (!effectiveBg) return false;
+        const clean = effectiveBg.replace("#", "");
+        if (clean.length === 3) {
+          const r = parseInt(clean[0] + clean[0], 16);
+          const g = parseInt(clean[1] + clean[1], 16);
+          const b = parseInt(clean[2] + clean[2], 16);
+          return (r * 299 + g * 587 + b * 114) / 1000 > 155;
+        }
+        if (clean.length === 6) {
+          const r = parseInt(clean.slice(0, 2), 16);
+          const g = parseInt(clean.slice(2, 4), 16);
+          const b = parseInt(clean.slice(4, 6), 16);
+          return (r * 299 + g * 587 + b * 114) / 1000 > 155;
+        }
+        return false;
+      })();
+
       ContentComponent = (
-        <div className="mx-auto max-w-4xl text-gray-200">
-          {/* Standard HTML render code... */}
-          <div className="flex items-center justify-between mb-4 border-b border-gray-800 pb-2">
-            <h1 className="text-3xl font-bold text-vector-text uppercase tracking-widest">{module.title}</h1>
+        <div 
+          className={`mx-auto max-w-4xl p-8 rounded-lg transition-colors ${isLight ? "text-gray-900 shadow-xl border border-gray-300" : "text-gray-200"}`}
+          style={{ backgroundColor: effectiveBg || "transparent" }}
+        >
+          {/* Header */}
+          <div className={`flex items-center justify-between mb-6 border-b pb-3 ${isLight ? "border-gray-300" : "border-gray-800"}`}>
+            <h1 className={`text-3xl font-bold uppercase tracking-widest ${isLight ? "text-gray-900" : "text-vector-text"}`}>
+              {module.title}
+            </h1>
             <button
               onClick={onToggleBookmark}
-              className={`flex items-center gap-2 px-3 py-1 rounded text-xs font-bold tracking-widest uppercase transition-colors border ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold tracking-widest uppercase transition-colors border ${
                 isBookmarked 
                   ? "bg-vector-accent/20 border-vector-accent text-vector-accent" 
-                  : "bg-gray-800 border-gray-700 text-gray-500 hover:text-white"
+                  : isLight 
+                    ? "bg-gray-100 border-gray-300 text-gray-700 hover:text-black hover:bg-gray-200" 
+                    : "bg-gray-800 border-gray-700 text-gray-500 hover:text-white"
               }`}
             >
               {isBookmarked ? "📍 PINNED" : "📌 PIN TO BOOKMARKS"}
             </button>
           </div>
           <div
-            className="prose prose-invert max-w-none"
+            className={`max-w-none leading-relaxed ${isLight ? "prose prose-slate text-gray-800" : "prose prose-invert text-gray-300"}`}
             dangerouslySetInnerHTML={{ __html: module.content_html }}
           />
         </div>
       );
+      break;
+    }
   }
 
   return (

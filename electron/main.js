@@ -240,13 +240,28 @@ app.whenReady().then(() => {
   // Create User (Admin Only)
   ipcMain.handle("auth:create-user", (e, { username, password, role }) => {
     try {
-      const hash = bcrypt.hashSync(password, 10);
+      if (!username || !username.trim()) {
+        return { success: false, message: "Username cannot be empty." };
+      }
+      if (!password || !password.trim()) {
+        return { success: false, message: "Password cannot be empty." };
+      }
+      const hash = bcrypt.hashSync(password.trim(), 10);
       db.prepare(
         "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-      ).run(username, hash, role);
+      ).run(username.trim(), hash, role || "user");
       return { success: true };
     } catch (err) {
       return { success: false, message: "Username likely exists" };
+    }
+  });
+
+  ipcMain.handle("auth:delete-user", (e, userId) => {
+    try {
+      db.prepare("DELETE FROM users WHERE id = ?").run(userId);
+      return { success: true };
+    } catch (err) {
+      return { success: false, message: err.message };
     }
   });
 
@@ -568,24 +583,18 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle("ietm:add-module", (e, data) => {
-    const { manualId, parentId, title, type, content } = data;
-    db.prepare(
-      `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html) VALUES (?, ?, ?, ?, ?)`,
-    ).run(manualId, parentId, title, type, content || "");
-    return { success: true };
+    const { manualId, parentId, title, type, content, bgColor } = data;
+    const info = db.prepare(
+      `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html, bg_color) VALUES (?, ?, ?, ?, ?, ?)`,
+    ).run(manualId, parentId, title, type, content || "", bgColor || null);
+    return { success: true, id: info.lastInsertRowid };
   });
 
-  ipcMain.handle("ietm:update-module", (e, { id, title, content, type }) => {
+  ipcMain.handle("ietm:update-module", (e, { id, title, content, type, bgColor }) => {
     try {
-      if (type) {
-        db.prepare(
-          "UPDATE modules SET title = ?, content_html = ?, node_type = ? WHERE id = ?",
-        ).run(title, content, type, id);
-      } else {
-        db.prepare(
-          "UPDATE modules SET title = ?, content_html = ? WHERE id = ?",
-        ).run(title, content, id);
-      }
+      db.prepare(
+        "UPDATE modules SET title = ?, content_html = ?, node_type = ?, bg_color = ? WHERE id = ?",
+      ).run(title, content, type || "procedure", bgColor || null, id);
       return { success: true };
     } catch (err) {
       console.error("Update Module Error:", err);
@@ -669,9 +678,24 @@ app.whenReady().then(() => {
       }
     });
 
+    // Fetch sub-elements for complete Level 4 packaging
+    const modIds = modules.map((m) => m.id);
+    let hotspots = [];
+    let diagnostics = [];
+    let moduleParts = [];
+    if (modIds.length > 0) {
+      const placeholders = modIds.map(() => "?").join(",");
+      hotspots = db.prepare(`SELECT * FROM hotspots WHERE module_id IN (${placeholders})`).all(...modIds);
+      diagnostics = db.prepare(`SELECT * FROM diagnostics WHERE module_id IN (${placeholders})`).all(...modIds);
+      moduleParts = db.prepare(`SELECT * FROM module_parts WHERE module_id IN (${placeholders})`).all(...modIds);
+    }
+
     const exportData = {
       manual,
       modules,
+      hotspots,
+      diagnostics,
+      moduleParts,
       assets, // <--- The actual images are now inside this JSON
       version: "1.0",
       type: "IETM_SECURE_PKG",
@@ -708,10 +732,28 @@ app.whenReady().then(() => {
       const data = decryptData(filePaths[0], passkey);
 
       const insert = db.transaction(() => {
-        // 1. Insert Manual with SILO LOGIC (Owner ID = Importer User ID)
+        // 1. Insert Manual with SILO LOGIC, System ID, and Security Classification
         const info = db
-          .prepare("INSERT INTO manuals (owner_id, title, description) VALUES (?, ?, ?)")
-          .run(userId || null, data.manual.title, data.manual.description || "");
+          .prepare(`
+            INSERT INTO manuals (
+              owner_id, 
+              title, 
+              description, 
+              version, 
+              weapon_system_id, 
+              publication_date, 
+              security_classification
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+          `)
+          .run(
+            userId || null,
+            data.manual.title,
+            data.manual.description || "",
+            data.manual.version || "1.0",
+            data.manual.weapon_system_id || "UNKNOWN",
+            data.manual.publication_date || new Date().toISOString().split("T")[0],
+            data.manual.security_classification || "UNCLASSIFIED"
+          );
         const newManualId = info.lastInsertRowid;
 
         // 2. Unpack Assets (If any)
@@ -734,9 +776,9 @@ app.whenReady().then(() => {
           });
         }
 
-        // 3. Insert Modules & Rewrite Links (Preserving Hierarchy)
+        // 3. Insert Modules & Rewrite Links (Preserving Hierarchy and bg_color)
         const insertModule = db.prepare(
-          `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html, order_index) VALUES (?, ?, ?, ?, ?, ?)`
+          `INSERT INTO modules (manual_id, parent_id, title, node_type, content_html, order_index, bg_color) VALUES (?, ?, ?, ?, ?, ?, ?)`
         );
 
         const idMap = {}; // Maps Old Module ID -> New Module ID
@@ -759,7 +801,7 @@ app.whenReady().then(() => {
               Object.keys(urlMap).forEach((oldUrl) => {
                 content = content.split(oldUrl).join(urlMap[oldUrl]);
               });
-              const info = insertModule.run(newManualId, null, m.title, m.node_type, content, m.order_index || 0);
+              const info = insertModule.run(newManualId, null, m.title, m.node_type, content, m.order_index || 0, m.bg_color || null);
               idMap[m.id] = info.lastInsertRowid;
             });
             break;
@@ -781,13 +823,56 @@ app.whenReady().then(() => {
               m.title,
               m.node_type,
               content,
-              m.order_index || 0
+              m.order_index || 0,
+              m.bg_color || null
             );
             idMap[m.id] = info.lastInsertRowid; // Cache new ID internally
           });
 
           // Filter out the inserted modules for the next pass
           remaining = remaining.filter((m) => !idMap[m.id]);
+        }
+
+        // 4. Restore Hotspots
+        if (data.hotspots && Array.isArray(data.hotspots)) {
+          const insertHotspot = db.prepare(
+            `INSERT INTO hotspots (module_id, x, y, width, height, target_module_id, label) VALUES (?, ?, ?, ?, ?, ?, ?)`
+          );
+          data.hotspots.forEach((h) => {
+            const newModId = idMap[h.module_id];
+            if (newModId) {
+              const newTarget = h.target_module_id ? (idMap[h.target_module_id] || null) : null;
+              insertHotspot.run(newModId, h.x, h.y, h.width, h.height, newTarget, h.label || "");
+            }
+          });
+        }
+
+        // 5. Restore Diagnostics
+        if (data.diagnostics && Array.isArray(data.diagnostics)) {
+          const insertDiag = db.prepare(
+            `INSERT INTO diagnostics (module_id, question, yes_module_id, no_module_id) VALUES (?, ?, ?, ?)`
+          );
+          data.diagnostics.forEach((d) => {
+            const newModId = idMap[d.module_id];
+            if (newModId) {
+              const newYes = d.yes_module_id ? (idMap[d.yes_module_id] || null) : null;
+              const newNo = d.no_module_id ? (idMap[d.no_module_id] || null) : null;
+              insertDiag.run(newModId, d.question, newYes, newNo);
+            }
+          });
+        }
+
+        // 6. Restore Module Parts
+        if (data.moduleParts && Array.isArray(data.moduleParts)) {
+          const insertMP = db.prepare(
+            `INSERT INTO module_parts (module_id, inventory_id, quantity_required, reference_designator) VALUES (?, ?, ?, ?)`
+          );
+          data.moduleParts.forEach((mp) => {
+            const newModId = idMap[mp.module_id];
+            if (newModId) {
+              insertMP.run(newModId, mp.inventory_id, mp.quantity_required || 1, mp.reference_designator || "");
+            }
+          });
         }
       });
 
@@ -803,7 +888,7 @@ app.whenReady().then(() => {
   ipcMain.handle("ietm:get-tree", (e, manualId) => {
     const nodes = db
       .prepare(
-        "SELECT id, parent_id, title, node_type FROM modules WHERE manual_id = ? ORDER BY order_index",
+        "SELECT id, parent_id, title, node_type, bg_color FROM modules WHERE manual_id = ? ORDER BY order_index",
       )
       .all(manualId);
     const buildTree = (pid) =>

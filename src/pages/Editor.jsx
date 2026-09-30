@@ -180,11 +180,18 @@ export default function Editor({ manualId, onBack }) {
   const [content, setContent] = useState("");
   const [nodeTitle, setNodeTitle] = useState("");
   const [nodeType, setNodeType] = useState("procedure");
+  const [bgColor, setBgColor] = useState(null);
+  const [saveStatus, setSaveStatus] = useState("saved"); // 'saved', 'saving'
+
+  // Modals
   const [showChapterModal, setShowChapterModal] = useState(false);
   const [newChapterTitle, setNewChapterTitle] = useState("");
+  const [newChapterBg, setNewChapterBg] = useState(null);
+
   const [showSubTopicModal, setShowSubTopicModal] = useState(false);
   const [newSubTopicTitle, setNewSubTopicTitle] = useState("");
   const [newSubTopicType, setNewSubTopicType] = useState("procedure");
+  const [newSubTopicBg, setNewSubTopicBg] = useState(null);
 
   // Advanced Editor States
   const [diagnostic, setDiagnostic] = useState({ question: "", yesModuleId: "", noModuleId: "" });
@@ -193,16 +200,72 @@ export default function Editor({ manualId, onBack }) {
   const [globalInventory, setGlobalInventory] = useState([]);
   const [activeTab, setActiveTab] = useState("content"); // 'content', 'advanced', 'logistics'
 
+  // Refs to guarantee live values during auto-save and focus switches
   const editorRef = useRef(null);
+  const selectedNodeRef = useRef(null);
+  const contentRef = useRef("");
+  const titleRef = useRef("");
+  const typeRef = useRef("procedure");
+  const bgRef = useRef(null);
+  const diagnosticRef = useRef({ question: "", yesModuleId: "", noModuleId: "" });
+  const hotspotsRef = useRef([]);
+  const mappedPartsRef = useRef([]);
 
+  // Sync live refs with state
+  useEffect(() => { selectedNodeRef.current = selectedNode; }, [selectedNode]);
+  useEffect(() => { titleRef.current = nodeTitle; }, [nodeTitle]);
+  useEffect(() => { typeRef.current = nodeType; }, [nodeType]);
+  useEffect(() => { bgRef.current = bgColor; }, [bgColor]);
+  useEffect(() => { diagnosticRef.current = diagnostic; }, [diagnostic]);
+  useEffect(() => { hotspotsRef.current = hotspots; }, [hotspots]);
+  useEffect(() => { mappedPartsRef.current = mappedParts; }, [mappedParts]);
+
+  // Dual-persistence helpers
+  const extractMetaBg = (html) => {
+    if (!html) return null;
+    const m = html.match(/<!-- ietm-page-bg:\s*(#[A-Fa-f0-9]{3,8}) -->/);
+    return m ? m[1] : null;
+  };
+
+  const stripMetaBg = (html) => {
+    if (!html) return "";
+    return html.replace(/<!-- ietm-page-bg:\s*#[A-Fa-f0-9]{3,8}\s*-->\n?/g, "");
+  };
+
+  const ensureMetaBg = (html, bg) => {
+    if (!html && !bg) return html || "";
+    const clean = stripMetaBg(html || "");
+    if (bg) {
+      return `<!-- ietm-page-bg: ${bg} -->\n` + clean;
+    }
+    return clean;
+  };
+
+  const isLightColor = (hex) => {
+    if (!hex) return false;
+    const cleanHex = hex.replace("#", "");
+    if (cleanHex.length === 3) {
+      const r = parseInt(cleanHex[0] + cleanHex[0], 16);
+      const g = parseInt(cleanHex[1] + cleanHex[1], 16);
+      const b = parseInt(cleanHex[2] + cleanHex[2], 16);
+      return (r * 299 + g * 587 + b * 114) / 1000 > 155;
+    }
+    if (cleanHex.length === 6) {
+      const r = parseInt(cleanHex.slice(0, 2), 16);
+      const g = parseInt(cleanHex.slice(2, 4), 16);
+      const b = parseInt(cleanHex.slice(4, 6), 16);
+      return (r * 299 + g * 587 + b * 114) / 1000 > 155;
+    }
+    return false;
+  };
+
+  const isLight = isLightColor(bgColor);
+
+  // Stable config: Never recreated when bgColor changes to prevent Jodit destruction / freezing
   const config = useMemo(
     () => ({
       theme: "dark",
       minHeight: 400,
-      style: {
-        background: "#0B0E11", // Deep charcoal to match Vector Industrial Theme
-        color: "#E2E8F0",      // Slate gray text
-      },
       toolbarAdaptive: false,
       buttons: [
         "source", "|",
@@ -228,29 +291,129 @@ export default function Editor({ manualId, onBack }) {
   };
 
   useEffect(() => {
-    console.log("manual id changed", manualId);
     loadTree();
   }, [manualId]);
 
+  // Main Save Function with Mutex Lock & Guaranteed finally clause
+  const isSavingRef = useRef(false);
+
+  const performSave = async (showToast = false) => {
+    const currentNode = selectedNodeRef.current;
+    if (!currentNode || isSavingRef.current) return false;
+
+    isSavingRef.current = true;
+    setSaveStatus("saving");
+
+    try {
+      // Safely read live content from editorRef or contentRef fallback
+      let liveContent = contentRef.current;
+      try {
+        if (editorRef.current && editorRef.current.value !== undefined && editorRef.current.value !== null) {
+          liveContent = editorRef.current.value;
+        }
+      } catch (err) {
+        console.warn("Could not read editorRef value directly:", err);
+      }
+
+      const currentTitle = titleRef.current;
+      const finalType = typeRef.current === "exploded_view" ? "ipb" : (typeRef.current || "procedure");
+      const currentBg = bgRef.current;
+
+      // Dual-persisted content: metadata comment in HTML + bg_color column in DB
+      const contentToSave = ensureMetaBg(liveContent, currentBg);
+
+      const res = await window.api.updateModule({
+        id: currentNode.id,
+        content: contentToSave,
+        title: currentTitle,
+        type: finalType,
+        bgColor: currentBg || null,
+      });
+
+      if (finalType === "troubleshooting") {
+        await window.api.saveDiagnostic?.({
+          moduleId: currentNode.id,
+          ...diagnosticRef.current,
+        });
+      }
+
+      if (finalType === "exploded_view" || finalType === "ipb") {
+        await window.api.saveHotspots?.({
+          moduleId: currentNode.id,
+          hotspots: hotspotsRef.current,
+        });
+        await window.api.saveModuleParts?.({
+          moduleId: currentNode.id,
+          mappedParts: mappedPartsRef.current,
+        });
+      }
+
+      contentRef.current = liveContent;
+
+      if (showToast) {
+        if (res?.success !== false) {
+          toast.success("Module saved securely", { duration: 1500 });
+        } else {
+          toast.error("Save failed: " + (res?.message || "Unknown error"));
+        }
+      }
+
+      return res?.success !== false;
+    } catch (err) {
+      console.error("Save error:", err);
+      if (showToast) toast.error("Save error: " + err.message);
+      return false;
+    } finally {
+      isSavingRef.current = false;
+      setSaveStatus("saved");
+    }
+  };
+
   const handleSelect = async (id) => {
+    if (selectedNodeRef.current?.id === id) return;
+
+    // 1. AUTO-SAVE ACTIVE NODE BEFORE CHANGING SELECTION
+    if (selectedNodeRef.current) {
+      await performSave(false);
+    }
+
+    // 2. FETCH & LOAD TARGET NODE
     const node = await window.api.getModuleContent(id);
+    if (!node) return;
+
+    const resolvedBg = node.bg_color || extractMetaBg(node.content_html) || null;
+    const cleanContent = stripMetaBg(node.content_html || "");
+
     setSelectedNode(node);
-    setContent(node.content_html || "");
+    setContent(cleanContent);
     setNodeTitle(node.title);
-    setNodeType(node.node_type || "procedure");
+    setNodeType(node.node_type === "exploded_view" ? "ipb" : (node.node_type || "procedure"));
+    setBgColor(resolvedBg);
     setActiveTab("content");
+
+    selectedNodeRef.current = node;
+    contentRef.current = cleanContent;
+    titleRef.current = node.title;
+    typeRef.current = node.node_type === "exploded_view" ? "ipb" : (node.node_type || "procedure");
+    bgRef.current = resolvedBg;
     
     if (node.node_type === "troubleshooting") {
       const diag = await window.api.getDiagnostic?.(id);
-      setDiagnostic(diag || { question: "", yesModuleId: "", noModuleId: "" });
+      const diagData = diag || { question: "", yesModuleId: "", noModuleId: "" };
+      setDiagnostic(diagData);
+      diagnosticRef.current = diagData;
     }
     
     if (node.node_type === "exploded_view" || node.node_type === "ipb") {
       const hots = await window.api.getHotspots?.(id);
-      setHotspots(hots || []);
+      const hotsData = hots || [];
+      setHotspots(hotsData);
+      hotspotsRef.current = hotsData;
 
       const parts = await window.api.getModuleParts?.(id);
-      setMappedParts(parts || []);
+      const partsData = parts || [];
+      setMappedParts(partsData);
+      mappedPartsRef.current = partsData;
 
       const glob = await window.api.getInventory?.() || [];
       setGlobalInventory(glob);
@@ -258,58 +421,59 @@ export default function Editor({ manualId, onBack }) {
   };
 
   const handleNodeTypeChange = async (newType) => {
-    setNodeType(newType);
-    if ((newType === "exploded_view" || newType === "ipb") && selectedNode) {
+    const finalType = newType === "exploded_view" ? "ipb" : newType;
+    setNodeType(finalType);
+    typeRef.current = finalType;
+
+    if (selectedNodeRef.current) {
+      await performSave(false);
+    }
+
+    if ((finalType === "exploded_view" || finalType === "ipb") && selectedNode) {
       const hots = await window.api.getHotspots?.(selectedNode.id);
       setHotspots(hots || []);
       const parts = await window.api.getModuleParts?.(selectedNode.id);
       setMappedParts(parts || []);
       const glob = await window.api.getInventory?.() || [];
       setGlobalInventory(glob);
-    } else if (newType === "troubleshooting" && selectedNode) {
+    } else if (finalType === "troubleshooting" && selectedNode) {
       const diag = await window.api.getDiagnostic?.(selectedNode.id);
       setDiagnostic(diag || { question: "", yesModuleId: "", noModuleId: "" });
     }
   };
 
-  const handleSave = async () => {
-    if (!selectedNode) return;
-    const finalType = nodeType === "exploded_view" ? "ipb" : nodeType;
-    await window.api.updateModule({
-      id: selectedNode.id,
-      content,
-      title: nodeTitle,
-      type: finalType,
-    });
-
-    setSelectedNode((prev) => ({
-      ...prev,
-      title: nodeTitle,
-      node_type: finalType,
-      content_html: content,
-    }));
-    
-    if (nodeType === "troubleshooting") {
-      await window.api.saveDiagnostic?.({
-        moduleId: selectedNode.id,
-        ...diagnostic
-      });
+  const handleBgColorSelect = async (color) => {
+    setBgColor(color);
+    bgRef.current = color;
+    if (selectedNodeRef.current) {
+      await performSave(false);
+      toast.success("Page background updated & auto-saved", { duration: 1500, icon: "🎨" });
     }
-
-    if (nodeType === "exploded_view" || nodeType === "ipb") {
-      await window.api.saveHotspots?.({
-        moduleId: selectedNode.id,
-        hotspots
-      });
-      await window.api.saveModuleParts?.({
-        moduleId: selectedNode.id,
-        mappedParts
-      });
-    }
-    
-    loadTree();
-    toast.success("Module saved securely");
   };
+
+  const handleSave = async () => {
+    await performSave(true);
+    await loadTree();
+  };
+
+  const saveRef = useRef(handleSave);
+  useEffect(() => {
+    saveRef.current = handleSave;
+  });
+
+  // Global Ctrl + S / Cmd + S keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === "s" || e.key === "S")) {
+        e.preventDefault();
+        e.stopPropagation();
+        saveRef.current?.();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, []);
 
   const handleDeleteModule = async () => {
     if (!selectedNode) return;
@@ -318,6 +482,7 @@ export default function Editor({ manualId, onBack }) {
       if (res?.success) {
         toast.success("Module deleted");
         setSelectedNode(null);
+        selectedNodeRef.current = null;
         loadTree();
       } else {
         toast.error("Delete failed: " + (res?.message || "Unknown error"));
@@ -328,40 +493,70 @@ export default function Editor({ manualId, onBack }) {
   const handleCreateChapter = async () => {
     if (!newChapterTitle) return;
 
-    await window.api.addModule({
+    if (selectedNodeRef.current) {
+      await performSave(false);
+    }
+
+    const res = await window.api.addModule({
       manualId,
       parentId: null,
       title: newChapterTitle,
       type: "chapter",
+      bgColor: newChapterBg || null,
+      content: "",
     });
 
-    // Reset and Close
     setNewChapterTitle("");
+    setNewChapterBg(null);
     setShowChapterModal(false);
-    loadTree();
+    await loadTree();
+
+    if (res?.id) {
+      await handleSelect(res.id);
+    }
   };
 
   const handleAddChild = () => {
     if (!selectedNode) return;
-    // Instead of prompt(), we just open the modal
+    setNewSubTopicTitle("");
+    setNewSubTopicType("procedure");
+    setNewSubTopicBg(null);
     setShowSubTopicModal(true);
   };
 
   const handleCreateSubTopic = async () => {
     if (!newSubTopicTitle || !selectedNode) return;
 
-    await window.api.addModule({
+    if (selectedNodeRef.current) {
+      await performSave(false);
+    }
+
+    const finalType = newSubTopicType === "exploded_view" ? "ipb" : newSubTopicType;
+    const res = await window.api.addModule({
       manualId,
-      parentId: selectedNode.id, // Parent is the currently selected node
+      parentId: selectedNode.id,
       title: newSubTopicTitle,
-      type: newSubTopicType,
+      type: finalType,
+      bgColor: newSubTopicBg || null,
       content: "",
     });
 
     setNewSubTopicTitle("");
     setNewSubTopicType("procedure");
+    setNewSubTopicBg(null);
     setShowSubTopicModal(false);
-    loadTree();
+    await loadTree();
+
+    if (res?.id) {
+      await handleSelect(res.id);
+    }
+  };
+
+  const handleBack = async () => {
+    if (selectedNodeRef.current) {
+      await performSave(false);
+    }
+    onBack();
   };
 
   const insertImage = async () => {
@@ -382,7 +577,7 @@ export default function Editor({ manualId, onBack }) {
       <div className="flex w-80 flex-col border-r border-gray-800 bg-vector-panel">
         <div className="flex items-center justify-between border-b border-gray-800 p-4">
           <button
-            onClick={onBack}
+            onClick={handleBack}
             className="text-xs text-vector-text-muted hover:text-vector-accent font-bold tracking-widest uppercase transition-colors"
           >
             ← EXIT
@@ -407,7 +602,7 @@ export default function Editor({ manualId, onBack }) {
           <>
             {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-3 border-b border-gray-800 bg-vector-panel p-3">
-              <div className="flex items-center gap-2 flex-1 min-w-[260px]">
+              <div className="flex items-center gap-2 flex-1 min-w-[240px]">
                 <span className="text-[10px] font-mono tracking-widest uppercase text-vector-text-muted">Title</span>
                 <input
                   value={nodeTitle}
@@ -432,6 +627,63 @@ export default function Editor({ manualId, onBack }) {
                 </select>
               </div>
 
+              {/* Page Background Selector */}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-vector-text-muted">Page BG</span>
+                <div className="flex items-center gap-1.5 bg-vector-bg border border-gray-700 rounded-sm px-2 py-1">
+                  {/* Default Dark */}
+                  <button
+                    type="button"
+                    title="Default Dark (#0B0E11)"
+                    onClick={() => handleBgColorSelect("#0B0E11")}
+                    className={`w-4 h-4 rounded-full border transition-all ${(!bgColor || bgColor === "#0B0E11") ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-600 hover:scale-105"}`}
+                    style={{ backgroundColor: "#0B0E11" }}
+                  />
+                  {/* Document White (Manual Page) */}
+                  <button
+                    type="button"
+                    title="Document White (#FFFFFF)"
+                    onClick={() => handleBgColorSelect("#FFFFFF")}
+                    className={`w-4 h-4 rounded-full border transition-all ${bgColor === "#FFFFFF" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-400 hover:scale-105"}`}
+                    style={{ backgroundColor: "#FFFFFF" }}
+                  />
+                  {/* Warm Cream / Off-white */}
+                  <button
+                    type="button"
+                    title="Technical Cream (#F5F5F0)"
+                    onClick={() => handleBgColorSelect("#F5F5F0")}
+                    className={`w-4 h-4 rounded-full border transition-all ${bgColor === "#F5F5F0" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-400 hover:scale-105"}`}
+                    style={{ backgroundColor: "#F5F5F0" }}
+                  />
+                  {/* Deep Navy */}
+                  <button
+                    type="button"
+                    title="Deep Navy (#0D1117)"
+                    onClick={() => handleBgColorSelect("#0D1117")}
+                    className={`w-4 h-4 rounded-full border transition-all ${bgColor === "#0D1117" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-600 hover:scale-105"}`}
+                    style={{ backgroundColor: "#0D1117" }}
+                  />
+                  {/* Custom Color Input */}
+                  <label title="Custom Color Picker" className="cursor-pointer relative flex items-center justify-center w-4 h-4 rounded-full border border-gray-600 hover:border-vector-accent overflow-hidden">
+                    <input
+                      type="color"
+                      value={bgColor || "#0B0E11"}
+                      onChange={(e) => {
+                        setBgColor(e.target.value);
+                        bgRef.current = e.target.value;
+                      }}
+                      onBlur={() => {
+                        if (selectedNodeRef.current) {
+                          performSave(false);
+                        }
+                      }}
+                      className="opacity-0 absolute inset-0 cursor-pointer w-full h-full"
+                    />
+                    <span className="text-[9px]">🎨</span>
+                  </label>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleAddChild}
@@ -453,11 +705,29 @@ export default function Editor({ manualId, onBack }) {
                 >
                   DELETE
                 </button>
+
+                {/* Auto-save Status Indicator */}
+                <div className="hidden sm:flex items-center px-1">
+                  {saveStatus === "saving" ? (
+                    <span className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-vector-accent">
+                      <span className="w-1.5 h-1.5 rounded-full bg-vector-accent animate-ping" />
+                      Saving...
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 text-[10px] font-mono tracking-widest uppercase text-green-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                      Auto-Saved
+                    </span>
+                  )}
+                </div>
+
                 <button
                   onClick={handleSave}
-                  className="rounded-sm bg-vector-accent text-black px-5 py-1.5 text-xs font-bold tracking-widest uppercase hover:brightness-110 shadow-[0_0_10px_rgba(0,245,212,0.2)]"
+                  title="Save Changes (Ctrl + S)"
+                  className="rounded-sm bg-vector-accent text-black px-4 py-1.5 text-xs font-bold tracking-widest uppercase hover:brightness-110 shadow-[0_0_10px_rgba(0,245,212,0.2)] flex items-center gap-1.5"
                 >
-                  SAVE
+                  <span>SAVE</span>
+                  <span className="text-[10px] font-mono opacity-70 tracking-normal">(Ctrl+S)</span>
                 </button>
               </div>
             </div>
@@ -491,13 +761,28 @@ export default function Editor({ manualId, onBack }) {
             {/* Editor Wrapper configured for Vector Theme */}
             <div className="flex-1 p-4 relative h-full overflow-y-auto">
               {activeTab === "content" && (
-                <div className="absolute inset-4 rounded-md shadow-lg border border-gray-800 bg-vector-bg custom-jodit-container">
+                <div 
+                  className="absolute inset-4 rounded-md shadow-lg border border-gray-800 custom-jodit-container transition-colors"
+                  style={{
+                    backgroundColor: bgColor || "#0B0E11",
+                    "--editor-page-bg": bgColor || "#0B0E11",
+                    "--editor-page-color": isLight ? "#111827" : "#FFFFFF",
+                  }}
+                >
                   <JoditEditor
+                    key={selectedNode?.id}
                     ref={editorRef}
                     value={content}
                     config={config}
-                    onBlur={(newContent) => setContent(newContent)}
-                    onChange={() => {}}
+                    onBlur={(newContent) => {
+                      contentRef.current = newContent;
+                      if (selectedNodeRef.current) {
+                        performSave(false);
+                      }
+                    }}
+                    onChange={(newContent) => {
+                      contentRef.current = newContent;
+                    }}
                   />
                 </div>
               )}
@@ -642,11 +927,59 @@ export default function Editor({ manualId, onBack }) {
             <input
               autoFocus
               placeholder="Chapter Title (e.g., 1.0 General Info)"
-              className="w-full mb-6 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
+              className="w-full mb-4 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
               value={newChapterTitle}
               onChange={(e) => setNewChapterTitle(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleCreateChapter()}
             />
+
+            <div className="mb-6">
+              <label className="block text-[10px] font-mono uppercase tracking-widest text-vector-text-muted mb-2">
+                Page Background Color
+              </label>
+              <div className="flex items-center gap-2 bg-vector-bg border border-gray-700 rounded-sm p-2">
+                <button
+                  type="button"
+                  title="Default Dark (#0B0E11)"
+                  onClick={() => setNewChapterBg("#0B0E11")}
+                  className={`w-5 h-5 rounded-full border transition-all ${(!newChapterBg || newChapterBg === "#0B0E11") ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-600"}`}
+                  style={{ backgroundColor: "#0B0E11" }}
+                />
+                <button
+                  type="button"
+                  title="Document White (#FFFFFF)"
+                  onClick={() => setNewChapterBg("#FFFFFF")}
+                  className={`w-5 h-5 rounded-full border transition-all ${newChapterBg === "#FFFFFF" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-400"}`}
+                  style={{ backgroundColor: "#FFFFFF" }}
+                />
+                <button
+                  type="button"
+                  title="Technical Cream (#F5F5F0)"
+                  onClick={() => setNewChapterBg("#F5F5F0")}
+                  className={`w-5 h-5 rounded-full border transition-all ${newChapterBg === "#F5F5F0" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-400"}`}
+                  style={{ backgroundColor: "#F5F5F0" }}
+                />
+                <button
+                  type="button"
+                  title="Deep Navy (#0D1117)"
+                  onClick={() => setNewChapterBg("#0D1117")}
+                  className={`w-5 h-5 rounded-full border transition-all ${newChapterBg === "#0D1117" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-600"}`}
+                  style={{ backgroundColor: "#0D1117" }}
+                />
+                <label title="Custom Color" className="cursor-pointer relative flex items-center justify-center w-5 h-5 rounded-full border border-gray-600 overflow-hidden">
+                  <input
+                    type="color"
+                    value={newChapterBg || "#0B0E11"}
+                    onChange={(e) => setNewChapterBg(e.target.value)}
+                    className="opacity-0 absolute inset-0 cursor-pointer w-full h-full"
+                  />
+                  <span className="text-[10px]">🎨</span>
+                </label>
+                <span className="text-[10px] font-mono text-vector-accent ml-auto">
+                  {newChapterBg || "Default Dark"}
+                </span>
+              </div>
+            </div>
 
             <div className="flex justify-end gap-3">
               <button
@@ -685,7 +1018,7 @@ export default function Editor({ manualId, onBack }) {
             <select
               value={newSubTopicType}
               onChange={(e) => setNewSubTopicType(e.target.value)}
-              className="w-full my-4 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors text-sm"
+              className="w-full my-3 rounded-sm bg-vector-bg border border-gray-700 font-mono p-3 text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors text-sm"
             >
               <option value="procedure">Standard Procedure</option>
               <option value="topic">Topic / Information</option>
@@ -693,6 +1026,55 @@ export default function Editor({ manualId, onBack }) {
               <option value="troubleshooting">Troubleshooting Node</option>
               <option value="chapter">Sub-Chapter / Group</option>
             </select>
+
+            <div className="mb-6">
+              <label className="block text-[10px] font-mono uppercase tracking-widest text-vector-text-muted mb-2">
+                Page Background Color
+              </label>
+              <div className="flex items-center gap-2 bg-vector-bg border border-gray-700 rounded-sm p-2">
+                <button
+                  type="button"
+                  title="Default Dark (#0B0E11)"
+                  onClick={() => setNewSubTopicBg("#0B0E11")}
+                  className={`w-5 h-5 rounded-full border transition-all ${(!newSubTopicBg || newSubTopicBg === "#0B0E11") ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-600"}`}
+                  style={{ backgroundColor: "#0B0E11" }}
+                />
+                <button
+                  type="button"
+                  title="Document White (#FFFFFF)"
+                  onClick={() => setNewSubTopicBg("#FFFFFF")}
+                  className={`w-5 h-5 rounded-full border transition-all ${newSubTopicBg === "#FFFFFF" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-400"}`}
+                  style={{ backgroundColor: "#FFFFFF" }}
+                />
+                <button
+                  type="button"
+                  title="Technical Cream (#F5F5F0)"
+                  onClick={() => setNewSubTopicBg("#F5F5F0")}
+                  className={`w-5 h-5 rounded-full border transition-all ${newSubTopicBg === "#F5F5F0" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-400"}`}
+                  style={{ backgroundColor: "#F5F5F0" }}
+                />
+                <button
+                  type="button"
+                  title="Deep Navy (#0D1117)"
+                  onClick={() => setNewSubTopicBg("#0D1117")}
+                  className={`w-5 h-5 rounded-full border transition-all ${newSubTopicBg === "#0D1117" ? "border-vector-accent ring-2 ring-vector-accent/50 scale-110" : "border-gray-600"}`}
+                  style={{ backgroundColor: "#0D1117" }}
+                />
+                <label title="Custom Color" className="cursor-pointer relative flex items-center justify-center w-5 h-5 rounded-full border border-gray-600 overflow-hidden">
+                  <input
+                    type="color"
+                    value={newSubTopicBg || "#0B0E11"}
+                    onChange={(e) => setNewSubTopicBg(e.target.value)}
+                    className="opacity-0 absolute inset-0 cursor-pointer w-full h-full"
+                  />
+                  <span className="text-[10px]">🎨</span>
+                </label>
+                <span className="text-[10px] font-mono text-vector-accent ml-auto">
+                  {newSubTopicBg || "Default Dark"}
+                </span>
+              </div>
+            </div>
+
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowSubTopicModal(false)}

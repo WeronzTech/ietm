@@ -16,6 +16,13 @@ export default function IPBViewer({ module, onNavigate }) {
     loadIPBData();
   }, [module.id]);
 
+  const effectiveBg = module.bg_color || (() => {
+    const m = module.content_html?.match(/<!-- ietm-page-bg:\s*(#[A-Fa-f0-9]{3,8}) -->/);
+    return m ? m[1] : null;
+  })();
+
+  const isLight = effectiveBg && (effectiveBg === "#FFFFFF" || effectiveBg === "#F5F5F0");
+
   return (
     <div className="flex h-full flex-col lg:flex-row gap-6 h-[calc(100vh-180px)]">
       {/* LEFT: Graphics */}
@@ -24,10 +31,13 @@ export default function IPBViewer({ module, onNavigate }) {
           <span className="mr-2">⚡</span> Interactive Parts Breakdown Enabled
         </div>
 
-        <div className="relative flex-1 border border-gray-700 bg-gray-900 rounded-lg overflow-hidden group min-h-[400px]">
+        <div 
+          className="relative flex-1 border border-gray-700 rounded-lg overflow-hidden group min-h-[400px] transition-colors"
+          style={{ backgroundColor: effectiveBg || "#111827" }}
+        >
           {/* Render Author HTML */}
           <div
-            className="prose prose-invert max-w-none text-gray-300 leading-relaxed pointer-events-auto w-full h-full p-4 [&_img]:w-full [&_img]:h-auto [&_img]:object-contain relative"
+            className={`prose ${isLight ? "prose-slate text-gray-900" : "prose-invert text-gray-300"} max-w-none leading-relaxed pointer-events-auto w-full h-full p-4 [&_img]:w-full [&_img]:h-auto [&_img]:object-contain relative`}
             dangerouslySetInnerHTML={{ __html: module.content_html }}
           />
 

@@ -92,6 +92,12 @@ export function initDb() {
     );
   `);
 
+  try {
+    db.exec(`ALTER TABLE modules ADD COLUMN bg_color TEXT;`);
+  } catch (err) {
+    // Column already exists, safe to ignore
+  }
+
   // --- 4. PARTS (New Table for Interactive IPB) ---
   // This is critical for Level 4 "Hotspot" interactivity
   db.exec(`

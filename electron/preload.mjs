@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld("api", {
 
   // Admin Features
   createUser: (data) => ipcRenderer.invoke("auth:create-user", data),
+  deleteUser: (id) => ipcRenderer.invoke("auth:delete-user", id),
   getUsers: () => ipcRenderer.invoke("auth:get-users"),
   getAudits: () => ipcRenderer.invoke("ietm:get-audits"),
   createBackup: () => ipcRenderer.invoke("ietm:create-backup"),

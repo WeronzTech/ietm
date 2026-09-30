@@ -259,9 +259,55 @@ export default function AdminDashboard() {
   }, []);
 
   const handleCreateUser = async () => {
-    await window.api.createUser(newUser);
-    loadData();
-    setNewUser({ username: "", password: "", role: "user" }); // Reset
+    const trimmedUsername = newUser.username?.trim();
+    const trimmedPassword = newUser.password?.trim();
+
+    if (!trimmedUsername) {
+      toast.error("Username is required.");
+      return;
+    }
+    if (!trimmedPassword) {
+      toast.error("Password is required.");
+      return;
+    }
+    if (trimmedUsername.length < 3) {
+      toast.error("Username must be at least 3 characters.");
+      return;
+    }
+    if (trimmedPassword.length < 4) {
+      toast.error("Password must be at least 4 characters.");
+      return;
+    }
+
+    const res = await window.api.createUser({
+      username: trimmedUsername,
+      password: trimmedPassword,
+      role: newUser.role || "user",
+    });
+
+    if (res?.success) {
+      toast.success(`User "${trimmedUsername}" created successfully.`);
+      loadData();
+      setNewUser({ username: "", password: "", role: "user" }); // Reset
+    } else {
+      toast.error(res?.message || "Failed to create user (username may already exist).");
+    }
+  };
+
+  const handleDeleteUser = async (targetUser) => {
+    if (targetUser.id === user?.id) {
+      toast.error("You cannot delete your own active administrator account.");
+      return;
+    }
+    if (window.confirm(`Are you sure you want to permanently delete user "${targetUser.username}"?`)) {
+      const res = await window.api.deleteUser?.(targetUser.id);
+      if (res?.success) {
+        toast.success(`User "${targetUser.username}" deleted.`);
+        loadData();
+      } else {
+        toast.error("Delete failed: " + (res?.message || "Unknown error"));
+      }
+    }
   };
 
   const handleCreateManual = async () => {
@@ -385,12 +431,30 @@ export default function AdminDashboard() {
             {users.map((u) => (
               <li
                 key={u.id}
-                className="flex justify-between bg-vector-bg p-2 text-sm border border-gray-800 items-center rounded-sm hover:bg-gray-800 transition-colors"
+                className="flex justify-between bg-vector-bg p-2 text-sm border border-gray-800 items-center rounded-sm hover:bg-gray-800/60 transition-colors"
               >
-                <span className="font-mono">{u.username}</span>
-                <span className="text-[10px] uppercase bg-gray-800 text-vector-text-muted px-2 py-0.5 rounded-sm border border-gray-700">
-                  {u.role}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono">{u.username}</span>
+                  {u.id === user?.id && (
+                    <span className="text-[9px] font-mono text-vector-accent border border-vector-accent/40 rounded px-1">
+                      YOU
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase bg-gray-800 text-vector-text-muted px-2 py-0.5 rounded-sm border border-gray-700">
+                    {u.role}
+                  </span>
+                  {u.id !== user?.id && (
+                    <button
+                      onClick={() => handleDeleteUser(u)}
+                      title={`Delete user ${u.username}`}
+                      className="p-1 rounded text-red-400 hover:text-red-300 hover:bg-red-500/20 transition-colors border border-transparent hover:border-red-500/40"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
