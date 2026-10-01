@@ -134,21 +134,26 @@ export function initDb() {
     );
   `);
 
-  // --- 6. DIAGNOSTICS (Troubleshooting Logic) ---
-  // Stores the Decision Tree logic (Yes/No flows)
+  // --- 6. DIAGNOSTICS (Troubleshooting Fault Trees - Level 4) ---
   db.exec(`
     CREATE TABLE IF NOT EXISTS diagnostics (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      module_id INTEGER,
-      step_id TEXT, -- e.g., 'STEP-01'
+      module_id INTEGER UNIQUE,
       question TEXT,
-      yes_step_id TEXT, -- Next step if User clicks Yes
-      no_step_id TEXT,  -- Next step if User clicks No
-      action_text TEXT, -- "Replace fuse F1"
-      
-      FOREIGN KEY(module_id) REFERENCES modules(id)
+      yes_module_id INTEGER,
+      no_module_id INTEGER,
+      FOREIGN KEY(module_id) REFERENCES modules(id),
+      FOREIGN KEY(yes_module_id) REFERENCES modules(id),
+      FOREIGN KEY(no_module_id) REFERENCES modules(id)
     );
   `);
+
+  try {
+    db.exec(`ALTER TABLE diagnostics ADD COLUMN yes_module_id INTEGER;`);
+  } catch (err) {}
+  try {
+    db.exec(`ALTER TABLE diagnostics ADD COLUMN no_module_id INTEGER;`);
+  } catch (err) {}
 
   // --- 7. AUDIT LOGS (Compliance Tracking) ---
   db.exec(`
@@ -190,21 +195,7 @@ export function initDb() {
     );
   `);
 
-  // --- 10. DIAGNOSTICS (Fault Trees) ---
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS diagnostics (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      module_id INTEGER UNIQUE,
-      question TEXT,
-      yes_module_id INTEGER,
-      no_module_id INTEGER,
-      FOREIGN KEY(module_id) REFERENCES modules(id),
-      FOREIGN KEY(yes_module_id) REFERENCES modules(id),
-      FOREIGN KEY(no_module_id) REFERENCES modules(id)
-    );
-  `);
-
-  // --- 11. INVENTORY (Logistics & Supply) ---
+  // --- 10. INVENTORY (Logistics & Supply) ---
   db.exec(`
     CREATE TABLE IF NOT EXISTS inventory (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
