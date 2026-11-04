@@ -305,6 +305,7 @@
 // }
 import { useState } from "react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import ManualView from "./pages/ManualView";
@@ -314,8 +315,15 @@ const AppContent = () => {
   const { user } = useAuth();
   const [currentPage, setCurrentPage] = useState("dashboard");
   const [currentManualId, setCurrentManualId] = useState(null);
+  const [initialModuleId, setInitialModuleId] = useState(null);
 
   if (!user) return <Login />;
+
+  const handleSearchNavigate = (manualId, moduleId) => {
+    setCurrentManualId(manualId);
+    setInitialModuleId(moduleId);
+    setCurrentPage("manual");
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -332,7 +340,11 @@ const AppContent = () => {
         return (
           <ManualView
             manualId={currentManualId}
-            onBack={() => setCurrentPage("dashboard")}
+            initialModuleId={initialModuleId}
+            onBack={() => {
+              setCurrentPage("dashboard");
+              setInitialModuleId(null);
+            }}
           />
         );
       default:
@@ -340,12 +352,44 @@ const AppContent = () => {
     }
   };
 
-  return <Layout>{renderPage()}</Layout>;
+  return <Layout onSearchNavigate={handleSearchNavigate}>{renderPage()}</Layout>;
 };
 
 export default function App() {
   return (
     <AuthProvider>
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "#161B22",
+            color: "#E2E8F0",
+            border: "1px solid #334155",
+            borderRadius: "4px",
+            fontFamily: "monospace",
+            fontSize: "12px",
+            letterSpacing: "0.05em",
+          },
+          success: {
+            iconTheme: {
+              primary: "#00F5D4",
+              secondary: "#161B22",
+            },
+            style: {
+              border: "1px solid #00F5D4",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "#ff4444",
+              secondary: "#161B22",
+            },
+            style: {
+              border: "1px solid #ff4444",
+            },
+          },
+        }}
+      />
       <AppContent />
     </AuthProvider>
   );

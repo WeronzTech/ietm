@@ -211,12 +211,19 @@
 //   );
 // }
 import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 import Editor from "./Editor";
+import InventoryManager from "./InventoryManager";
+import toast from "react-hot-toast";
+import { Users, ShieldAlert, Lock, Edit3, Download, PlusCircle, Trash2, Database, Activity, Box } from "lucide-react";
 
 export default function AdminDashboard() {
+  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [manuals, setManuals] = useState([]);
+  const [audits, setAudits] = useState([]);
   const [editingManualId, setEditingManualId] = useState(null);
+  const [viewLogistics, setViewLogistics] = useState(false);
 
   // User State
   const [newUser, setNewUser] = useState({
@@ -240,9 +247,11 @@ export default function AdminDashboard() {
 
   const loadData = async () => {
     const u = await window.api.getUsers();
-    const m = await window.api.getManuals();
+    const m = await window.api.getManuals({ userId: user.id, role: user.role });
+    const a = await window.api.getAudits?.() || [];
     setUsers(u);
     setManuals(m);
+    setAudits(a);
   };
 
   useEffect(() => {
@@ -250,18 +259,64 @@ export default function AdminDashboard() {
   }, []);
 
   const handleCreateUser = async () => {
-    await window.api.createUser(newUser);
-    loadData();
-    setNewUser({ username: "", password: "", role: "user" }); // Reset
+    const trimmedUsername = newUser.username?.trim();
+    const trimmedPassword = newUser.password?.trim();
+
+    if (!trimmedUsername) {
+      toast.error("Username is required.");
+      return;
+    }
+    if (!trimmedPassword) {
+      toast.error("Password is required.");
+      return;
+    }
+    if (trimmedUsername.length < 3) {
+      toast.error("Username must be at least 3 characters.");
+      return;
+    }
+    if (trimmedPassword.length < 4) {
+      toast.error("Password must be at least 4 characters.");
+      return;
+    }
+
+    const res = await window.api.createUser({
+      username: trimmedUsername,
+      password: trimmedPassword,
+      role: newUser.role || "user",
+    });
+
+    if (res?.success) {
+      toast.success(`User "${trimmedUsername}" created successfully.`);
+      loadData();
+      setNewUser({ username: "", password: "", role: "user" }); // Reset
+    } else {
+      toast.error(res?.message || "Failed to create user (username may already exist).");
+    }
+  };
+
+  const handleDeleteUser = async (targetUser) => {
+    if (targetUser.id === user?.id) {
+      toast.error("You cannot delete your own active administrator account.");
+      return;
+    }
+    if (window.confirm(`Are you sure you want to permanently delete user "${targetUser.username}"?`)) {
+      const res = await window.api.deleteUser?.(targetUser.id);
+      if (res?.success) {
+        toast.success(`User "${targetUser.username}" deleted.`);
+        loadData();
+      } else {
+        toast.error("Delete failed: " + (res?.message || "Unknown error"));
+      }
+    }
   };
 
   const handleCreateManual = async () => {
     if (!newManual.title || !newManual.weapon_system_id) {
-      alert("Title and Weapon System ID are required.");
+      toast.error("Title and Weapon System ID are required.");
       return;
     }
 
-    const res = await window.api.createManual(newManual);
+    const res = await window.api.createManual({ ...newManual, userId: user.id });
     if (res.success) {
       loadData();
       // Reset Form
@@ -272,16 +327,26 @@ export default function AdminDashboard() {
         security_classification: "UNCLASSIFIED",
         description: "",
       });
+      toast.success("Weapon System Created");
     } else {
-      alert("Error: " + res.message);
+      toast.error("Error: " + res.message);
     }
   };
 
   const submitExport = async () => {
-    if (!passkey) return;
+    if (!passkey) return toast.error("Passkey required for encryption");
     const res = await window.api.exportManual({ manualId: exportId, passkey });
     setExportId(null);
-    alert(res.success ? "Exported to: " + res.path : "Failed: " + res.message);
+    if (res.success) toast.success("Exported to: " + res.path);
+    else toast.error("Failed: " + res.message);
+  };
+
+  const handleDeleteManual = async (id) => {
+    if (window.confirm("CRITICAL: Are you sure you want to permanently delete this Weapon System block? This destroys all associated modules.")) {
+      await window.api.deleteManual(id);
+      loadData();
+      toast.success("Manual permanently expunged.");
+    }
   };
 
   if (editingManualId) {
@@ -293,22 +358,46 @@ export default function AdminDashboard() {
     );
   }
 
+  if (viewLogistics) return <InventoryManager onBack={() => setViewLogistics(false)} />;
+
+  const handleBackup = async () => {
+    const res = await window.api.createBackup?.();
+    if (res?.success) toast.success("System Backup created at: " + res.path);
+    else toast.error("Backup failed: " + (res?.message || "Unknown router error"));
+  };
+
   return (
-    <div className="min-h-full bg-gray-900 p-8 text-gray-100">
-      <h1 className="mb-8 text-3xl font-bold tracking-tight text-white border-b border-gray-800 pb-4">
-        Admin Control Center
-      </h1>
+    <div className="min-h-full bg-vector-bg p-8 text-vector-text space-y-8">
+      <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+        <h1 className="text-3xl font-bold tracking-tight text-white mb-0">
+          Admin Control Center
+        </h1>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setViewLogistics(true)}
+            className="rounded-sm bg-gray-800 border border-gray-700 px-5 py-2 text-xs font-bold tracking-widest text-white hover:text-vector-accent hover:border-vector-accent flex items-center gap-2 transition-colors uppercase"
+          >
+            <Box size={16} /> Global Logistics
+          </button>
+          <button
+            onClick={handleBackup}
+            className="rounded-sm bg-blue-600 px-5 py-2 text-xs font-bold tracking-widest text-white hover:bg-blue-500 shadow-[0_0_15px_rgba(37,99,235,0.2)] uppercase flex items-center gap-2 transition-colors"
+          >
+            <Database size={16} /> FULL SYSTEM BACKUP
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* --- USER MANAGEMENT --- */}
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-md h-fit">
-          <h3 className="mb-4 text-xl font-semibold text-blue-400 border-b border-gray-700 pb-2">
-            User Management
+        <div className="rounded-lg border border-gray-800 bg-vector-panel p-6 shadow-md h-fit">
+          <h3 className="mb-4 text-xl font-semibold text-vector-accent border-b border-gray-800 pb-2 flex items-center gap-2">
+            <Users size={20} /> User Management
           </h3>
           <div className="grid grid-cols-12 gap-2 mb-6">
             <input
               placeholder="Username"
-              className="col-span-4 rounded bg-gray-900 border border-gray-600 p-2 text-sm text-white outline-none focus:border-blue-500"
+              className="col-span-4 font-mono rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
               value={newUser.username}
               onChange={(e) =>
                 setNewUser({ ...newUser, username: e.target.value })
@@ -317,14 +406,14 @@ export default function AdminDashboard() {
             <input
               placeholder="Password"
               type="password"
-              className="col-span-4 rounded bg-gray-900 border border-gray-600 p-2 text-sm text-white outline-none focus:border-blue-500"
+              className="col-span-4 rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
               value={newUser.password}
               onChange={(e) =>
                 setNewUser({ ...newUser, password: e.target.value })
               }
             />
             <select
-              className="col-span-2 rounded bg-gray-900 border border-gray-600 p-2 text-sm text-white outline-none focus:border-blue-500"
+              className="col-span-2 rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors"
               value={newUser.role}
               onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
             >
@@ -333,41 +422,59 @@ export default function AdminDashboard() {
             </select>
             <button
               onClick={handleCreateUser}
-              className="col-span-2 rounded bg-blue-600 text-sm font-bold hover:bg-blue-500"
+              className="col-span-2 rounded-sm bg-vector-accent text-black text-xs tracking-widest font-bold hover:brightness-110 flex items-center justify-center gap-1 uppercase"
             >
-              ADD
+              <PlusCircle size={14} /> ADD
             </button>
           </div>
-          <ul className="space-y-2 max-h-60 overflow-y-auto pr-2">
+          <ul className="space-y-2 max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-600">
             {users.map((u) => (
               <li
                 key={u.id}
-                className="flex justify-between rounded bg-gray-700/50 p-2 text-sm border border-gray-700 items-center"
+                className="flex justify-between bg-vector-bg p-2 text-sm border border-gray-800 items-center rounded-sm hover:bg-gray-800/60 transition-colors"
               >
-                <span className="font-mono">{u.username}</span>
-                <span className="text-[10px] uppercase bg-blue-900/50 text-blue-200 px-2 py-0.5 rounded border border-blue-900">
-                  {u.role}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono">{u.username}</span>
+                  {u.id === user?.id && (
+                    <span className="text-[9px] font-mono text-vector-accent border border-vector-accent/40 rounded px-1">
+                      YOU
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase bg-gray-800 text-vector-text-muted px-2 py-0.5 rounded-sm border border-gray-700">
+                    {u.role}
+                  </span>
+                  {u.id !== user?.id && (
+                    <button
+                      onClick={() => handleDeleteUser(u)}
+                      title={`Delete user ${u.username}`}
+                      className="p-1 rounded text-red-400 hover:text-red-300 hover:bg-red-500/20 transition-colors border border-transparent hover:border-red-500/40"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
         </div>
 
         {/* --- WEAPON SYSTEM MANAGEMENT (LEVEL 4 STANDARDS) --- */}
-        <div className="rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-md">
-          <h3 className="mb-4 text-xl font-semibold text-green-400 border-b border-gray-700 pb-2">
-            Add Weapon System (IETM L4)
+        <div className="rounded-lg border border-gray-800 bg-vector-panel p-6 shadow-md">
+          <h3 className="mb-4 text-xl font-semibold text-vector-accent border-b border-gray-800 pb-2 flex items-center gap-2">
+            <ShieldAlert size={20} /> Add Weapon System (IETM L4)
           </h3>
 
           {/* Detailed Form */}
-          <div className="grid grid-cols-2 gap-4 mb-6 bg-gray-900/50 p-4 rounded border border-gray-700">
+          <div className="grid grid-cols-2 gap-4 mb-6 bg-vector-bg p-4 rounded-sm border border-gray-800">
             <div className="col-span-2">
-              <label className="text-xs text-gray-400 uppercase font-bold">
+              <label className="text-xs text-vector-text-muted uppercase font-bold tracking-widest">
                 Manual Title
               </label>
               <input
                 placeholder="e.g. Operator Manual for MK-19"
-                className="w-full rounded bg-gray-800 border border-gray-600 p-2 text-sm text-white outline-none focus:border-green-500 mt-1"
+                className="w-full rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors mt-1"
                 value={newManual.title}
                 onChange={(e) =>
                   setNewManual({ ...newManual, title: e.target.value })
@@ -376,12 +483,12 @@ export default function AdminDashboard() {
             </div>
 
             <div>
-              <label className="text-xs text-gray-400 uppercase font-bold">
+              <label className="text-xs text-vector-text-muted uppercase font-bold tracking-widest">
                 Weapon System ID
               </label>
               <input
                 placeholder="e.g. MK-19 MOD 3"
-                className="w-full rounded bg-gray-800 border border-gray-600 p-2 text-sm text-white outline-none focus:border-green-500 mt-1"
+                className="w-full rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm text-vector-text font-mono outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors mt-1"
                 value={newManual.weapon_system_id}
                 onChange={(e) =>
                   setNewManual({
@@ -393,12 +500,12 @@ export default function AdminDashboard() {
             </div>
 
             <div>
-              <label className="text-xs text-gray-400 uppercase font-bold">
+              <label className="text-xs text-vector-text-muted uppercase font-bold tracking-widest">
                 Version
               </label>
               <input
                 placeholder="1.0"
-                className="w-full rounded bg-gray-800 border border-gray-600 p-2 text-sm text-white outline-none focus:border-green-500 mt-1"
+                className="w-full rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm font-mono text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors mt-1"
                 value={newManual.version}
                 onChange={(e) =>
                   setNewManual({ ...newManual, version: e.target.value })
@@ -407,11 +514,11 @@ export default function AdminDashboard() {
             </div>
 
             <div>
-              <label className="text-xs text-gray-400 uppercase font-bold">
+              <label className="text-xs text-vector-text-muted uppercase font-bold tracking-widest">
                 Classification
               </label>
               <select
-                className="w-full rounded bg-gray-800 border border-gray-600 p-2 text-sm text-white outline-none focus:border-green-500 mt-1"
+                className="w-full rounded-sm bg-vector-bg border border-gray-700 p-2 text-sm text-vector-text outline-none focus:border-vector-accent focus:ring-1 focus:ring-vector-accent transition-colors mt-1"
                 value={newManual.security_classification}
                 onChange={(e) =>
                   setNewManual({
@@ -429,17 +536,17 @@ export default function AdminDashboard() {
             <div className="flex items-end">
               <button
                 onClick={handleCreateManual}
-                className="w-full rounded bg-green-700 py-2 text-sm font-bold text-white hover:bg-green-600 shadow-lg transition-all"
+                className="w-full rounded-sm bg-vector-accent py-2 text-xs uppercase tracking-widest font-bold text-black hover:brightness-110 shadow-[0_0_15px_rgba(0,245,212,0.15)] transition-all flex items-center justify-center gap-2"
               >
-                CREATE SYSTEM
+                <PlusCircle size={16} /> CREATE SYSTEM
               </button>
             </div>
           </div>
 
           {/* List of Manuals */}
-          <div className="overflow-hidden rounded border border-gray-700">
+          <div className="overflow-hidden rounded-sm border border-gray-800">
             <table className="w-full text-left text-sm text-gray-300">
-              <thead className="bg-gray-700 text-xs uppercase text-gray-100">
+              <thead className="bg-gray-800 text-[10px] tracking-widest uppercase text-vector-text-muted">
                 <tr>
                   <th className="px-4 py-3">System ID</th>
                   <th className="px-4 py-3">Title</th>
@@ -447,41 +554,56 @@ export default function AdminDashboard() {
                   <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700 bg-gray-800">
+              <tbody className="divide-y divide-gray-800 bg-vector-panel">
                 {manuals.map((m) => (
                   <tr
                     key={m.id}
-                    className="hover:bg-gray-700/50 transition-colors"
+                    className="hover:bg-gray-800 transition-colors"
                   >
-                    <td className="px-4 py-3 font-mono text-green-400">
+                    <td className="px-4 py-3 font-mono text-vector-accent">
                       {m.weapon_system_id}
                     </td>
-                    <td className="px-4 py-3 font-medium text-white">
+                    <td className="px-4 py-3 font-medium text-white truncate max-w-[150px]">
                       {m.title}
                     </td>
-                    <td className="px-4 py-3 text-[10px] uppercase">
+                    <td className="px-4 py-3 text-[10px] uppercase font-bold tracking-widest">
                       <span
-                        className={`px-2 py-0.5 rounded ${m.security_classification === "SECRET" ? "bg-red-900 text-red-200" : "bg-gray-700"}`}
+                        className={`px-2 py-0.5 rounded-sm border ${
+                          m.security_classification === "SECRET"
+                            ? "bg-vector-danger/10 text-vector-danger border-vector-danger/50"
+                            : "bg-gray-800 text-vector-text-muted border-gray-700"
+                        }`}
                       >
                         {m.security_classification}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right space-x-2">
-                      <button
-                        onClick={() => setEditingManualId(m.id)}
-                        className="text-blue-400 hover:text-blue-300 font-bold text-xs"
-                      >
-                        EDIT CONTENT
-                      </button>
-                      <button
-                        onClick={() => {
-                          setExportId(m.id);
-                          setPasskey("");
-                        }}
-                        className="text-yellow-500 hover:text-yellow-400 font-bold text-xs"
-                      >
-                        EXPORT
-                      </button>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-3">
+                        <button
+                          onClick={() => setEditingManualId(m.id)}
+                          className="text-vector-text-muted hover:text-vector-accent transition-colors flex flex-col items-center gap-1"
+                          title="Edit Content"
+                        >
+                          <Edit3 size={16} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setExportId(m.id);
+                            setPasskey("");
+                          }}
+                          className="text-vector-text-muted hover:text-yellow-500 transition-colors flex flex-col items-center gap-1"
+                          title="Export"
+                        >
+                          <Download size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteManual(m.id)}
+                          className="text-vector-text-muted hover:text-vector-danger transition-colors flex flex-col items-center gap-1"
+                          title="Expunge Record"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -491,34 +613,64 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* --- LEVEL 4 FORENSICS & AUDIT ARRAY --- */}
+      <div className="rounded-lg border border-gray-800 bg-vector-panel p-6 shadow-md mt-8">
+        <h3 className="mb-4 text-xl font-semibold text-purple-400 border-b border-gray-800 pb-2 flex items-center gap-2">
+          <Activity size={20} /> Audit & Forensics Log
+        </h3>
+        
+        <div className="overflow-hidden rounded-sm border border-gray-800 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600">
+          <table className="w-full text-left text-sm text-gray-300">
+            <thead className="bg-gray-800 sticky top-0 text-[10px] tracking-widest uppercase text-vector-text-muted z-10 block w-full table-fixed">
+              <tr>
+                <th className="px-4 py-3 w-1/5">Timestamp</th>
+                <th className="px-4 py-3 w-1/5">Operator</th>
+                <th className="px-4 py-3 w-1/5">Action</th>
+                <th className="px-4 py-3 w-2/5">Target / Detail</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800 bg-vector-panel block w-full table-fixed">
+              {audits.map((log) => (
+                <tr key={log.id} className="hover:bg-gray-800 transition-colors">
+                  <td className="px-4 py-3 text-xs font-mono text-gray-500 w-1/5">{new Date(log.timestamp).toLocaleString()}</td>
+                  <td className="px-4 py-3 font-mono text-vector-accent w-1/5">{log.username || "UNKNOWN"}</td>
+                  <td className="px-4 py-3 text-[10px] font-bold tracking-widest text-purple-300 uppercase w-1/5">{log.action}</td>
+                  <td className="px-4 py-3 text-gray-400 truncate w-2/5">{log.target}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Export Modal */}
       {exportId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <div className="w-96 rounded-lg bg-gray-800 border border-gray-600 p-6 shadow-2xl">
-            <h3 className="text-lg font-bold text-yellow-500 mb-2">
-              Encrypt Export
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
+          <div className="w-96 rounded-xl bg-vector-panel border border-gray-800 p-6 shadow-2xl">
+            <h3 className="text-lg font-bold text-yellow-500 mb-2 flex items-center gap-2 uppercase tracking-widest">
+              <Lock size={20} /> Encrypt Export
             </h3>
-            <p className="text-xs text-gray-400 mb-4">
+            <p className="text-[10px] font-mono text-vector-text-muted mb-6 uppercase tracking-wider">
               Enter a passkey to encrypt this IETM package for offline
               distribution.
             </p>
             <input
               type="password"
-              placeholder="Set Encryption Key"
-              className="w-full mb-4 rounded bg-gray-900 border border-gray-700 p-2 text-white outline-none focus:border-yellow-500"
+              placeholder="••••••••"
+              className="w-full mb-6 rounded-sm font-mono bg-vector-bg border border-gray-700 p-3 text-white outline-none focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
               value={passkey}
               onChange={(e) => setPasskey(e.target.value)}
             />
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end gap-3">
               <button
                 onClick={() => setExportId(null)}
-                className="px-3 py-1 text-gray-400 hover:text-white"
+                className="px-4 py-2 font-bold text-[10px] tracking-widest uppercase text-gray-500 hover:text-white transition-colors"
               >
-                Cancel
+                Abort
               </button>
               <button
                 onClick={submitExport}
-                className="rounded bg-yellow-600 px-4 py-2 font-bold text-black hover:bg-yellow-500"
+                className="rounded-sm bg-yellow-500 px-5 py-2 font-bold text-[10px] tracking-widest uppercase text-black hover:bg-yellow-400 transition-colors"
               >
                 EXPORT PACKAGE
               </button>
