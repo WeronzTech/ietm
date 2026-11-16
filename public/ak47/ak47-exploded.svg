@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050811" />
+      <stop offset="100%" stop-color="#0b1329" />
+    </linearGradient>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.75" />
+    </pattern>
+    <pattern id="grid-major" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#334155" stroke-width="1.2" opacity="0.6" />
+    </pattern>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="650" fill="url(#bg-grad)" />
+  <rect width="1000" height="650" fill="url(#grid)" />
+  <rect width="1000" height="650" fill="url(#grid-major)" />
+
+  <!-- Technical Drawing Border & Title Block -->
+  <rect x="15" y="15" width="970" height="620" fill="none" stroke="#00F5D4" stroke-width="1.5" opacity="0.4" />
+  <rect x="20" y="20" width="960" height="610" fill="none" stroke="#00F5D4" stroke-width="0.8" opacity="0.25" />
+
+  <!-- Header Title -->
+  <g transform="translate(40, 50)">
+    <text font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#00F5D4" letter-spacing="2">
+      MIL-STD-JSG-0852 // LEVEL-4 EXPLODED PARTS BREAKDOWN (IPB)
+    </text>
+    <text y="22" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="3">
+      7.62x39mm KALASHNIKOV AK-47 ASSAULT RIFLE
+    </text>
+    <text y="40" font-family="'Courier New', monospace" font-size="11" fill="#94a3b8" letter-spacing="1">
+      BASE SCHEMATIC: TM-9-1005-AK47-10 / 203d MILITARY INTELLIGENCE BATTALION
+    </text>
+  </g>
+
+  <!-- Title Block Bottom Right -->
+  <g transform="translate(680, 560)">
+    <rect width="290" height="65" fill="#0b172a" stroke="#00F5D4" stroke-width="1" opacity="0.8" />
+    <line x1="0" y1="22" x2="290" y2="22" stroke="#334155" stroke-width="1" />
+    <line x1="0" y1="44" x2="290" y2="44" stroke="#334155" stroke-width="1" />
+    <line x1="145" y1="22" x2="145" y2="65" stroke="#334155" stroke-width="1" />
+    <text x="10" y="16" font-family="monospace" font-size="10" fill="#00F5D4" font-weight="bold">SCALE: 1:1 // EXPLODED S1000D</text>
+    <text x="10" y="36" font-family="monospace" font-size="9" fill="#94a3b8">DWG NO: AK47-IPB-001</text>
+    <text x="155" y="36" font-family="monospace" font-size="9" fill="#94a3b8">REV: 4.2.0 (JSG 0852)</text>
+    <text x="10" y="57" font-family="monospace" font-size="9" fill="#94a3b8">CAGE: 1A429 (ORD)</text>
+    <text x="155" y="57" font-family="monospace" font-size="9" fill="#00F5D4">STATUS: ACCEPTED</text>
+  </g>
+
+  <!-- Exploded Assembly Components (Drawn in authentic technical blueprint vector style) -->
+
+  <!-- Component 2: Receiver Cover (Top Cover) - Floating Above (x: 280-480, y: 120-170) -->
+  <g id="comp-receiver-cover" stroke="#38bdf8" stroke-width="1.8" fill="#0c2340" fill-opacity="0.3">
+    <!-- Receiver cover outline -->
+    <path d="M 280 160 C 290 145, 340 135, 420 135 L 470 140 C 485 145, 490 155, 485 168 L 290 168 Z" />
+    <!-- Strengthening ribs -->
+    <path d="M 315 145 C 340 140, 390 140, 425 143" stroke-width="1.2" stroke-dasharray="3,2" />
+    <path d="M 320 152 C 345 147, 395 147, 435 150" stroke-width="1.2" stroke-dasharray="3,2" />
+    <!-- Rear latch aperture -->
+    <rect x="475" y="150" width="12" height="15" rx="2" stroke="#38bdf8" fill="#071526" />
+  </g>
+
+  <!-- Component 3: Driving Spring Mechanism - Floating Behind Carrier (x: 350-520, y: 200-240) -->
+  <g id="comp-recoil-spring" stroke="#a78bfa" stroke-width="1.8" fill="none">
+    <!-- Guide rod rear base -->
+    <path d="M 480 215 L 515 215 L 520 225 L 515 235 L 480 235 Z" fill="#2e1065" fill-opacity="0.5" />
+    <!-- Telescoping guide rods -->
+    <line x1="360" y1="225" x2="480" y2="225" stroke="#c084fc" stroke-width="2.5" />
+    <!-- Helical Spring coils -->
+    <path d="M 370 220 C 375 210, 380 240, 385 225 C 390 210, 395 240, 400 225 C 405 210, 410 240, 415 225 C 420 210, 425 240, 430 225 C 435 210, 440 240, 445 225 C 450 210, 455 240, 460 225 C 465 210, 470 240, 475 225" stroke="#e9d5ff" stroke-width="1.5" />
+  </g>
+
+  <!-- Component 4: Bolt Carrier with Gas Piston - Center/Middle (x: 270-460, y: 250-310) -->
+  <g id="comp-bolt-carrier" stroke="#00F5D4" stroke-width="2" fill="#042f2e" fill-opacity="0.4">
+    <!-- Carrier body -->
+    <path d="M 340 270 L 440 270 L 445 280 L 440 310 L 350 310 L 340 295 Z" />
+    <!-- Cocking handle -->
+    <path d="M 400 285 L 425 285 C 435 285, 440 295, 435 305 L 420 305" stroke-width="2.5" />
+    <!-- Bolt cam race / tunnel -->
+    <path d="M 355 280 L 385 280 L 390 295 L 360 295 Z" stroke="#34d399" stroke-width="1.2" fill="#021f1e" />
+    <!-- Gas Piston Extension Rod -->
+    <rect x="200" y="272" width="140" height="10" rx="2" fill="#083344" stroke="#38bdf8" />
+    <!-- Gas Piston Head with rings -->
+    <rect x="175" y="268" width="25" height="18" rx="2" fill="#164e63" stroke="#38bdf8" stroke-width="2" />
+    <line x1="182" y1="268" x2="182" y2="286" stroke="#00F5D4" />
+    <line x1="188" y1="268" x2="188" y2="286" stroke="#00F5D4" />
+    <line x1="194" y1="268" x2="194" y2="286" stroke="#00F5D4" />
+  </g>
+
+  <!-- Component 5: Rotating Bolt - Under Carrier (x: 310-380, y: 325-365) -->
+  <g id="comp-bolt" stroke="#fbbf24" stroke-width="1.8" fill="#451a03" fill-opacity="0.3">
+    <!-- Bolt body cylindrical shank -->
+    <rect x="330" y="335" width="45" height="16" rx="2" />
+    <!-- Bolt head with dual locking lugs -->
+    <rect x="310" y="330" width="20" height="26" rx="2" fill="#78350f" fill-opacity="0.6" />
+    <!-- Extractor claw -->
+    <path d="M 310 332 L 322 332 L 322 342 L 310 340 Z" stroke="#fef08a" stroke-width="1" />
+    <!-- Cam guide lug -->
+    <rect x="345" y="327" width="12" height="8" rx="1" stroke="#f59e0b" fill="#b45309" />
+  </g>
+
+  <!-- Component 6: Gas Tube & Handguard Upper - Above Barrel (x: 230-380, y: 175-215) -->
+  <g id="comp-gas-tube" stroke="#f97316" stroke-width="1.8" fill="#431407" fill-opacity="0.3">
+    <!-- Gas tube metal sleeve -->
+    <rect x="230" y="190" width="145" height="14" rx="3" />
+    <!-- Upper handguard wood overlay -->
+    <path d="M 255 180 L 350 180 C 355 180, 360 185, 360 192 L 250 192 C 250 185, 252 180, 255 180 Z" fill="#7c2d12" stroke="#ea580c" />
+    <!-- Rear locking collar -->
+    <rect x="365" y="185" width="12" height="22" rx="2" stroke="#fb923c" />
+  </g>
+
+  <!-- Component 1: Main Receiver & Barrel Assembly (Baseline) (x: 100-650, y: 350-450) -->
+  <g id="comp-receiver-barrel" stroke="#00F5D4" stroke-width="2" fill="#0f172a" fill-opacity="0.5">
+    <!-- Barrel Extension -->
+    <rect x="120" y="380" width="240" height="14" fill="#1e293b" stroke="#38bdf8" />
+    <!-- Muzzle / Front Sight Post Base -->
+    <g transform="translate(100, 350)">
+      <!-- Slant muzzle nut / thread protector -->
+      <rect x="0" y="28" width="20" height="18" fill="#0f172a" stroke="#38bdf8" />
+      <!-- Front sight base & guard ears -->
+      <path d="M 22 42 L 22 18 C 22 10, 35 10, 35 18 L 35 42 Z" fill="#0f172a" stroke="#00F5D4" />
+      <!-- Cylindrical sight post -->
+      <line x1="28" y1="18" x2="28" y2="30" stroke="#fbbf24" stroke-width="2.5" />
+      <!-- Cleaning rod lug -->
+      <rect x="18" y="44" width="15" height="8" rx="1" stroke="#38bdf8" />
+    </g>
+
+    <!-- Gas Block with 45-degree angle port -->
+    <path d="M 220 378 L 220 345 L 245 345 L 250 378 Z" fill="#0f172a" stroke="#38bdf8" />
+
+    <!-- Rear Sight Base & Leaf -->
+    <g transform="translate(345, 350)">
+      <rect x="0" y="18" width="35" height="14" fill="#0f172a" stroke="#38bdf8" />
+      <!-- Sight Leaf pivoting upward -->
+      <line x1="5" y1="24" x2="32" y2="18" stroke="#fbbf24" stroke-width="2" />
+      <rect x="22" y="16" width="6" height="6" fill="#f59e0b" />
+    </g>
+
+    <!-- Forged/Stamped Receiver Housing -->
+    <path d="M 345 375 L 525 375 L 530 425 L 355 425 L 345 375 Z" fill="#09182a" stroke="#00F5D4" stroke-width="2.2" />
+    <!-- Receiver Dimple & Selector Markings -->
+    <rect x="390" y="390" width="30" height="6" rx="3" stroke="#38bdf8" stroke-width="1.2" />
+    <!-- Selector lever -->
+    <path d="M 465 385 L 515 390 L 512 402 L 465 395 Z" fill="#0e7490" stroke="#06b6d4" />
+    <!-- Magwell opening -->
+    <path d="M 370 425 L 415 425 L 410 435 L 375 435 Z" fill="#000" stroke="#38bdf8" />
+  </g>
+
+  <!-- Component 7: Lower Handguard - Below Gas Tube (x: 235-345, y: 395-420) -->
+  <g id="comp-lower-handguard" stroke="#ea580c" stroke-width="1.8" fill="#7c2d12" fill-opacity="0.4">
+    <path d="M 235 398 L 340 398 C 342 415, 335 422, 330 422 L 240 422 C 235 422, 233 415, 235 398 Z" />
+    <!-- Handguard retaining cap -->
+    <rect x="230" y="395" width="8" height="28" rx="2" stroke="#f97316" fill="#431407" />
+  </g>
+
+  <!-- Component 8: 30-Round Steel Magazine - Detached Below (x: 350-430, y: 450-580) -->
+  <g id="comp-magazine" stroke="#38bdf8" stroke-width="2" fill="#082f49" fill-opacity="0.4">
+    <!-- Distinctive curved banana magazine body -->
+    <path d="M 385 450 C 375 480, 360 520, 340 560 L 385 575 C 410 530, 425 490, 430 450 Z" />
+    <!-- Reinforcing ribs -->
+    <path d="M 378 475 C 385 495, 395 515, 412 530" stroke="#0284c7" stroke-width="1.5" />
+    <path d="M 368 495 C 375 515, 385 535, 400 550" stroke="#0284c7" stroke-width="1.5" />
+    <path d="M 358 515 C 365 535, 375 550, 388 565" stroke="#0284c7" stroke-width="1.5" />
+    <!-- Floorplate -->
+    <rect x="330" y="565" width="60" height="12" rx="2" transform="rotate(18, 330, 565)" stroke="#38bdf8" fill="#0c4a6e" />
+    <!-- Feed lips & locking lugs -->
+    <rect x="390" y="445" width="35" height="10" stroke="#00F5D4" fill="#0f766e" />
+  </g>
+
+  <!-- Component 9: Trigger & Fire Control Group - Under Receiver (x: 440-490, y: 425-470) -->
+  <g id="comp-trigger-group" stroke="#fbbf24" stroke-width="1.8" fill="#78350f" fill-opacity="0.5">
+    <!-- Trigger Guard -->
+    <path d="M 430 425 C 430 455, 475 455, 480 425" fill="none" stroke="#00F5D4" stroke-width="2" />
+    <!-- Curved Trigger blade -->
+    <path d="M 452 425 C 452 435, 458 445, 464 450" fill="none" stroke="#f59e0b" stroke-width="3" />
+    <!-- Magazine release lever latch -->
+    <path d="M 425 425 L 420 440 L 428 440 Z" stroke="#38bdf8" fill="#0369a1" />
+  </g>
+
+  <!-- Component 10: Wooden Buttstock & Pistol Grip - Detached Rear (x: 530-740, y: 390-530) -->
+  <g id="comp-buttstock" stroke="#ea580c" stroke-width="2" fill="#7c2d12" fill-opacity="0.35">
+    <!-- Buttstock wood outline -->
+    <path d="M 535 390 L 670 415 C 690 420, 700 440, 705 470 L 670 480 C 640 455, 580 435, 535 425 Z" />
+    <!-- Buttplate steel -->
+    <path d="M 670 415 C 690 420, 700 440, 705 470 L 712 470 C 708 438, 695 418, 675 413 Z" fill="#1e293b" stroke="#94a3b8" />
+    <!-- Trapdoor for cleaning kit in stock -->
+    <ellipse cx="692" cy="445" rx="5" ry="12" stroke="#38bdf8" fill="#0f172a" stroke-dasharray="2,2" />
+    <!-- Sling swivel mount -->
+    <rect x="620" y="445" width="16" height="8" rx="2" stroke="#94a3b8" fill="#334155" />
+
+    <!-- Pistol Grip -->
+    <path d="M 505 428 L 530 500 C 532 508, 520 515, 510 515 L 490 510 C 485 508, 485 500, 485 492 L 492 428 Z" fill="#9a3412" stroke="#f97316" stroke-width="2" />
+  </g>
+
+  <!-- CALLOUT LABELS & LEADER LINES (Coordinates matched to interactive Hotspots 1 through 10) -->
+
+  <!-- Hotspot 1: Receiver & Barrel Assembly (x: 23%, y: 62% -> (230, 400)) -->
+  <g id="callout-1" opacity="0.9">
+    <circle cx="230" cy="400" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="230" y="405" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">1</text>
+  </g>
+
+  <!-- Hotspot 2: Receiver Top Cover (x: 38%, y: 22% -> (380, 145)) -->
+  <g id="callout-2" opacity="0.9">
+    <circle cx="380" cy="145" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="380" y="150" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">2</text>
+  </g>
+
+  <!-- Hotspot 3: Driving Spring Mechanism (x: 48%, y: 35% -> (480, 225)) -->
+  <g id="callout-3" opacity="0.9">
+    <circle cx="480" cy="225" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="480" y="230" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">3</text>
+  </g>
+
+  <!-- Hotspot 4: Bolt Carrier with Gas Piston (x: 39%, y: 44% -> (390, 285)) -->
+  <g id="callout-4" opacity="0.9">
+    <circle cx="390" cy="285" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="390" y="290" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">4</text>
+  </g>
+
+  <!-- Hotspot 5: Rotating Bolt & Extractor (x: 34%, y: 53% -> (340, 345)) -->
+  <g id="callout-5" opacity="0.9">
+    <circle cx="340" cy="345" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="340" y="350" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">5</text>
+  </g>
+
+  <!-- Hotspot 6: Gas Tube & Handguard Upper (x: 31%, y: 30% -> (310, 195)) -->
+  <g id="callout-6" opacity="0.9">
+    <circle cx="310" cy="195" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="310" y="200" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">6</text>
+  </g>
+
+  <!-- Hotspot 7: Lower Handguard Wood (x: 29%, y: 64% -> (290, 415)) -->
+  <g id="callout-7" opacity="0.9">
+    <circle cx="290" cy="415" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="290" y="420" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">7</text>
+  </g>
+
+  <!-- Hotspot 8: 30-Round Steel Magazine (x: 39%, y: 80% -> (390, 520)) -->
+  <g id="callout-8" opacity="0.9">
+    <circle cx="390" cy="520" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="390" y="525" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">8</text>
+  </g>
+
+  <!-- Hotspot 9: Trigger & Fire Control Group (x: 46%, y: 68% -> (460, 440)) -->
+  <g id="callout-9" opacity="0.9">
+    <circle cx="460" cy="440" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="460" y="445" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">9</text>
+  </g>
+
+  <!-- Hotspot 10: Buttstock & Pistol Grip (x: 61%, y: 68% -> (610, 440)) -->
+  <g id="callout-10" opacity="0.9">
+    <circle cx="610" cy="440" r="16" fill="#000" stroke="#00F5D4" stroke-width="2" />
+    <text x="610" y="445" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4" text-anchor="middle">10</text>
+  </g>
+
+</svg>
+

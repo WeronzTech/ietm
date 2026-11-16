@@ -1,31 +1,80 @@
 {
-  "name": "ietm-electron",
+  "name": "ietm-level4-quantum",
+  "productName": "Quantum TechDocs IETM Level-4",
+  "description": "Interactive Electronic Technical Manual (JSG 0852 Level-4 S1000D Rev 5.0)",
+  "author": "SSS Defence Systems",
   "private": true,
-  "version": "0.0.0",
+  "version": "4.2.0",
   "type": "module",
   "main": "electron/main.js",
   "scripts": {
     "dev": "concurrently -k \"cross-env BROWSER=none npm run react:start\" \"npm run electron:start\"",
     "react:start": "vite",
     "electron:start": "wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
+    "server": "cross-env ELECTRON_RUN_AS_NODE=1 electron ./electron/server.js",
+    "start:server": "cross-env ELECTRON_RUN_AS_NODE=1 electron ./electron/server.js",
     "build": "vite build && electron-builder",
+    "pack": "vite build && electron-builder --dir",
+    "dist:win": "vite build && electron-builder --win nsis",
+    "dist:dir": "vite build && electron-builder --win dir",
+    "dist:mac": "vite build && electron-builder --mac dmg zip",
+    "test:ietm": "cross-env ELECTRON_RUN_AS_NODE=1 electron scratch/test_ietm_suite.mjs",
+    "test:transfer": "cross-env ELECTRON_RUN_AS_NODE=1 electron test-image-transfer.mjs",
+    "test:api": "cross-env ELECTRON_RUN_AS_NODE=1 electron scratch/test_server_api.mjs",
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-    "appId": "com.myapp.pms",
-    "productName": "My Property Manager",
+    "appId": "in.defence.ietm.level4",
+    "productName": "Quantum TechDocs IETM Level-4",
     "files": [
       "dist/**/*",
-      "electron/**/*"
+      "electron/**/*",
+      "public/**/*",
+      "ietm_core_secure.db"
+    ],
+    "extraResources": [
+      {
+        "from": "ietm_core_secure.db",
+        "to": "ietm_core_secure.db"
+      }
     ],
     "directories": {
-      "buildResources": "assets"
+      "buildResources": "assets",
+      "output": "release"
     },
     "win": {
-      "target": "nsis"
+      "target": [
+        "nsis",
+        "dir"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Quantum TechDocs IETM Level-4"
     },
     "mac": {
-      "target": "dmg"
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "linux": {
       "target": "AppImage"
@@ -35,6 +84,7 @@
     "@tailwindcss/vite": "^4.1.18",
     "bcryptjs": "^3.0.3",
     "better-sqlite3-multiple-ciphers": "^12.5.0",
+    "dotenv": "^16.4.7",
     "html-react-parser": "^5.2.11",
     "jodit": "^4.12.2",
     "jodit-react": "^5.3.21",

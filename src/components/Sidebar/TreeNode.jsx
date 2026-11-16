@@ -1,55 +1,5 @@
-// import { useState } from "react";
-
-// export default function TreeNode({ node, onSelect, activeId }) {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const hasChildren = node.children && node.children.length > 0;
-//   const isActive = node.id === activeId;
-
-//   const handleClick = (e) => {
-//     e.stopPropagation();
-//     if (hasChildren) setIsOpen(!isOpen);
-//     onSelect(node.id);
-//   };
-
-//   return (
-//     <div style={{ marginLeft: "12px" }}>
-//       <div
-//         onClick={handleClick}
-//         style={{
-//           cursor: "pointer",
-//           padding: "6px 8px",
-//           color: isActive ? "#fff" : "#ccc",
-//           backgroundColor: isActive ? "#0078d4" : "transparent",
-//           borderRadius: "4px",
-//           display: "flex",
-//           alignItems: "center",
-//           fontSize: "14px",
-//           marginBottom: "2px",
-//         }}
-//       >
-//         <span style={{ marginRight: "8px", width: "12px" }}>
-//           {hasChildren ? (isOpen ? "▼" : "▶") : "•"}
-//         </span>
-//         {node.title}
-//       </div>
-
-//       {isOpen && hasChildren && (
-//         <div style={{ borderLeft: "1px solid #444", marginLeft: "6px" }}>
-//           {node.children.map((child) => (
-//             <TreeNode
-//               key={child.id}
-//               node={child}
-//               onSelect={onSelect}
-//               activeId={activeId}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 import { useState } from "react";
-import { ChevronDown, ChevronRight, FileText } from "lucide-react";
+import { ChevronDown, ChevronRight, FileText, Folder, FolderOpen, Layers, Wrench } from "lucide-react";
 
 export default function TreeNode({ node, onSelect, activeId }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -62,33 +12,67 @@ export default function TreeNode({ node, onSelect, activeId }) {
     onSelect(node.id);
   };
 
+  const isIpb = node.node_type === "ipb" || node.node_type === "exploded_view";
+  const isDiag = node.node_type === "troubleshooting";
+
   return (
-    <div className="ml-2 select-none">
+    <div className="select-none">
       <div
         onClick={handleClick}
         className={`
-          flex cursor-pointer items-center rounded-sm px-2 py-1.5 text-sm transition-colors duration-150 mb-0.5
-          ${isActive ? "bg-vector-accent text-black font-bold tracking-wide" : "text-vector-text-muted hover:bg-vector-panel hover:text-vector-text font-mono"}
+          group flex cursor-pointer items-center rounded-lg px-2.5 py-1.5 text-xs transition-all duration-150 mb-0.5
+          ${
+            isActive
+              ? "bg-sky-500/15 text-sky-300 font-semibold border-l-2 border-sky-400 pl-2 shadow-sm"
+              : "text-slate-300 hover:bg-slate-800/70 hover:text-white"
+          }
         `}
       >
-        <span className="mr-2 flex items-center justify-center w-4 text-center text-gray-500">
-          {hasChildren ? (isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : <FileText size={12} />}
+        <span className="mr-1.5 flex items-center justify-center w-4 text-slate-500 group-hover:text-slate-300 transition-colors">
+          {hasChildren ? (
+            isOpen ? (
+              <ChevronDown size={13} className="text-slate-400" />
+            ) : (
+              <ChevronRight size={13} className="text-slate-400" />
+            )
+          ) : isIpb ? (
+            <Layers size={12} className="text-blue-400" />
+          ) : isDiag ? (
+            <Wrench size={12} className="text-amber-400" />
+          ) : (
+            <FileText size={12} className="text-slate-500" />
+          )}
         </span>
-        <span className="truncate flex-1">{node.title}</span>
-        {(node.node_type === "ipb" || node.node_type === "exploded_view") && (
-          <span className={`ml-2 text-[9px] px-1.5 py-0.5 rounded font-mono font-bold tracking-wider ${isActive ? "bg-black text-vector-accent" : "bg-blue-950/80 text-blue-400 border border-blue-800/60"}`}>
+
+        <span className="truncate flex-1 font-sans">{node.title}</span>
+
+        {isIpb && (
+          <span
+            className={`ml-1.5 text-[10px] px-1.5 py-0.2 rounded font-mono font-medium ${
+              isActive
+                ? "bg-blue-500/20 text-blue-300 border border-blue-400/30"
+                : "bg-slate-800 text-blue-400 border border-slate-700"
+            }`}
+          >
             IPB
           </span>
         )}
-        {node.node_type === "troubleshooting" && (
-          <span className={`ml-2 text-[9px] px-1.5 py-0.5 rounded font-mono font-bold tracking-wider ${isActive ? "bg-black text-amber-400" : "bg-amber-950/80 text-amber-400 border border-amber-800/60"}`}>
+
+        {isDiag && (
+          <span
+            className={`ml-1.5 text-[10px] px-1.5 py-0.2 rounded font-mono font-medium ${
+              isActive
+                ? "bg-amber-500/20 text-amber-300 border border-amber-400/30"
+                : "bg-slate-800 text-amber-400 border border-slate-700"
+            }`}
+          >
             DIAG
           </span>
         )}
       </div>
 
       {isOpen && hasChildren && (
-        <div className="ml-2 border-l border-gray-700 pl-1">
+        <div className="ml-3 border-l border-slate-800 pl-1.5 mt-0.5 space-y-0.5">
           {node.children.map((child) => (
             <TreeNode
               key={child.id}

@@ -27,7 +27,7 @@ export default function Model3DViewer() {
       name: "Rotating Bolt Carrier Unit",
       partNo: "SSS-BLT-009",
       nsn: "1005-01-522-1924",
-      color: "#00F5D4",
+      color: "#0284C7",
       explodeOffset: { x: 0, y: -70, z: 0 },
       geometry: { w: 70, h: 25, d: 25 },
     },
@@ -156,10 +156,10 @@ export default function Model3DViewer() {
         }
         ctx.closePath();
 
-        ctx.fillStyle = isSelected ? "rgba(0, 245, 212, 0.45)" : part.color + (idx % 2 === 0 ? "44" : "28");
+        ctx.fillStyle = isSelected ? "rgba(2, 132, 199, 0.45)" : part.color + (idx % 2 === 0 ? "44" : "28");
         ctx.fill();
 
-        ctx.strokeStyle = isSelected ? "#00F5D4" : part.color;
+        ctx.strokeStyle = isSelected ? "#38BDF8" : part.color;
         ctx.lineWidth = isSelected ? 2.5 : 1.2;
         ctx.stroke();
       });
@@ -167,7 +167,7 @@ export default function Model3DViewer() {
       // Part Center Label
       const center = project(offset.x, offset.y, offset.z);
       if (isSelected || isExploded) {
-        ctx.fillStyle = isSelected ? "#00F5D4" : "#ffffff";
+        ctx.fillStyle = isSelected ? "#38BDF8" : "#ffffff";
         ctx.font = isSelected ? "bold 11px monospace" : "9px monospace";
         ctx.textAlign = "center";
         ctx.fillText(part.name.split(" ")[0], center.x, center.y);
@@ -214,10 +214,10 @@ export default function Model3DViewer() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsExploded(!isExploded)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-sm text-xs font-bold uppercase tracking-widest border transition-all ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold tracking-wide border transition-all ${
               isExploded
-                ? "bg-vector-accent text-black border-vector-accent shadow-[0_0_15px_rgba(0,245,212,0.3)]"
-                : "bg-vector-panel border-gray-700 text-gray-300 hover:text-white"
+                ? "bg-sky-600 text-white border-sky-500 shadow-sm"
+                : "bg-slate-800/80 border-slate-700 text-slate-300 hover:text-white"
             }`}
           >
             <Layers size={14} /> {isExploded ? "Collapse Model" : "Exploded View"}
@@ -290,10 +290,10 @@ export default function Model3DViewer() {
                 <div
                   key={p.id}
                   onClick={() => setSelectedPartId(isSelected ? null : p.id)}
-                  className={`p-3 rounded border cursor-pointer transition-all ${
+                  className={`p-3 rounded-lg border cursor-pointer transition-all ${
                     isSelected
-                      ? "bg-vector-accent/15 border-vector-accent text-white shadow-[0_0_12px_rgba(0,245,212,0.2)]"
-                      : "bg-vector-bg/40 border-gray-800 text-vector-text-muted hover:bg-gray-800 hover:text-white"
+                      ? "bg-sky-500/15 border-sky-500 text-white shadow-sm"
+                      : "bg-slate-900/40 border-slate-800 text-slate-400 hover:bg-slate-800/60 hover:text-white"
                   }`}
                 >
                   <div className="flex items-center justify-between">

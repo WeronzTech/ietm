@@ -137,7 +137,7 @@ export default function VideoGallery({ manualId }) {
           {/* Big Center Play/Pause button on hover */}
           <button
             onClick={togglePlay}
-            className="absolute w-16 h-16 rounded-full bg-vector-accent/80 hover:bg-vector-accent text-black flex items-center justify-center shadow-[0_0_25px_rgba(0,245,212,0.4)] transition-all transform hover:scale-110 z-20"
+            className="absolute w-16 h-16 rounded-full bg-sky-500/90 hover:bg-sky-500 text-white flex items-center justify-center shadow-xl transition-all transform hover:scale-110 z-20"
           >
             {isPlaying ? <Pause size={28} /> : <Play size={28} className="ml-1" />}
           </button>

@@ -1,0 +1,195 @@
+
+--- PAGE 1 ---
+READTHEINSTRUCTIONS THOROUGHLYANDPAY ATTENTION TO THE WARNINGSINTHISMANUAL BEFOREUSING THISFIREARM;DONOTDISCARDTHISMANUAL.Thisinstructionmanualshouldaccompanythisﬁrearm at all timesandbetransferredwithit.
+USER MANUAL: HANDLING&SAFETYINSTRUCTIONS
+G72-SMG
+--- PAGE 2 ---
+USINGORHANDLINGTHESSS DEFENCE G-72 SMG WITHOUTFIRSTREADINGANDUNDERSTANDINGTHEENTIREOPERATOR’S MANUALCANRESULTINUNSAFE CONDITIONSWITHTHEPOTENTIALTOCAUSE DEATHORSERIOUSBODILYHARM.
+•ALWAYSHANDLEANDOPERATETHEFIREARMINACCORDANCEWITHTHEINSTRUCTIONSCONTAINEDINTHIS MANUAL.•NEVERALLOWUNAUTHORIZEDPERSONSTOHAVEACCESSTOANYFIREARMANDNEVERLEAVEAFIREARM UNSECURED.•BEFOREBEGINNINGANYMAINTENANCEBESURETOCLEARTHEFIREARM.•INSPECTTHECHAMBERVISUALLYANDPHYSICALLYTOENSUREITISCLEAROFANYAMMUNITION.•DONOTLOADWITHAHOTCHAMBER.•IFTHESMG STOPSFIRINGWITHALIVEROUNDINTHECHAMBEROFAHOTBARREL,REMOVEITWITHIN 10 SECONDS. IFTHAT CANNOT BE ACCOMPLISHED KEEP THE MUZZLE POINTEDINA SAFE DIRECTIONAND QUICKLYREMOVETHEMAGAZINE.THENWAIT15MINUTESBEFOREHANDLINGTHEFIREARM.•DONOTOVERHEATTHEBARREL.
+WARNING
+www.sssdefence.com2
+--- PAGE 3 ---
+•DONOTINTERCHANGEBOLTSBETWEENFIREARMS.•ENSURE THE CAM PINISPROPERLY INSTALLED INTHE BOLT CARRIERASSEMBLY. SEVERE DAMAGE TO THE FIREARMANDINJURYORDEATHTOTHEOPERATORCOULDOCCUR.•DONOTKEEPLIVEAMMUNITIONINTHEWORKAREA.•ONLYOPERATETHEWEAPON WITHAMMUNITIONOFTHECORRECTCALIBER. DONOTFIRESERIOUSLYCORRODEDAMMUNITION.•DONOTFIREDENTEDCARTRIDGES.•DONOTFIRECARTRIDGESWITHLOOSEBULLETS.•DONOTFIRECARTRIDGESWITHTHEBULLETCOMPRESSED(PUSHEDIN).•ALWAYSCHECKTOENSURETHESILENCER,IFUTILIZED,ISPROPERLYATTACHEDTOTHEBARREL.•AHOTSILENCERCANCAUSESEVEREBURNSASARESULTFROMDIRECTCONTACTWITHUNPROTECTEDSKIN ORPROLONGEDCONTACTWITHPROTECTEDSKIN.•ALWAYSCHECKTOENSURETHATTHESILENCERISTHECORRECTCALIBERFORTHEAMMUNITIONBEINGFIRED.•DO NOT FIRETHE FIREARM AFTER A KNOWN BAFFLE STRIKEOCCURS AS THISCAN CAUSE CATASTROPHIC FAILURETOTHESILENCERANDINJURYTOTHESHOOTERORABYSTANDER.
+WARNING
+www.sssdefence.com3
+--- PAGE 4 ---
+TableOf Contents
+www.sssdefence.com4
+1. Introduction 62. General Information about the SSS DEFENCE G-72 SMG 8WARNING  – ALTERATIONS 93. Identification of Components103.1 Specifications 11,123.2 Upper Receiver Group133.3 Lower Receiver Group143.4 Buttstock and Sling Sockets154. INSTRUCTIONS FOR USE16EXTRACTION, COCKING, FEEDING & LOCKING174.1 Operating the SSS DEFENCE G-72 SMG 184.1.1 Safety Rules & Procedures184.1.2 Safety Procedures18,194.2 Loading, Firing and Reloading204.2.1 Removing the Magazine204.2.2 Loading the Magazine214.2.3 Loading procedure214.2.4 Charging the Weapon22
+--- PAGE 5 ---
+www.sssdefence.com5
+4.2.5 Reloading the G72 during shooting: 224.2.6 Safe Unloading 234.2.7 Selecting Modes of Fire234.2.8 Sight Adjustment & Zeroing244.3 Cleaning the Barrel Bore and Cartridge Chamber254.3.1 Cleaning the rest of the weapon264.3.2 Preservation of the weapon264.3.2 Preservation of the weapon265. Immediate/Remedial Action276. User Level Authorized Preventive Maintenance286.1 Field Strip the SSS DEFENCE G-72 287. Function Check 308. Troubleshooting 319. Transportation and Storage3310. Service and Replacement Parts Policy34WARNING – PARTS PURCHASE35
+--- PAGE 6 ---
+1. IntroductionThismanualcontainstheinformationnecessarytosafelyoperateandperformauthorizedpreventativemaintenanceattheuserlevelontheSSS DEFENCE G72 Sub-Machine Gun (SMG).It is imperative that you read and understand this manual prior to loading, unloading or handling this firearm. Failure to read this manual and follow the instructions may result in serious injury or death to you or others. If, after reading these instructions, you have any doubts about your ability to handle and use the firearm safely, seek supervised instruction from a firearms instructor. You are responsible for your firearm at all times, and safe gun handling is your responsibility.DISCLAIMERSSS Defence will not be responsible for any injury, death or property damage that results from: disregard for safety instructions and warnings, criminal or negligent use of this firearm, careless handling of this firearm, improper modifications or repairs to the firearm, or the use of reloaded, nonstandard or defective ammunition.www.sssdefence.com6
+--- PAGE 7 ---
+THEBASICRULESOFSAFEFIREARMSHANDLING1.ALWAYStreateveryfirearmasifitwereloaded.2.ALWAYSbesurethebarrelisclearofanyobstruction.3.ALWAYSbesureofyourbackstop,whatliesbeyond,andthesafetyofbystandersbeforeyoushoot.4.ALWAYSuseclean,dry,originalfactory-madeammunitionofthepropertypeandcaliberforyourfirearm.5.ALWAYSwearearprotectionandsafetyglasseswhenshooting.6.ALWAYScarryyourfirearmsothatyoucancontrolthedirectionofthemuzzleifyoufallorstumble.7.NEVERshootataflatsurfaceorwater.8.DONOTleaveanunattendedfirearmloaded.Firearmsandammunitionshouldbestoredseparately,lockedifpossible,beyondthereachofchildren,carelessadults,andunauthorizedusers.9.NEVERallowyourfirearmtobeusedbyanyonewhohasnotreadandunderstoodthisoperator’smanual.10.DONOTpointanyfirearm,loadedorunloaded,atanyundesiredtarget.11.NEVERfireyourriflenearananimalunlessitistrainedtoacceptthenoise;ananimal’sstartledreactioncouldinjureitorcauseanaccident.12.NEVERdrinkalcoholicbeveragesortakedrugsbeforeorduringshooting,asyourvisionandjudgmentcouldbeseriouslyimpaired,makingyourfirearmhandlingunsafe.
+www.sssdefence.com7
+--- PAGE 8 ---
+DescriptionThe SSS DEFENCE G-72 SMG is a short-range, magazine fed, 9 x19mm NATO chambered sub-machine gun. The SSS DEFENCE G-72 SMG has both auto & semi-automatic settings. The operatingsystemisadelayed roller blowbacksystemenablingoptimumfunctionunderadverseconditions.The upper receiverprovides a full length MIL-STD 1913 rail. The receiverhas interfaces for mountingofMIL-STD1913railsegmentsatthe12,9, 6 and3o’clockpositions.
+2. General Information about the SSS DEFENCE G-72 SMG 
+www.sssdefence.com8
+WARNING 
+
+--- PAGE 9 ---
+•This product was designed to function properly in its original condition. Alterationscanmakeitunsafe.Donotalteranypartoraddorsubstituteany partsoraccessoriesnotmanufactured.•DO NOTALTERANYFIREARM
+WARNING – ALTERATIONS
+www.sssdefence.com9
+--- PAGE 10 ---
+3.Identification of ComponentsCharging Handle
+Trigger
+Pistol Grip
+Fire control selectorAmbidextrous MagazineRelease
+MIL-STD 1913 Upper Rail Adapter 
+Bolt Catch
+Foldable Butt Stock
+Flip-up sights
+Figure A: G72 Components
+Barrel
+www.sssdefence.com10
+--- PAGE 11 ---
+CALIBER 9 x19mmNATOOVERALLLENGTHW/TELESCOPICSTOCK23.5” 596.9mm / 24” 609.6mm / 25” 635mm
+OVERALL WIDTH 2.4” 63mmBARREL LENGTH6” 152.4mm / 7” 177.8mm / 8.9” 226.06mmLANDS&GROOVES 6 groovesRATEOFTWIST 1:10 (1 Turn in 10”in)WEIGHT (W/ SIGHTS & EMPTY MAG)2.5~3kgsMAGAZINE 30 RDPOLYMERHEIGHT(Measuredathighestpointoftoprail to magazine end point ) 260mmTOP MIL-STD 1913 RAIL MOUNTING SURFACE LENGTH 260~305mm
+BOTTOMMOUNTINGSURFACELENGTH 76mm
+3.1 Specifications
+www.sssdefence.com11
+--- PAGE 12 ---
+GRIP UTG SNIPER’S PISTOL GRIP
+TRIGGER TYPE SINGLESTAGE
+TRIGGER 1.5LBS~4.5LBS
+CHARGING HANDLEAMBIDEXTROUS
+SELECTOR 2POSAMBIDEXTROUS
+FIRE CONTROL SAFE/SEMI/AUTO
+BOLT CATCH STANDARDM4TYPE
+MAGCATCH AMBIDEXTROUS
+SLING ATTACHMENT POINTS4 PTS
+BUTTSTOCK FOLDABLE BUTTSTOCK
+www.sssdefence.com12
+--- PAGE 13 ---
+Chamber View
+Picatinny Rails
+3.2 Upper Receiver Group
+www.sssdefence.com13
+--- PAGE 14 ---
+Hammer
+Magazine
+Take Down Pin
+FireControlSelector
+Pistol Grip
+TheLowerReceiverGroupconsistsof thelowerreceiverassemblywithitsrelated parts andthebuttstock.
+Magazine CatchPivot Pin
+Figure B: G72 Components
+Bolt Catch
+Trigger
+3.3 Lower Receiver Group
+www.sssdefence.com14
+--- PAGE 15 ---
+The SSS DefenceG72 is fitted with a foldablebuttstock as per the shooter’s preference. To release the stock, push the hinge pin downwards to collapse the buttstock.
+Figure C: Unfolded ButtstockFigure D: Folded Buttstock
+Hinge Pin
+Sling Socket 1Sling Socket 2
+3.4 Buttstock and Sling Sockets
+www.sssdefence.com15
+--- PAGE 16 ---
+4. INSTRUCTIONS FOR USEThe SSS DEFENCE G-72 SMG follows an eight-step operation cycle. The first half is categorized by what is called the ‘recoil stroke’ starting with Firing and ending with Locking.FIRINGWhen the trigger is pulled, the firing pin strikes the cartridge primer, igniting the powder. This generates gas pressure, which propels the bullet down the barrel.Delay Mechanism (Rollers Engaged)The rollers located between the receiver and the blowback delay block remain engaged with the locking surfaces in the receiver, delaying the rearward movement of the carrier until safe amounts of pressure is maintained inside the barrel before the next step.UNLOCKING (Roller Disengagement)Breech mechanism is activated, which results in unlocking of the chamber. Chamber is where the cartridge sits.
+www.sssdefence.com16
+--- PAGE 17 ---
+EXTRACTIONAs the carrier moves back, the spent casing is extracted from the chamber and ejected out of the ejection port by the ejector.COCKINGDuring the rearward movement of the carrier, the recoil spring is compressed and the firing mechanism is cocked. When the carrier reaches the end of its travel, the recoil spring pushes it forward again.FEEDINGThe forward movement of the carrier picks up a new round from the magazine and chambers it, preparing the weapon for the next shot.LOCKINGThe carrier moves forward, and the roller drops downwards, re-engaging with the locking surfaces to delay the next firing cycle.www.sssdefence.com17
+--- PAGE 18 ---
+Alwaysfollowthesafetyrulesandproceduresnotedin thismanualinadditiontothesafetyrules,regulations,procedures orguidelinesofyourorganization.Treateveryfirearmasifitwereloaded.a.Neverpointafirearm at anythingyoudonotintendtoshoot.b.Keepyourtriggerfingeroffthetriggerandoutofthetriggerguarduntil youarereadytoshoot.c.Keepthefirearmonsafeuntil youarereadytoshoot.d.Besureofyourintendedtargetandknowwhatlaysbeyond.
+a.Whenhandingafirearm tosomeoneelseorpriortoacceptingafirearm fromanotherperson,alwaysphysicallyand visuallycheckthechambersobothpeoplecanensurethefirearmisunloaded/
+b. Be aware of where the muzzle of the firearm is pointed at all times while handling or operating the firearm. Never allow the muzzle to be inadvertently pointed at another person.
+4.1 Operating the SSS DEFENCE G-72 SMG4.1.1 Safety Rules & Procedures
+www.sssdefence.com18
+4.1.2 Safety Procedures
+--- PAGE 19 ---
+c. Beawareofwherethemuzzleofthefirearmispointedatalltimeswhilehandlingoroperatingthefirearm.Neverallowthemuzzletobeinadvertentlypointedatanotherperson.d. Alwaysperformafunctionscheckpriortoshootingthefirearm.Donotfirethefirearmifitisdamagedoritfailsfunctionscheck.e. Alwaysuseserviceable,cleanammunitionthathasbeenprofessionallymanufacturedtoSAAMI,orNATOSTANAGspecificationofthepropercaliberforthefirearm.Neveroilorotherwiselubricateammunition.Donotusedamagedordentedammunition.f. Donotfirethefirearmifyouhadaknownbafflestrikewithinthesilencerdevice,asthiscancauseacatastrophicfailuretothesilencer,andinjurytotheshooterorbystandershouldanotherbafflestrikeoccur.g. Livefirefirearm’strainingshouldalwaysbeconductedonanapprovedfiringrangeconformingtotheminimumsafetyrequirementsforthecaliberandammunitionutilizedandunderthesupervisionofqualifiedrangesafetypersonnel.h. Alwaysensurefirearmsareunloadedpriortostorage,maintenanceorotherwisenotinuse.i. Anymaintenancebeyondtheuserleveldescribedinthismanual,istobeperformedbyqualifiedpersonnelspecificallytrainedonthemaintenanceoftheSSS DEFENCE G-72 SMG inaccordancewiththearmorer’smanualforthisspecificfirearm.
+www.sssdefence.com19
+--- PAGE 20 ---
+Grip the gun firmly with your right hand while holding the top section of the magazine with your left hand. Position your left thumb near the magazine release, and press the release catch to detach the magazine from the firearm (See Figure E)
+Magazine Catch
+Figure E: Magazine Catch
+4.2 Loading, Firing and Reloading4.2.1 Removing the Magazine
+www.sssdefence.com20
+--- PAGE 21 ---
+CAUTION
+Hold the magazine with its feed lips pointing upward. Position the cartridge at the front of the magazine follower and press it downward. Stack the next cartridge on top of the previous one, sliding it into place in the same manner. Avoid overloading the magazine, as this may lead to malfunctions (Figure F)
+WHEN LOADING THE FIREARM, ALWAYS ENSURE THE MUZZLE IS POINTED IN A SAFE DIRECTION! Begin by inserting a loaded magazine into the firearm, ensuring it is securely locked by the magazine catch indicated by a clicking sound
+Figure F: Inserting loaded Magazine 
+4.2.2 Loading the Magazine
+4.2.3 Loading procedure
+www.sssdefence.com21
+--- PAGE 22 ---
+With one hand holding the firearm, use the other to pull the non-reciprocating charging lever fully backward (indicated by the red arrow in Figure G) and then release it. This action chambers a cartridge, making the firearm ready to fire. Pulling the trigger will discharge the firearm. To engage the safety, rotate the manual safety lever to the SAFE position.
+Figure H: Bolt catch
+After firing the last round, remove the empty magazine and insert a loaded one. Pull the cocking lever fully backward and release it, or press the bolt catch with your thumb to chamber the next round. The firearm is now reloaded and ready to fire again.
+Bolt Catch
+Charging Lever
+Figure G: Charging lever
+4.2.4 Charging the Weapon
+4.2.5 Reloading the G72 during shooting: 
+www.sssdefence.com22
+--- PAGE 23 ---
+POINT THE MUZZLE IN A SAFE DIRECTION!-Remove the magazine -Pull the cocking lever backward and ensure the chamber and magwell are empty -Release the slide -Perform a dry fire by pulling the trigger, keeping the muzzle pointed in a safe direction.
+The SSS DEFENCE G-72 features three fire control selector positions: SAFE, SEMI & AUTO. In the SAFE position, the firearm is prevented from firing by mechanically blocking the trigger’s movement. The selector can be maneuvered only when the hammer is cocked. The SEMI position enables semi-automatic firing, allowing one round to be fired with each trigger pull. AUTO then facilitates burst shots. The ambidextrous selector is designed for use by both right- and left-handed shooters, with each position clearly marked by pictographs for easy identification.
+Safe AutoSemi
+4.2.6 Safe Unloading 
+www.sssdefence.com23
+4.2.7 Selecting Modes of Fire
+--- PAGE 24 ---
+1.Prepare the Rifle•Ensure the firearm is unloaded and pointed safely. •Securely attach MBUS sights. •Choose a zeroing distance (e.g., 25m, 50m, or 100m). 2.Adjust Sights•Rear Sight: Adjust windage (1 Click = 0.5 MOA at 100 meters) with the knob (clockwise = right, counterclockwise = left). •Front Sight: Adjust elevation (1 Click = 1 MOA at 100 meters) using the tool (clockwise = lower impact, counterclockwise = raise impact). 3.Fire and Observe•Fire a 3-5 shot group at the target. •Check the point of impact relative to your aim. 4.Make Corrections•Adjust rear sight for windage and front sight for elevation. 5.Confirm Zero•Repeat steps until shots consistently align with the point of aim. 6.Finalize•Record settings for future reference. 
+4.2.8 Sight Adjustment & Zeroing
+www.sssdefence.com24
+--- PAGE 25 ---
+Before using your new firearm for the first time, ensure the barrel is cleaned thoroughly. After firing, clean the barrel bore and cartridge chamber using a clean patch attached to a cleaning rod. Replace the patch as needed until it comes out clean. If the bore is heavily soiled or has carbon buildup, apply a suitable gun cleaning solution to the bore and chamber. Allow it to sit for at least 10 minutes (or follow the specific instructions provided in the cleaning solution’s manual). Afterward, use an appropriate brush to remove any remaining residue.
+FIGURE L: Chamber view
+4.3 Cleaning the Barrel Bore and Cartridge Chamber
+www.sssdefence.com25
+
+--- PAGE 26 ---
+Use a clean patch to dry the bore and cartridge chamber, ensuring all residues are removed. Repeat the process if needed. To prevent muzzle damage, insert the cleaning rod and brush into the barrel through the chamber (Refer Figures M & N to disassemble weapon). Push the brush all the way through the barrel. Avoid reversing the direction while the brush is inside the barrel, as this could cause it to jam. Always use the appropriate, dedicated barrel bore cleaning brushes for the correct caliber.
+Clean the other parts of the weapon, including the external surfaces of the receiver, using a dry cloth and a suitable brush or wooden scraper. You may use preservation oil or kerosene during the cleaning process. However, avoid using bore cleaning solutions, as they are highly corrosive and may remain in the joints between components, potentially causing severe corrosion. Ensure that no cloth remnants or brush bristles are left in any part of the gun.After cleaning, wipe the bore, cartridge chamber, and all accessible parts with a cloth lightly oiled or use oil spray. Remove any excess oil. Before firing, ensure the barrel’s bore is dry. If using the gun in very low temperatures, remove the oil from all accessible parts or use a special lubricant designed for such conditions, as standard lubricants may thicken and cause malfunctions in extreme cold.For long-term storage in harsh climates, apply preservative grease, but be sure to remove it completely before using the gun again. Always point the gun in a safe direction. Remove the magazine and check that there is no round in the chamber or magazine well. 
+4.3.1 Cleaning the rest of the weapon
+www.sssdefence.com26
+4.3.2 Preservation of the weapon:
+--- PAGE 27 ---
+If the SSS DEFENCE G-72 SMG stops firing:1.Slapuponthebottomofthemagazine.2.Pullchargingcompletelyrearward.3.Observetheejectionofthecase/cartridgeandcheckthechamberforanyobstruction.4.Releasethecharginghandletofeedanewcartridge.5.Pressthetriggerandattempttofire thefirearm.
+Ifthefirearmstill failstofire refertothetroubleshooting sectionofthismanual.
+5. Immediate/Remedial Action
+www.sssdefence.com27
+--- PAGE 28 ---
+1.ClearthefirearmandrotatetheselectortoSAFE.2.Detachtheslingifitisattached.3.Pushthetakedownpinfromlefttorightuntil stoppedbythedetent to expose the lower receiver away from upper receiver (Figure M)4.Swingapartthereceivers (Refer Figure N)
+Figure M: Rear take down pin
+6. User Level Authorized Preventive Maintenance6.1 Field Strip the SSS DEFENCE G-72
+Figure N: Exposed Receivers www.sssdefence.com28
+
+--- PAGE 29 ---
+5.Partiallydrawbackthecharginghandletoexposetheboltcarrierassembly.Grasptheboltcarrierassemblyandpullitstraightoutfromtherearoftheupperreceiver.6.Removethecharginghandlebypullingitrearwarduntilthetwoguidetabsarealignedwiththeslotsintheupperreceivertrack.Thecharginghandlewillthendropoutofthetrackandcanberemovedfromtherearoftheupperreceiver.
+www.sssdefence.com29
+--- PAGE 30 ---
+7. Function Check1.Ensurethefirearmisclear.2.Insertanunloadedmagazineintomagwell.3.Fullyretractthecharginghandleuntilboltlockstotherear,thenpressthecharginghandleforwardtolock.4.RotatethefirecontrolselectortoSAFE.5.Depressthemagazinecatch.Themagazineshouldfallfreeofmagazinewell.6.Depresstheboltcatch.Theboltshouldgoforward.7.Pressthetriggertotherear.Thehammershouldnotfall.8.RotatethefireselectortoSEMI.9.Pressthetriggerandholdtotherear.Thehammershouldfall.10.Fullyretractthecharginghandle,cockingthefirearm.11.Slowlyreleasethetrigger.Youshouldhearanaudibleclick.12.Pressthetriggertotherear.Thehammershouldfall.
+www.sssdefence.com30
+--- PAGE 31 ---
+STOPPAGETEST/INSPECTIONCORRECTIVE ACTIONMisfireSelectoronSAFE.Rotatetoafireposition.Firingpin installed incorrectlyAssembleappropriatelyExcessiveoil infiring pinrecessofbolt.Cleanoutwithpipecleaner.Improper ammo.Detach/Discard.BoltFails to DisengageBolt has particles to be cleaned.Cleanandreplace.BurredBoltLugs.EvacuatetoArmorer.Feeding MishapsDirty/Corrodedammo.Cleanandreplace.Dirtymagazine.Cleanandreplace.Defectivemagazine.Replace.Overloadedmagazine.Removeexcessrounds.Magazinenotseated.Checkmagcatchadjustment.Underfunction.EvacuatetoArmorer.DoubleFeedDefectivemagazine.Replace.
+8. Troubleshooting
+www.sssdefence.com31
+--- PAGE 32 ---
+STOPPAGETEST/INSPECTIONCORRECTIVE ACTIONUnsuccessful ChamberingGrimy/Corrodedammo.Clean/Replace.Damagedammo.Discard/Replace.Dirtychamber.Clean.BoltFailstoLockGrimyboltlugs. Cleanlugs.Extraction MishapsFrozenextractor.Detach/Clean.Brokenextractorspring.EvacuatetoArmorer.Restrictedmovementofboltcarriergroup.Detach,clean,lube.Dirty/Corrodedammo.Detach/Clean.Dirtychamber.Clean.Bolt Fails to Lock to Rear after Previous RoundFaultymagazine.Replace.BrokenboltcatchEvacuatetoArmorer.FrozenSelectorLeverNeedsoil. Lubricate.Dirt/Residueundertrigger.Clean.
+www.sssdefence.com32
+--- PAGE 33 ---
+Whentransportingyourfirearmtoandfromshootingactivities,keepitunloadedforyoursafetyandforthesafety ofothers.Whenstoringyourfirearm,keepitseparatedfromammunition,underlockandkeyifpossible,andoutofthereachofchildrenandotherinexperiencedorunauthorizedpersons.
+Never place or store any firearm in such a manner that it may be dislodged. Firearms should always be stored securely and unloaded, away from children and other unauthorized users. Use the locking device originally supplied with this firearm for storage. The use of a locking device or safety lock is only one aspect of responsible firearms storage. For increased safety, firearms should be stored unloaded and locked in a location that is both separate from their ammunition and inaccessible to children and any other unauthorized person.STORESECURELY&UNLOADED
+9. Transportation and Storage
+WARNING – STORAGE
+www.sssdefence.com33
+--- PAGE 34 ---
+10. Service and Replacement Parts PolicyIf your firearm ever requires service, we highly recommend returning it to Stumpp Schuele Lewis Machine Tools Pvt. Ltd. Firearms are precision instruments, and certain replacement parts may need custom fitting to ensure proper function. Using the wrong part, improper fitting, or incorrect adjustments could lead to unsafe conditions, dangerous malfunctions, firearm damage, or serious injury to the shooter or others.
+If any part is ordered without returning the firearm to Stumpp Schuele Lewis Machine Tools Pvt. Ltd., the customer assumes full responsibility for ensuring the part is correct for their firearm and is installed and fitted properly by a qualified gunsmith.
+Stumpp Schuele Lewis Machine Tools Pvt. Ltd. is not responsible for the performance of any firearm where replacement parts were installed by unauthorized individuals.
+www.sssdefence.com34
+--- PAGE 35 ---
+Itisthepurchaser’sresponsibilitytobeabsolutelycertainthatanypartsorderedfromthefactoryarecorrectlyfittedandinstalled.FirearmsarecomplicatedmechanismsandIMPROPERFITTINGOFPARTSMAYRESULTINADANGEROUSMALFUNCTION,DAMAGETOTHEFIREARM,ANDSERIOUSINJURYTOTHESHOOTERANDOTHERPERSONS.Thepurchaser andinstallerofpartsmustacceptfullresponsibilityforthecorrectadjustmentandfunctioningoftherifleaftersuchinstallation. PARTS MUST FIT CORRECTLYServicePolicyIfyouhavequestionsconcerningtheperformanceorservicingof yourrifle,pleasewriteorcall:STUMPP SCHUELE LEWIS MACHINE TOOLS PVT LIMITEDNo. 283/B, Bommasandra Industrial Area, Attibele Hobli, Anekal Taluk, Bangalore - 560105
+WARNING – PARTS PURCHASE
+www.sssdefence.com35
+--- PAGE 36 ---
+P/N1800846-01REV00
+FORPRODUCTSERVICEON THISMODEL,PLEASECALL(603)610-3000,EXT.172PeaseBoulevard,Newington,NH03801USA

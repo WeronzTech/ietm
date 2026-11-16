@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-ov" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040814" />
+      <stop offset="100%" stop-color="#09142b" />
+    </linearGradient>
+    <pattern id="grid-ov" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.75" />
+    </pattern>
+    <pattern id="grid-major-ov" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#334155" stroke-width="1.2" opacity="0.6" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="600" fill="url(#bg-grad-ov)" />
+  <rect width="1000" height="600" fill="url(#grid-ov)" />
+  <rect width="1000" height="600" fill="url(#grid-major-ov)" />
+
+  <!-- Borders -->
+  <rect x="15" y="15" width="970" height="570" fill="none" stroke="#00F5D4" stroke-width="1.5" opacity="0.4" />
+
+  <!-- Header -->
+  <g transform="translate(40, 50)">
+    <text font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#00F5D4" letter-spacing="2">
+      MIL-STD-JSG-0852 // SYSTEM ARCHITECTURE OVERVIEW (FIG 01-A)
+    </text>
+    <text y="22" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="3">
+      7.62x39mm AK-47 ASSAULT RIFLE (SOVIET STANDARD)
+    </text>
+    <text y="40" font-family="'Courier New', monospace" font-size="11" fill="#94a3b8" letter-spacing="1">
+      OVERALL LENGTH: 870 mm (34.2 in) // BARREL LENGTH: 415 mm (16.3 in) // WEIGHT: 4.3 kg (9.5 lb)
+    </text>
+  </g>
+
+  <!-- Assembled AK-47 Profile Vector Schematic (Center: y: 220-420, x: 80-920) -->
+  <g id="ak47-assembled" transform="translate(40, 20)">
+
+    <!-- Slant Muzzle Nut -->
+    <rect x="80" y="278" width="18" height="16" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+    <polygon points="98,278 88,278 80,294 98,294" fill="#0284c7" stroke="#38bdf8" stroke-width="1" />
+
+    <!-- Barrel Exposed -->
+    <rect x="98" y="280" width="125" height="12" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" />
+
+    <!-- Cleaning Rod Under Barrel -->
+    <line x1="88" y1="298" x2="330" y2="298" stroke="#94a3b8" stroke-width="2" />
+    <circle cx="88" cy="298" r="3" fill="#38bdf8" />
+
+    <!-- Front Sight Assembly -->
+    <g transform="translate(108, 245)">
+      <rect x="0" y="35" width="22" height="15" fill="#0f172a" stroke="#00F5D4" stroke-width="1.5" />
+      <path d="M 4 35 L 4 12 C 4 2, 20 2, 20 12 L 20 35 Z" fill="#0f172a" stroke="#00F5D4" stroke-width="1.5" />
+      <line x1="12" y1="12" x2="12" y2="26" stroke="#fbbf24" stroke-width="2.5" />
+    </g>
+
+    <!-- Gas Block & Port (45 deg angle) -->
+    <g transform="translate(210, 248)">
+      <path d="M 0 32 L 24 12 L 40 12 L 40 44 L 0 44 Z" fill="#09182a" stroke="#38bdf8" stroke-width="1.5" />
+      <circle cx="28" cy="25" r="4" fill="#00F5D4" />
+    </g>
+
+    <!-- Gas Tube & Upper Handguard Wood -->
+    <g transform="translate(250, 256)">
+      <path d="M 0 4 L 115 4 C 118 4, 120 8, 120 16 L 0 16 Z" fill="#7c2d12" stroke="#ea580c" stroke-width="1.8" />
+      <line x1="10" y1="10" x2="110" y2="10" stroke="#f97316" stroke-width="1" stroke-dasharray="8,4" />
+    </g>
+
+    <!-- Lower Handguard Wood -->
+    <g transform="translate(245, 276)">
+      <path d="M 0 4 L 125 4 C 127 22, 118 28, 110 28 L 10 28 C 4 28, 0 20, 0 4 Z" fill="#9a3412" stroke="#f97316" stroke-width="1.8" />
+      <path d="M 20 16 C 50 16, 80 16, 105 16" stroke="#ea580c" stroke-width="1.5" />
+    </g>
+
+    <!-- Rear Sight Base & Leaf -->
+    <g transform="translate(365, 252)">
+      <rect x="0" y="16" width="30" height="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+      <line x1="4" y1="18" x2="28" y2="10" stroke="#fbbf24" stroke-width="2" />
+      <rect x="22" y="8" width="6" height="5" fill="#f59e0b" />
+    </g>
+
+    <!-- Receiver Main Body -->
+    <g transform="translate(390, 260)">
+      <!-- Receiver box -->
+      <rect x="0" y="8" width="180" height="48" fill="#09182a" stroke="#00F5D4" stroke-width="2" />
+      <!-- Top Cover -->
+      <path d="M 0 8 C 10 -4, 50 -12, 120 -12 L 175 -8 C 182 -4, 182 2, 180 8 Z" fill="#0c2340" stroke="#38bdf8" stroke-width="1.8" />
+      <!-- Cocking Handle protruding -->
+      <path d="M 60 4 L 75 4 C 82 4, 85 10, 82 18 L 72 18" stroke="#38bdf8" stroke-width="2.5" fill="none" />
+      <!-- Selector Lever (Shown in SEMI position) -->
+      <path d="M 125 18 L 170 24 L 168 34 L 125 28 Z" fill="#0e7490" stroke="#06b6d4" stroke-width="1.5" />
+      <!-- Magazine Well & Latch -->
+      <rect x="15" y="48" width="40" height="8" fill="#000" stroke="#38bdf8" />
+      <path d="M 55 52 L 62 64 L 68 64 Z" fill="#0284c7" stroke="#38bdf8" />
+    </g>
+
+    <!-- 30-Round Steel Curved Magazine -->
+    <g transform="translate(405, 316)">
+      <path d="M 0 0 C -12 35, -28 75, -50 115 L -5 130 C 20 85, 38 45, 42 0 Z" fill="#082f49" stroke="#38bdf8" stroke-width="2" />
+      <!-- Horizontal stamping ribs -->
+      <path d="M -10 25 C -2 45, 10 65, 26 80" stroke="#0284c7" stroke-width="1.5" />
+      <path d="M -22 50 C -14 70, -2 90, 15 105" stroke="#0284c7" stroke-width="1.5" />
+      <path d="M -34 75 C -26 95, -15 110, 2 125" stroke="#0284c7" stroke-width="1.5" />
+      <!-- Mag floorplate -->
+      <rect x="-60" y="122" width="60" height="12" rx="2" transform="rotate(20, -60, 122)" fill="#0c4a6e" stroke="#38bdf8" />
+    </g>
+
+    <!-- Trigger Guard & Trigger Blade -->
+    <g transform="translate(460, 316)">
+      <path d="M 0 0 C 0 32, 45 32, 50 0" fill="none" stroke="#00F5D4" stroke-width="2" />
+      <path d="M 22 0 C 22 10, 28 20, 34 25" fill="none" stroke="#fbbf24" stroke-width="3" />
+    </g>
+
+    <!-- Pistol Grip -->
+    <g transform="translate(520, 316)">
+      <path d="M 0 0 L 25 75 C 28 85, 15 90, 5 90 L -15 85 C -20 80, -20 72, -20 65 L -12 0 Z" fill="#9a3412" stroke="#ea580c" stroke-width="2" />
+      <!-- Checkering diamond pattern lines -->
+      <line x1="-8" y1="20" x2="15" y2="45" stroke="#f97316" stroke-width="1" />
+      <line x1="-12" y1="35" x2="10" y2="60" stroke="#f97316" stroke-width="1" />
+    </g>
+
+    <!-- Wooden Buttstock -->
+    <g transform="translate(570, 268)">
+      <path d="M 0 0 L 145 25 C 170 30, 185 50, 190 85 L 150 95 C 115 70, 50 48, 0 40 Z" fill="#7c2d12" stroke="#ea580c" stroke-width="2" />
+      <!-- Steel Buttplate -->
+      <path d="M 145 25 C 170 30, 185 50, 190 85 L 198 85 C 193 48, 178 25, 152 23 Z" fill="#1e293b" stroke="#94a3b8" />
+      <!-- Cleaning kit trapdoor -->
+      <ellipse cx="180" cy="58" rx="4" ry="12" fill="#0b172a" stroke="#38bdf8" />
+      <!-- Rear sling swivel -->
+      <rect x="95" y="58" width="18" height="8" rx="2" fill="#334155" stroke="#94a3b8" />
+    </g>
+
+  </g>
+
+  <!-- Dimension Callout Lines -->
+  <!-- Overall Length: 870 mm -->
+  <g transform="translate(120, 490)">
+    <line x1="0" y1="0" x2="685" y2="0" stroke="#00F5D4" stroke-width="1.5" stroke-dasharray="4,4" />
+    <line x1="0" y1="-8" x2="0" y2="8" stroke="#00F5D4" stroke-width="2" />
+    <line x1="685" y1="-8" x2="685" y2="8" stroke="#00F5D4" stroke-width="2" />
+    <rect x="250" y="-12" width="185" height="24" fill="#050811" stroke="#00F5D4" stroke-width="1" />
+    <text x="342" y="4" font-family="monospace" font-size="11" font-weight="bold" fill="#00F5D4" text-anchor="middle">
+      OVERALL LENGTH: 870 mm (34.2 in)
+    </text>
+  </g>
+
+  <!-- Technical Spec Box Lower Left -->
+  <g transform="translate(40, 480)">
+    <rect width="280" height="90" fill="#0b172a" stroke="#38bdf8" stroke-width="1" opacity="0.9" />
+    <text x="12" y="20" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">SYSTEM PERFORMANCE SPECS</text>
+    <text x="12" y="38" font-family="monospace" font-size="9" fill="#e2e8f0">• Cartridge: 7.62 x 39 mm M43</text>
+    <text x="12" y="52" font-family="monospace" font-size="9" fill="#e2e8f0">• Cyclic Rate: 600 rounds / min</text>
+    <text x="12" y="66" font-family="monospace" font-size="9" fill="#e2e8f0">• Muzzle Velocity: 715 m/s (2,346 ft/s)</text>
+    <text x="12" y="80" font-family="monospace" font-size="9" fill="#e2e8f0">• Effective Range: 400 m (Iron Sights)</text>
+  </g>
+
+  <!-- Fire Selector Legend Lower Center -->
+  <g transform="translate(340, 520)">
+    <rect width="320" height="50" fill="#0b172a" stroke="#a78bfa" stroke-width="1" opacity="0.9" />
+    <text x="12" y="18" font-family="monospace" font-size="10" font-weight="bold" fill="#c084fc">SELECTOR POSITIONS (SOVIET CYRILLIC)</text>
+    <text x="12" y="36" font-family="monospace" font-size="9" fill="#e2e8f0">Top: ПР (Safe) | Middle: АВ (Auto) | Bottom: ОД (Semi)</text>
+  </g>
+
+</svg>
+

@@ -1,22 +1,58 @@
 import Database from "better-sqlite3-multiple-ciphers";
 import path from "node:path";
-import { app } from "electron";
-import dotenv from "dotenv";
+import fs from "node:fs";
+let electronApp = null;
+try {
+  const electron = await import("electron");
+  electronApp = electron.app || electron.default?.app || null;
+} catch (e) {
+  // Server / CLI mode
+}
 import { fileURLToPath } from "node:url";
 import process from "node:process";
 import bcrypt from "bcryptjs";
 
-dotenv.config();
+try {
+  const dotenv = await import("dotenv");
+  (dotenv.default?.config || dotenv.config)?.();
+} catch (e) {
+  // Dotenv not present or unnecessary in production bundle
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const isDev = process.env.VITE_APP_NODE_ENV === "development";
+const isDev = process.env.NODE_ENV === "development" || process.env.VITE_APP_NODE_ENV === "development" || !electronApp;
 
 // Define DB location
-const dbPath = isDev
-  ? path.join(process.cwd(), "ietm_core_secure.db")
-  : path.join(app.getPath("userData"), "ietm_core_secure.db");
+let dbPath;
+if (isDev || !electronApp?.getPath) {
+  dbPath = path.join(process.cwd(), "ietm_core_secure.db");
+} else {
+  const userDbPath = path.join(electronApp.getPath("userData"), "ietm_core_secure.db");
+  if (!fs.existsSync(userDbPath)) {
+    const candidateSources = [
+      path.join(process.resourcesPath || "", "ietm_core_secure.db"),
+      path.join(process.resourcesPath || "", "app.asar.unpacked", "ietm_core_secure.db"),
+      path.join(process.resourcesPath || "", "app", "ietm_core_secure.db"),
+      path.join(electronApp.getAppPath ? electronApp.getAppPath() : "", "ietm_core_secure.db"),
+      path.join(process.cwd(), "ietm_core_secure.db"),
+    ];
+    for (const src of candidateSources) {
+      if (src && fs.existsSync(src)) {
+        try {
+          fs.mkdirSync(electronApp.getPath("userData"), { recursive: true });
+          fs.copyFileSync(src, userDbPath);
+          console.log(`[IETM DB] Copied initial database from ${src} to ${userDbPath}`);
+          break;
+        } catch (err) {
+          console.error("[IETM DB] Error copying database:", err);
+        }
+      }
+    }
+  }
+  dbPath = userDbPath;
+}
 
 export const db = new Database(dbPath);
 
@@ -30,7 +66,7 @@ try {
   db.prepare("SELECT count(*) FROM sqlite_master").get();
 } catch (e) {
   console.error("CRITICAL: Database key mismatch or corruption.");
-  app.quit();
+  if (electronApp?.quit) electronApp.quit(); else process.exit(1);
 }
 
 export function initDb() {
@@ -350,7 +386,7 @@ export function initDb() {
   const settingsSeed = [
     ["app_title", "SSS DEFENCE IETM (CLASS 4)"],
     ["client_logo", "/logo.png"],
-    ["copyright_text", "© 2026 SSS Defence. Restricted Military Technology. Unauthorized Reproduction Prohibited."],
+    ["copyright_text", "┬⌐ 2026 SSS Defence. Restricted Military Technology. Unauthorized Reproduction Prohibited."],
     ["idle_timeout_minutes", "15"],
     ["multi_user_detect", "true"],
     ["theme", "dark"],
@@ -387,31 +423,26 @@ export function initDb() {
     insertSugg.run("Safety Warning", "Safety");
   }
 
-  // Seed Super User & Operators
-  const admin = db
-    .prepare("SELECT * FROM users WHERE username = 'superadmin'")
-    .get();
-  if (!admin) {
-    const hash = bcrypt.hashSync("admin123", 10);
-    db.prepare(
-      "INSERT INTO users (username, password, role, access_level, unit_code) VALUES (?, ?, ?, ?, ?)",
-    ).run("superadmin", hash, "superadmin", 3, "HQ-01");
+  // Seed Super User & Default Accounts (ONLY on fresh database initialization)
+  const userCount = db.prepare("SELECT count(*) as count FROM users").get()?.count || 0;
+  if (userCount === 0) {
+    const defaultAccounts = [
+      { username: "superadmin", pass: "admin123", role: "superadmin", level: 3, unit: "HQ-01" },
+      { username: "admin1", pass: "admin123", role: "admin", level: 3, unit: "HQ-ADMIN" },
+      { username: "maintainer1", pass: "maint123", role: "maintainer", level: 2, unit: "ECHELON-3-WORKSHOP" },
+      { username: "operator1", pass: "operator123", role: "operator", level: 1, unit: "FIELD-BRIGADE-4" },
+    ];
+    for (const acc of defaultAccounts) {
+      const hash = bcrypt.hashSync(acc.pass, 10);
+      db.prepare(
+        "INSERT INTO users (username, password, role, access_level, unit_code) VALUES (?, ?, ?, ?, ?)"
+      ).run(acc.username, hash, acc.role, acc.level, acc.unit);
+    }
   }
 
-  const op = db.prepare("SELECT * FROM users WHERE username = 'operator1'").get();
-  if (!op) {
-    const hash = bcrypt.hashSync("operator123", 10);
-    db.prepare(
-      "INSERT INTO users (username, password, role, access_level, unit_code) VALUES (?, ?, ?, ?, ?)",
-    ).run("operator1", hash, "operator", 1, "FIELD-BRIGADE-4");
-  }
-
-  const maint = db.prepare("SELECT * FROM users WHERE username = 'maintainer1'").get();
-  if (!maint) {
-    const hash = bcrypt.hashSync("maint123", 10);
-    db.prepare(
-      "INSERT INTO users (username, password, role, access_level, unit_code) VALUES (?, ?, ?, ?, ?)",
-    ).run("maintainer1", hash, "maintainer", 2, "ECHELON-3-WORKSHOP");
-  }
+  // Schema migrations for existing databases
+  try { db.exec("ALTER TABLE users ADD COLUMN failed_attempts INTEGER DEFAULT 0"); } catch (e) {}
+  try { db.exec("ALTER TABLE users ADD COLUMN locked_until DATETIME"); } catch (e) {}
+  try { db.exec("ALTER TABLE audit_logs ADD COLUMN ip_address TEXT"); } catch (e) {}
 }
 

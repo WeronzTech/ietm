@@ -3,13 +3,17 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("api", {
   // Auth
   login: (data) => ipcRenderer.invoke("auth:login", data),
+  changePassword: (data) => ipcRenderer.invoke("auth:change-password", data),
 
   // Admin Features
   createUser: (data) => ipcRenderer.invoke("auth:create-user", data),
+  updateUser: (data) => ipcRenderer.invoke("auth:update-user", data),
   deleteUser: (id) => ipcRenderer.invoke("auth:delete-user", id),
+  unlockUser: (id) => ipcRenderer.invoke("auth:unlock-user", id),
   getUsers: () => ipcRenderer.invoke("auth:get-users"),
   getAudits: () => ipcRenderer.invoke("ietm:get-audits"),
   createBackup: () => ipcRenderer.invoke("ietm:create-backup"),
+  generateCustomerPackage: (data) => ipcRenderer.invoke("ietm:generate-customer-package", data),
   logAudit: (data) => ipcRenderer.invoke("ietm:log-audit", data),
 
   // Manual CRUD
@@ -32,12 +36,14 @@ contextBridge.exposeInMainWorld("api", {
   saveHotspots: (data) => ipcRenderer.invoke("ietm:save-hotspots", data),
   getHotspots: (moduleId) => ipcRenderer.invoke("ietm:get-hotspots", moduleId),
   saveDiagnostic: (data) => ipcRenderer.invoke("ietm:save-diagnostic", data),
-  getDiagnostic: (moduleId) => ipcRenderer.invoke("ietm:get-diagnostic", moduleId),
+  getDiagnostic: (moduleId) =>
+    ipcRenderer.invoke("ietm:get-diagnostic", moduleId),
 
   // Logistics & Supply
   getInventory: () => ipcRenderer.invoke("ietm:get-inventory"),
   addInventory: (data) => ipcRenderer.invoke("ietm:add-inventory", data),
-  getModuleParts: (moduleId) => ipcRenderer.invoke("ietm:get-module-parts", moduleId),
+  getModuleParts: (moduleId) =>
+    ipcRenderer.invoke("ietm:get-module-parts", moduleId),
   addModulePart: (data) => ipcRenderer.invoke("ietm:add-module-part", data),
   saveModuleParts: (data) => ipcRenderer.invoke("ietm:save-module-parts", data),
 
@@ -57,18 +63,26 @@ contextBridge.exposeInMainWorld("api", {
   getAllAnnotations: () => ipcRenderer.invoke("ietm:get-all-annotations"),
   addAnnotation: (data) => ipcRenderer.invoke("ietm:add-annotation", data),
   replyAnnotation: (data) => ipcRenderer.invoke("ietm:reply-annotation", data),
-  moderateAnnotation: (data) => ipcRenderer.invoke("ietm:moderate-annotation", data),
+  moderateAnnotation: (data) =>
+    ipcRenderer.invoke("ietm:moderate-annotation", data),
   deleteAnnotation: (id) => ipcRenderer.invoke("ietm:delete-annotation", id),
 
   // Search History & Suggestions (V11, V12, V13, V14, V15, A13, O7)
-  getSearchSuggestions: (query) => ipcRenderer.invoke("ietm:get-search-suggestions", query),
-  addSearchSuggestion: (data) => ipcRenderer.invoke("ietm:add-search-suggestion", data),
-  deleteSearchSuggestion: (id) => ipcRenderer.invoke("ietm:delete-search-suggestion", id),
-  getSearchHistory: (userId) => ipcRenderer.invoke("ietm:get-search-history", userId),
-  saveSearchHistory: (data) => ipcRenderer.invoke("ietm:save-search-history", data),
-  clearSearchHistory: (userId) => ipcRenderer.invoke("ietm:clear-search-history", userId),
+  getSearchSuggestions: (query) =>
+    ipcRenderer.invoke("ietm:get-search-suggestions", query),
+  addSearchSuggestion: (data) =>
+    ipcRenderer.invoke("ietm:add-search-suggestion", data),
+  deleteSearchSuggestion: (id) =>
+    ipcRenderer.invoke("ietm:delete-search-suggestion", id),
+  getSearchHistory: (userId) =>
+    ipcRenderer.invoke("ietm:get-search-history", userId),
+  saveSearchHistory: (data) =>
+    ipcRenderer.invoke("ietm:save-search-history", data),
+  clearSearchHistory: (userId) =>
+    ipcRenderer.invoke("ietm:clear-search-history", userId),
   searchAdvanced: (data) => ipcRenderer.invoke("ietm:search-advanced", data),
-  searchPdfManuals: (data) => ipcRenderer.invoke("ietm:search-pdf-manuals", data),
+  searchPdfManuals: (data) =>
+    ipcRenderer.invoke("ietm:search-pdf-manuals", data),
 
   // Media & Assets Gallery (V4, V5, V6, V24, O10)
   getManualAssets: (data) => ipcRenderer.invoke("ietm:get-manual-assets", data),
@@ -76,7 +90,8 @@ contextBridge.exposeInMainWorld("api", {
   deleteManualAsset: (id) => ipcRenderer.invoke("ietm:delete-manual-asset", id),
 
   // Revisions (V34, A14)
-  getRevisions: (manualId) => ipcRenderer.invoke("ietm:get-revisions", manualId),
+  getRevisions: (manualId) =>
+    ipcRenderer.invoke("ietm:get-revisions", manualId),
   addRevision: (data) => ipcRenderer.invoke("ietm:add-revision", data),
 
   // System Settings (A15, O11)
@@ -85,14 +100,18 @@ contextBridge.exposeInMainWorld("api", {
 
   // Session & Security (V36, V37, V38)
   sessionPing: (data) => ipcRenderer.invoke("auth:session-ping", data),
-  getSecurityQuestion: (username) => ipcRenderer.invoke("auth:get-security-question", username),
-  setSecurityQuestion: (data) => ipcRenderer.invoke("auth:set-security-question", data),
-  verifySecurityQuestion: (data) => ipcRenderer.invoke("auth:verify-security-question", data),
+  getSecurityQuestion: (username) =>
+    ipcRenderer.invoke("auth:get-security-question", username),
+  setSecurityQuestion: (data) =>
+    ipcRenderer.invoke("auth:set-security-question", data),
+  verifySecurityQuestion: (data) =>
+    ipcRenderer.invoke("auth:verify-security-question", data),
 
   // Diagnostic Link Checker (G3)
   checkLinks: (manualId) => ipcRenderer.invoke("ietm:check-links", manualId),
 
   // Reports & Backup (A8, A9, A11)
-  getConsolidatedReport: (filters) => ipcRenderer.invoke("ietm:get-consolidated-report", filters),
+  getConsolidatedReport: (filters) =>
+    ipcRenderer.invoke("ietm:get-consolidated-report", filters),
   restoreBackup: () => ipcRenderer.invoke("ietm:restore-backup"),
 });
