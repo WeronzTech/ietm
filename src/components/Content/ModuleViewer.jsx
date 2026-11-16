@@ -14,6 +14,7 @@ export default function ModuleViewer({
   onOpenAnnotations,
 }) {
   const [activeHotspot, setActiveHotspot] = useState(null);
+  const [hoverTooltip, setHoverTooltip] = useState(null);
 
   if (!module) {
     return (
@@ -26,6 +27,34 @@ export default function ModuleViewer({
 
   // 1. Safety Alert Scan (Military Defense Compliance)
   const safetyOverlay = <SafetyModal content={module.content_html} />;
+
+  const handleContentMouseOver = (e) => {
+    const link = e.target.closest("a, [data-hotspot-type], [data-module-id]");
+    if (!link) {
+      if (hoverTooltip) setHoverTooltip(null);
+      return;
+    }
+    const hotspotType = link.getAttribute("data-hotspot-type");
+    const dataModId = link.getAttribute("data-module-id");
+    const rect = link.getBoundingClientRect();
+    if (hotspotType) {
+      setHoverTooltip({
+        text: `[${hotspotType.toUpperCase()} HOTSPOT] ${link.getAttribute("data-hotspot-title") || "Click to inspect"}`,
+        x: Math.max(10, rect.left),
+        y: Math.max(10, rect.top - 28),
+      });
+    } else if (dataModId) {
+      setHoverTooltip({
+        text: `[HYPERLINK] Jump to Data Module #${dataModId}`,
+        x: Math.max(10, rect.left),
+        y: Math.max(10, rect.top - 28),
+      });
+    }
+  };
+
+  const handleContentMouseOut = () => {
+    setHoverTooltip(null);
+  };
 
   // 2. Intercept click on hyperlinked cross-references (V16) and interactive hotspots (V17, V18, V19, V20)
   const handleContentClick = (e) => {
@@ -111,25 +140,27 @@ export default function ModuleViewer({
             fontSize: `${fontSize}px`,
           }}
           onClick={handleContentClick}
+          onMouseOver={handleContentMouseOver}
+          onMouseOut={handleContentMouseOut}
         >
           {/* Header */}
           <div
             className={`flex items-center justify-between mb-6 border-b pb-4 ${
-              isLight ? "border-gray-300" : "border-gray-800"
+              isLight ? "border-gray-300" : "border-slate-800"
             }`}
           >
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono uppercase bg-gray-800 text-vector-accent px-2 py-0.5 rounded border border-gray-700">
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="text-[11px] font-mono font-semibold bg-sky-500/10 text-sky-400 px-2.5 py-0.5 rounded-md border border-sky-500/30">
                   {module.dm_code || `DMC-WEAPON-00${module.id}`}
                 </span>
-                <span className="text-[10px] font-mono text-gray-500 uppercase">
-                  CLASSIFICATION: {module.security_class || "RESTRICTED"}
+                <span className="text-[10px] font-mono font-medium uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                  {module.security_class || "RESTRICTED"}
                 </span>
               </div>
               <h1
-                className={`text-2xl lg:text-3xl font-bold uppercase tracking-wider ${
-                  isLight ? "text-gray-900" : "text-vector-text"
+                className={`text-2xl lg:text-3xl font-bold tracking-tight ${
+                  isLight ? "text-gray-900" : "text-white"
                 }`}
               >
                 {module.title}
@@ -140,23 +171,23 @@ export default function ModuleViewer({
               {onOpenAnnotations && (
                 <button
                   onClick={onOpenAnnotations}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold font-mono tracking-widest uppercase bg-gray-800 border border-gray-700 text-vector-text-muted hover:text-white transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium tracking-wide bg-slate-800/80 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
                   title="Open Notes & Annotations"
                 >
-                  <MessageSquare size={13} /> NOTES
+                  <MessageSquare size={14} /> Notes
                 </button>
               )}
               <button
                 onClick={onToggleBookmark}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold tracking-widest uppercase transition-colors border ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium tracking-wide transition-colors border ${
                   isBookmarked
-                    ? "bg-vector-accent/20 border-vector-accent text-vector-accent"
+                    ? "bg-sky-500/15 border-sky-500/50 text-sky-300 shadow-sm"
                     : isLight
                     ? "bg-gray-100 border-gray-300 text-gray-700 hover:text-black hover:bg-gray-200"
-                    : "bg-gray-800 border-gray-700 text-gray-500 hover:text-white"
+                    : "bg-slate-800/80 border-slate-700 text-slate-400 hover:text-white"
                 }`}
               >
-                {isBookmarked ? "📍 PINNED" : "📌 PIN TO BOOKMARKS"}
+                {isBookmarked ? "📍 Pinned" : "📌 Pin to Bookmarks"}
               </button>
             </div>
           </div>
@@ -166,15 +197,15 @@ export default function ModuleViewer({
             className={`max-w-none leading-relaxed select-text ${
               isLight
                 ? "prose prose-slate text-gray-800 [&_a]:text-blue-600 [&_a]:underline font-sans"
-                : "prose prose-invert text-gray-300 [&_a]:text-vector-accent [&_a]:underline font-sans"
+                : "prose prose-invert text-slate-200 [&_a]:text-sky-400 [&_a]:underline font-sans"
             }`}
             dangerouslySetInnerHTML={{ __html: module.content_html }}
           />
 
           {/* Interactive Demonstration Hotspots Bar */}
-          <div className="mt-10 p-4 rounded-lg bg-gray-900/60 border border-gray-800 flex flex-wrap items-center justify-between gap-3 text-xs hide-on-print">
-            <span className="font-mono text-[10px] text-gray-400 uppercase tracking-widest">
-              Available Cross-Reference Hotspots:
+          <div className="mt-10 p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs hide-on-print shadow-sm backdrop-blur-sm">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Interactive Hotspot Triggers:
             </span>
             <div className="flex items-center gap-2">
               <button
@@ -185,7 +216,7 @@ export default function ModuleViewer({
                     content: "Upper receiver retaining screws must be tightened to exactly 65 inch-pounds in criss-cross pattern using torque wrench Mil-W-42.",
                   })
                 }
-                className="px-2.5 py-1 rounded bg-vector-panel border border-vector-accent/40 text-vector-accent hover:bg-vector-accent hover:text-black transition-colors font-mono text-[11px]"
+                className="px-3 py-1.5 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-300 hover:bg-sky-500 hover:text-white transition-all text-xs font-medium"
               >
                 🔍 Specs Hotspot
               </button>
@@ -198,7 +229,7 @@ export default function ModuleViewer({
                     caption: "Internal firing chamber tolerances and gas port bypass channels.",
                   })
                 }
-                className="px-2.5 py-1 rounded bg-vector-panel border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500 hover:text-black transition-colors font-mono text-[11px]"
+                className="px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:border-sky-500/40 hover:text-white transition-all text-xs font-medium"
               >
                 🖼️ Image Hotspot
               </button>
@@ -211,7 +242,7 @@ export default function ModuleViewer({
                     caption: "Live demonstration of retaining pin disengagement.",
                   })
                 }
-                className="px-2.5 py-1 rounded bg-vector-panel border border-purple-500/40 text-purple-400 hover:bg-purple-500 hover:text-white transition-colors font-mono text-[11px]"
+                className="px-3 py-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500 hover:text-white transition-all text-xs font-medium"
               >
                 🎥 Video Hotspot
               </button>
@@ -224,7 +255,7 @@ export default function ModuleViewer({
                     relatedContent: "For complete replacement of the buffer recoil spring assembly, reference procedure DMC-02-00 including preventative spring tension measurement.",
                   })
                 }
-                className="px-2.5 py-1 rounded bg-vector-panel border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500 hover:text-black transition-colors font-mono text-[11px]"
+                className="px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500 hover:text-white transition-all text-xs font-medium"
               >
                 🔗 Related Content
               </button>
@@ -239,6 +270,14 @@ export default function ModuleViewer({
   return (
     <div className="h-full relative overflow-y-auto">
       {safetyOverlay}
+      {hoverTooltip && (
+        <div
+          style={{ left: hoverTooltip.x, top: hoverTooltip.y }}
+          className="fixed z-50 px-2.5 py-1 rounded-lg bg-slate-950/95 border border-sky-500/50 text-xs font-medium text-sky-200 shadow-xl pointer-events-none animate-fade-in"
+        >
+          {hoverTooltip.text}
+        </div>
+      )}
       {ContentComponent}
       {activeHotspot && (
         <HotspotModal

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ZoomIn, ZoomOut, RotateCcw, X, Layers, Image as ImageIcon, Eye, Maximize } from "lucide-react";
+import { ZoomIn, ZoomOut, RotateCcw, X, Layers, Image as ImageIcon, Eye, Maximize, ExternalLink } from "lucide-react";
 
 export default function DrawingsViewer({ manualId, onNavigate }) {
   const [drawings, setDrawings] = useState([]);
@@ -19,7 +19,18 @@ export default function DrawingsViewer({ manualId, onNavigate }) {
     try {
       const assets = await window.api.getManualAssets?.({ manualId, assetType: "drawing" }) || [];
       if (assets.length > 0) {
-        setDrawings(assets);
+        const parsed = assets.map((a) => {
+          let hs = a.hotspots;
+          if (!hs && a.hotspots_json) {
+            try {
+              hs = typeof a.hotspots_json === "string" ? JSON.parse(a.hotspots_json) : a.hotspots_json;
+            } catch (e) {
+              hs = [];
+            }
+          }
+          return { ...a, hotspots: hs || [] };
+        });
+        setDrawings(parsed);
       } else {
         // High quality default schematics and drawings with interactive callouts
         const defaults = [
@@ -120,7 +131,7 @@ export default function DrawingsViewer({ manualId, onNavigate }) {
           <div
             key={dwg.id}
             onClick={() => openLightbox(dwg)}
-            className="group rounded-lg border border-gray-800 bg-vector-panel p-4 cursor-pointer hover:border-vector-accent hover:shadow-[0_0_20px_rgba(0,245,212,0.15)] transition-all flex flex-col"
+            className="group rounded-xl border border-slate-800 bg-slate-900/60 p-4 cursor-pointer hover:border-sky-500/60 hover:shadow-lg transition-all flex flex-col backdrop-blur-sm"
           >
             {/* Drawing Preview Area */}
             <div className="relative h-48 w-full bg-gray-950 rounded border border-gray-800 flex items-center justify-center overflow-hidden mb-3 group-hover:border-gray-700">
@@ -128,14 +139,22 @@ export default function DrawingsViewer({ manualId, onNavigate }) {
               <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-70" />
               
               {/* Vector Blueprint Schematic Preview */}
-              <svg className="w-4/5 h-4/5 text-vector-accent/60 group-hover:text-vector-accent transition-colors" viewBox="0 0 200 120" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <rect x="20" y="20" width="160" height="80" rx="4" strokeDasharray="3 3" />
-                <circle cx="60" cy="60" r="25" />
-                <path d="M60 35 L60 85 M35 60 L85 60" />
-                <rect x="110" y="40" width="50" height="40" rx="2" />
-                <line x1="85" y1="60" x2="110" y2="60" strokeWidth="2" />
-                <text x="118" y="65" fill="currentColor" stroke="none" fontSize="10" fontFamily="monospace">PART</text>
-              </svg>
+              {dwg.file_path ? (
+                <img
+                  src={dwg.file_path}
+                  alt={dwg.title}
+                  className="w-full h-full object-contain p-2 relative z-10 pointer-events-none"
+                />
+              ) : (
+                <svg className="w-4/5 h-4/5 text-vector-accent/60 group-hover:text-vector-accent transition-colors" viewBox="0 0 200 120" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="20" y="20" width="160" height="80" rx="4" strokeDasharray="3 3" />
+                  <circle cx="60" cy="60" r="25" />
+                  <path d="M60 35 L60 85 M35 60 L85 60" />
+                  <rect x="110" y="40" width="50" height="40" rx="2" />
+                  <line x1="85" y1="60" x2="110" y2="60" strokeWidth="2" />
+                  <text x="118" y="65" fill="currentColor" stroke="none" fontSize="10" fontFamily="monospace">PART</text>
+                </svg>
+              )}
 
               <div className="absolute bottom-2 right-2 bg-black/80 px-2 py-1 rounded text-[10px] font-mono text-vector-accent border border-gray-800 flex items-center gap-1">
                 <Eye size={12} /> Inspect
@@ -227,41 +246,55 @@ export default function DrawingsViewer({ manualId, onNavigate }) {
                   }}
                   className="relative w-[800px] h-[550px] bg-slate-900 border-2 border-vector-accent/40 rounded-lg shadow-2xl p-6 pointer-events-auto"
                 >
-                  {/* Schematic Vector Mockup */}
-                  <svg className="w-full h-full text-vector-accent" viewBox="0 0 800 500" fill="none" stroke="currentColor">
-                    <rect x="50" y="50" width="700" height="400" strokeWidth="2" strokeDasharray="6 6" />
-                    <rect x="150" y="100" width="500" height="280" rx="8" strokeWidth="2" />
-                    <line x1="250" y1="100" x2="250" y2="380" strokeWidth="1.5" />
-                    <line x1="450" y1="100" x2="450" y2="380" strokeWidth="1.5" />
-                    <circle cx="350" cy="240" r="60" strokeWidth="2" />
-                    <circle cx="550" cy="240" r="40" strokeWidth="2" />
-                    <path d="M150 240 L700 240" strokeDasharray="4 4" strokeWidth="1" />
-                    <text x="70" y="85" fill="#00F5D4" stroke="none" fontSize="14" fontFamily="monospace" fontWeight="bold">
-                      SSS-DEFENCE SCHEMATIC - SCALE 1:1
-                    </text>
-                  </svg>
+                  {/* Render Drawing File (SVG/Image) or Schematic Vector Mockup */}
+                  {selectedDrawing.file_path ? (
+                    <img
+                      src={selectedDrawing.file_path}
+                      alt={selectedDrawing.title}
+                      className="w-full h-full object-contain pointer-events-none select-none"
+                    />
+                  ) : (
+                    <svg className="w-full h-full text-vector-accent" viewBox="0 0 800 500" fill="none" stroke="currentColor">
+                      <rect x="50" y="50" width="700" height="400" strokeWidth="2" strokeDasharray="6 6" />
+                      <rect x="150" y="100" width="500" height="280" rx="8" strokeWidth="2" />
+                      <line x1="250" y1="100" x2="250" y2="380" strokeWidth="1.5" />
+                      <line x1="450" y1="100" x2="450" y2="380" strokeWidth="1.5" />
+                      <circle cx="350" cy="240" r="60" strokeWidth="2" />
+                      <circle cx="550" cy="240" r="40" strokeWidth="2" />
+                      <path d="M150 240 L700 240" strokeDasharray="4 4" strokeWidth="1" />
+                      <text x="70" y="85" fill="#38BDF8" stroke="none" fontSize="14" fontFamily="monospace" fontWeight="bold">
+                        SSS-DEFENCE SCHEMATIC - SCALE 1:1
+                      </text>
+                    </svg>
+                  )}
 
-                  {/* Hotspot Markers (V21 Interactivity: Click highlights table & vice versa) */}
+                  {/* Hotspot Markers (V21 Interactivity: Click highlights table & navigates if target set) */}
                   {selectedDrawing.hotspots?.map((h) => {
                     const isSelected = selectedHotspotId === h.id;
+                    const hasTarget = h.target_module_id && onNavigate;
                     return (
                       <button
                         key={h.id}
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedHotspotId(isSelected ? null : h.id);
+                          if (hasTarget) {
+                            setSelectedDrawing(null);
+                            onNavigate(h.target_module_id);
+                          }
                         }}
                         style={{ position: "absolute", left: `${h.x}%`, top: `${h.y}%` }}
-                        className={`w-8 h-8 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center font-bold text-xs font-mono transition-all transform hover:scale-125 z-20 ${
+                        className={`w-8 h-8 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center font-bold text-xs font-mono transition-all transform hover:scale-125 z-20 cursor-pointer ${
                           isSelected
-                            ? "bg-vector-accent text-black scale-125 ring-4 ring-vector-accent/40 shadow-[0_0_20px_#00F5D4] animate-pulse"
-                            : "bg-black/90 text-vector-accent border-2 border-vector-accent hover:bg-vector-accent hover:text-black"
+                            ? "bg-sky-500 text-white scale-125 ring-4 ring-sky-400/40 shadow-lg"
+                            : "bg-slate-900/95 text-sky-300 border border-sky-400/60 hover:bg-sky-500 hover:text-white hover:border-sky-400 shadow-md"
                         }`}
+                        title={hasTarget ? `${h.name} (Click to open component documentation)` : h.name}
                       >
                         {h.number}
                         {isSelected && (
                           <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-black border border-vector-accent text-vector-accent px-2 py-0.5 rounded whitespace-nowrap text-[10px] pointer-events-none shadow-md">
-                            {h.name}
+                            {h.name} {hasTarget && "➔ Open"}
                           </span>
                         )}
                       </button>
@@ -275,11 +308,12 @@ export default function DrawingsViewer({ manualId, onNavigate }) {
                 <div className="w-80 border-l border-gray-800 bg-vector-panel flex flex-col shrink-0">
                   <div className="p-3 border-b border-gray-800 font-mono text-xs uppercase font-bold text-vector-accent flex justify-between items-center bg-gray-900/60">
                     <span>Parts Callout Table</span>
-                    <span className="text-[10px] text-gray-400">Click to Highlight</span>
+                    <span className="text-[10px] text-gray-400">Click to Select / Open</span>
                   </div>
                   <div className="flex-1 overflow-y-auto p-2 divide-y divide-gray-800/60 scrollbar-thin scrollbar-thumb-gray-700">
                     {selectedDrawing.hotspots?.map((h) => {
                       const isSelected = selectedHotspotId === h.id;
+                      const hasTarget = h.target_module_id && onNavigate;
                       return (
                         <div
                           key={h.id}
@@ -303,6 +337,19 @@ export default function DrawingsViewer({ manualId, onNavigate }) {
                             <div className="font-bold text-white truncate">{h.name}</div>
                             <div className="text-[10px] font-mono text-gray-500">{h.partNo || "PART-REF"}</div>
                           </div>
+                          {hasTarget && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedDrawing(null);
+                                onNavigate(h.target_module_id);
+                              }}
+                              className="p-1 rounded bg-vector-accent/10 hover:bg-vector-accent hover:text-black text-vector-accent border border-vector-accent/40 transition-colors shrink-0 cursor-pointer"
+                              title="Open Component Data Module Page"
+                            >
+                              <ExternalLink size={12} />
+                            </button>
+                          )}
                         </div>
                       );
                     })}

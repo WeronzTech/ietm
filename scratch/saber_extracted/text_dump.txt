@@ -1,0 +1,274 @@
+
+--- PAGE 1 ---
+SABER . 3 3 8   SNIPER RIFLEUSER MANUAL: HANDLING&SAFETYINSTRUCTIONSREADTHEINSTRUCTIONS THOROUGHLYANDPAY ATTENTION TO THE WARNINGSINTHISMANUAL BEFOREUSING THISFIREARM;DONOTDISCARDTHISMANUAL.Thisinstructionmanualshouldaccompanythisﬁrearm at all timesandbetransferredwithit.www.sssdefence.com1
+
+--- PAGE 2 ---
+THEBASICRULESOFSAFEFIREARMSHANDLING1.Always treat every firearm as though it is loaded.2.Ensure the barrel is free of any obstructions before use.3.Be aware of your backstop, what lies beyond it, and the safety of bystanders before shooting.4.Use clean, dry, factory-manufactured ammunition that matches the correct type and caliber for your firearm.5.Wear proper ear protection and safety glasses while shooting.6.Carry your firearm in a way that maintains control over the muzzle direction, even if you stumble or fall.7.Never shoot at flat surfaces or bodies of water.8.Do not leave a firearm loaded when unattended. Store firearms and ammunition separately, ideally locked, and beyond the reach of children, careless individuals, and unauthorized users.9.Never allow anyone to use your firearm without first reading and understanding the operator’s manual.10.Do not point any firearm, whether loaded or unloaded, at anything you do not intend to shoot.11.Never fire your firearm near an animal unless it is trained to tolerate the noise, as a startled animal could injure itself or cause an accident.12.Avoid consuming alcohol or drugs before or during shooting, as they can impair your vision and judgment, making firearm handling unsafe. 
+www.sssdefence.com2
+--- PAGE 3 ---
+DisclaimerALL RIGHTS RESERVED  ALL CONTENT IN THIS DOCUMENT, INCLUDING BUT NOT LIMITED TO TRADEMARKS, ILLUSTRATIONS, PHOTOGRAPHS, GRAPHICS, DESIGNS, AND FORMATTING, IS THE PROPERTY OF SSS DEFENCE AND IS PROTECTED BY COPYRIGHT AND OTHER APPLICABLE LAWS AND REGULATIONS.THIS OPERATING MANUAL FOR THE .338 SNIPER RIFLE CONTAINS CONFIDENTIAL AND PROPRIETARY INFORMATION OF SSS DEFENCE AND MAY NOT BE USED, DISCLOSED, COPIED, PUBLISHED, OR DISTRIBUTED IN ANY FORM OR FOR ANY PURPOSE OTHER THAN AS A REFERENCE FOR OPERATING THE .338  SNIPER RIFLE, UNLESS EXPRESSLY AUTHORIZED IN WRITING BY SSS DEFENCE. ALL RIGHTS TO THIS MANUAL AND THE INFORMATION WITHIN REMAIN WITH SSS DEFENCE.THE INSTRUCTIONS AND INFORMATION IN THIS MANUAL ARE CRUCIAL FOR YOUR SAFETY AND LEGAL RESPONSIBILITIES. PLEASE READ THE ENTIRE MANUAL CAREFULLY TO ENSURE PROPER SETUP AND USE OF THE .338  SNIPER RIFLE. FAILURE TO FOLLOW THE GUIDELINES IN THIS MANUAL MAY RESULT IN PERSONAL INJURY, DAMAGE TO PROPERTY, OR HARM TO THE .338  SNIPER RIFLE ITSELF. SSS DEFENCE RESERVES THE RIGHT TO MODIFY THIS MANUAL AND ASSOCIATED DOCUMENTS AT ITS SOLE DISCRETIONBY USING THE .338 SNIPER RIFLE, YOU ACKNOWLEDGE THAT YOU HAVE READ AND ACCEPTED THE TERMS, CONDITIONS, AND DISCLAIMERS PRESENTED IN THIS MANUAL. YOU AGREE TO BE SOLELY RESPONSIBLE FOR THE USE OF THE .338  SNIPER RIFLE AND ANY CONSEQUENCES ARISING FROM ITS USE. SSS DEFENCE ACCEPTS NO LIABILITY FOR ANY DAMAGE, INJURY, OR LEGAL CONSEQUENCES INCURRED DIRECTLY OR INDIRECTLY AS A RESULT OF OPERATING THE .338  SNIPER RIFLE. USERS ARE EXPECTED TO ADHERE TO SAFE AND LEGAL PRACTICES, INCLUDING BUT NOT LIMITED TO THOSE OUTLINED IN THIS MANUAL AND ANY APPLICABLE LAWS, RULES, AND REGULATIONS.www.sssdefence.com3
+--- PAGE 4 ---
+Thismanualcontainstheinformation necessarytosafely operateandperformauthorizedpreventative maintenanceat theuserlevelontheSSS DEFENCE SABER.Readthismanualinitsentiretypriortohandlingoroperatingthefirearm.
+USINGORHANDLINGTHE SSS DEFENCE SABER .338  SNIPER RIFLE WITHOUTFIRSTREADINGANDUNDERSTANDINGTHEENTIREOPERATOR’S MANUALCANRESULTINUNSAFE CONDITIONSWITHTHEPOTENTIALTOCAUSE DEATHORSERIOUSBODILYHARM.•ALWAYSHANDLEANDOPERATETHEFIREARMINACCORDANCEWITHTHEINSTRUCTIONSCONTAINEDINTHIS MANUAL.•NEVERALLOWUNAUTHORIZEDPERSONSTOHAVEACCESSTOANYFIREARMANDNEVERLEAVEAFIREARM UNSECURED.•BEFOREBEGINNINGANYMAINTENANCEBESURETOCLEARTHEFIREARM.•INSPECTTHECHAMBERVISUALLYANDPHYSICALLYTOENSUREITISCLEAROFANYAMMUNITION.•DONOTLOADWITHAHOTCHAMBER.•IFTHE SNIPER RIFLE STOPSFIRINGWITHALIVEROUNDINTHECHAMBEROFAHOTBARREL,REMOVEITWITHIN 10 SECONDS. IFTHAT CANNOT BE ACCOMPLISHED KEEP THE MUZZLE POINTEDINA SAFE DIRECTIONAND QUICKLYREMOVETHEMAGAZINE.THENWAIT15MINUTESBEFOREHANDLINGTHEFIREARM.•DONOTOVERHEATTHEBARREL.
+CAUTION
+www.sssdefence.com4
+--- PAGE 5 ---
+•DONOTINTERCHANGEBOLTSBETWEENFIREARMS.•ENSURE THE CAM PINISPROPERLY INSTALLED INTHE BOLT CARRIERASSEMBLY. SEVERE DAMAGE TO THE FIREARMANDINJURYORDEATHTOTHEOPERATORCOULDOCCUR.•DONOTKEEPLIVEAMMUNITIONINTHEWORKAREA.•ONLYOPERATETHEWEAPON WITHAMMUNITIONOFTHECORRECTCALIBER. DONOTFIRESERIOUSLYCORRODEDAMMUNITION.•DONOTFIREDENTEDCARTRIDGES.•DONOTFIRECARTRIDGESWITHLOOSEBULLETS.•DONOTFIRECARTRIDGESWITHTHEBULLETCOMPRESSED(PUSHEDIN).•ALWAYSCHECKTOENSURETHESILENCER,IFUTILIZED,ISPROPERLYATTACHEDTOTHEBARREL.•AHOTSILENCERCANCAUSESEVEREBURNSASARESULTFROMDIRECTCONTACTWITHUNPROTECTEDSKIN ORPROLONGEDCONTACTWITHPROTECTEDSKIN.•ALWAYSCHECKTOENSURETHATTHESILENCERISTHECORRECTCALIBERFORTHEAMMUNITIONBEINGFIRED.•DO NOT FIRETHE FIREARM AFTER A KNOWN BAFFLE STRIKEOCCURS AS THISCAN CAUSE CATASTROPHIC FAILURETOTHESILENCERANDINJURYTOTHESHOOTERORABYSTANDER.
+CAUTION
+www.sssdefence.com5
+--- PAGE 6 ---
+•This product was designed to function properly in its original condition. Alterationscanmakeitunsafe.Donotalteranypartoraddorsubstituteany partsoraccessoriesnotmanufactured.DO NOTALTERANYFIREARMS
+•Clearing of the chamber after the magazine is removed is an absolute must. Despite the magazine’s removal, rounds can still be fired if there is a round present in the chamber. Every range session will beckon another check, and it highly critical for operator to know how to completely unload the weapon.
+CAUTION - ALTERATIONS
+www.sssdefence.com6
+--- PAGE 7 ---
+www.sssdefence.com7
+SECTION 1 - GENERAL INFORMATION1.1 Operator Manual Instructions111.2 Description 111.3 Specifications 132 Clearing/Unloading the SABER 0.338152.1 Safe Mode 152.2 Magazine Removal152.3 Bolt Position 162.4 Chamber Inspection163 Main Components of the weapon173.1 Groups & Assemblies194 Stock 234.1 Chassis with Picatinny Rails234.2 Hand Guard 244.3 Rear 244.4 Stock-Fixed type 244.5 Operation 27SECTION 2 - TESTS AND INSPECTIONS291 General 292 Inspection of Tools and guages313 Tests, Inspections and Adjustments313.1 Inspecting the bore313.2 Inspecting the headspace323.3 Inspecting the Firing Pin Protrusion Gauge333.4 Inspecting the safety34
+--- PAGE 8 ---
+www.sssdefence.com8
+SECTION 3 - MAINTENANCE AND REPAIR351 General 352 Maintenance and Repair Operations352.1 Barrelled receiver362.2 Installing the barreled action to the Chassis 372.3 Replacing the fastening screws382.4 Bolt 382.5 Replacing the Firing Pin Assembly382.6 Replacing the Firing Pin Spring392.7 Replacing the bolt shroud392.8 Replacing the extractor402.9 Replacing the extractor spring403 Removing/Installing of the Extractor404 Ejector 414.1 Cleaning the ejection seat414.2 Repairs of the ejector414.3 Replacing of the ejector spring424.4 Removing/Installing the ejector425 Receiver 445.1 Bolt Release 446 Trigger Mechanism467 Replacing and Fitting the safety lever467.1 Replacing the sear and the connecting lever47
+--- PAGE 9 ---
+www.sssdefence.com9
+8 Stock Repairs 488.1 Hand Guard 488.2 Hand Guard fastening pieces488.3 fixed stock 498.4 Cheek Piece 498.5 Recoil Pad 498.6 Pistol Grip Assembly508.7 Removal of Cheek Piece519 Chassis 5210 Magazine 5311 Replacing the magazine catch5311.1Replacing the magazine catch spring5411.2Magazine Box 5511.3Replacing the magazine spring5512 Barrel 5513 Bore Cleaning 5514 Chamber Cleaning5514.2Removing fouling5615 Muzzle Crown 56
+--- PAGE 10 ---
+www.sssdefence.com10
+16 General 5716.1Troubleshooting - Possible Causes and Remedies5716.2Troubleshooting Chart5717 Troubleshooting5818 Maintenance Under Special Conditions6018.1Using the weapon in low temperatures6118.2Using the weapon in very hot and humid condition61SECTION 4 - STORAGE INSTRUCTIONS65-67APPENDIX AACCESSORIES
+--- PAGE 11 ---
+1.GeneralInformationaboutTHE SSS DEFENCE SABER .338  SNIPER RIFLE 1.1 Operator’s Manual InstructionsThe Operator’s Manual is intended for military and  / or law enforcement and consists of information to safely handle the SSS DEFENCE .338 SNIPER RIFLE. Please go ensure this manual is read comprehensively prior to weapon handling as failure to do so can result in unsafe practices.
+1.2 DescriptionThe SSS Defence Saber is the result of blending the latest advances in sniper systems design with feedback from the most demanding of military users. Applying state of the art design, manufacturing and materials, every component of the rifle has been engineered to be lighter and stronger than several of the world’s best sniper weapons in use. The weapon operates with the .338 Lapua Magnum cartridge, delivering outstanding sub-MOA accuracy for distances of over 1500m.
+www.sssdefence.com11
+--- PAGE 12 ---
+With its simple design, hard-core construction and very few moving parts, the weapon is designed to offer consistent match-like precision. An exceedingly well tested feature of the SSS Defence Saber is the modular lightweight alloy chassis that is “Not just a stock”. The chassis system is suitable for use in the most rugged and extreme weather environments and accommodate every sniper mission possible. 
+The SSS Defence SABER features: • Proprietary design bolt action that is bolted to the chassis for stability • 27” match grade free floating barrel • Quick interchangeable barrel • Two stage trigger that is easily removable for cleaning & maintenance • Integrally machined MIL-STD 1913 (Picatinny) Rails at 3,6,9 & 12 o’ clock positions • Ambidextrous safety and magazine release • Recoil absorbing butt pad for increased comfort • 5 Round magazine
+www.sssdefence.com12
+--- PAGE 13 ---
+CALIBER .338 LAPUA MAGNUMOVERALLLENGTHW/TELESCOPICSTOCK 1290mmOVERALL WIDTH 110mmBARREL LENGTH 27”LANDS&GROOVES 5 GROOVESRATEOFTWIST 1:9.5WEIGHT (W/ SIGHTS & EMPTY MAG)9KGMAGAZINE 5 RD MetalSIGHT RADIUS 32mmHEIGHT(Measuredathighestpointoftoprail) 200mmTOP MIL-STD 1913 RAIL MOUNTING SURFACE LENGTH 540mm
+BOTTOMMOUNTINGSURFACELENGTH 250mm
+1.3 Specifications
+www.sssdefence.com13
+--- PAGE 14 ---
+NO. OF M SLOTS 26 SLOTS (ON EACH SIDE)GRIP UTG SNIPER’S PISTOL GRIPTRIGGER TYPE TWO STAGESELECTOR 2 POS AMBIDEXTROUSFIRE CONTROL BOLT ACTIONBOLT CATCH AMBIDEXTROUSMAG CATCH AMBIDEXTROUSSLING ATTACHMENT POINTS3 PTS PER SIDEBUTTSTOCK ADJUSTABLECHEEK REST ADJUSTABLE
+www.sssdefence.com14
+--- PAGE 15 ---
+2.  Clearing / Unloading the SABER .338The SSS DEFENCE SABER has four comprehensive steps to appropriately clear the weapon. They are displayed as follows:1.SAFE MODE: Switching the safety switch on is an absolute must and is shown in Figure 1. In order to do, please ensure the muzzle is pointed away from any potential targets and in safe directions at all times during clearing. 
+2.    MAGAZINE REMOVAL: Pressing the magazine top (Figure 2) will allow the magazine to detach, and the user can user is to simultaneously pull the magazine from it’s catch with the supporting hand.
+Figure 1. Safety Switch 
+www.sssdefence.com15
+
+--- PAGE 16 ---
+3.BOLT POSITION: Pull the bolt to its rearward position. Ensure it’s stopping at the bolt catch.4.CHAMBER INSPECTION: The chamber (Figure 3) should be inspected in order to ensure there is no live round or empty case. This can be done in 2 ways: •Optically inspecting the chamber•Ejection of live rounds / empty cases
+16
+Figure 2. Magazine Removal 
+www.sssdefence.com
+--- PAGE 17 ---
+3. Main components of the weapon SABER 0.338 Lapua Magnum sniper rifle comprises of the following main components (Fig. 4): A.BarrelB.Bolt C.ChassisD.TriggerE.MagazineF.Muzzle Brake G.Top Hand GuardH.ReceiverI.Cheek RestJ.Butt Stock Assembly
+www.sssdefence.com17
+--- PAGE 18 ---
+Figure 4. Exploded view of main components  www.sssdefence.com18
+AGHBI
+J DE C
+F
+--- PAGE 19 ---
+3.1 Groups &Assemblies3.1.1 Barrel•Length of the barrel is 27”•The barrel is four right-hand grooves, with 1:9.5 twist.•The barrel is fastened to the receiver using a 1,1/16”-20UNF-2A thread. •The muzzle has a 5/8-24 UNEF-2A thread for fastening a muzzle brake or a suppressor. 
+3.1.2 Receiver •Receiver has been machined from steel billet. •Slot for the bolt stop has been milled on the Top of the receiver. •Slot for the trigger mechanism has been milled on the bottom of the receiver’s rear part. •There are two M6-threads on the bottom of the receiver, which are utilized together with the appropriate screws and to fasten the receiver to the Chassis. 
+Figure 5. Barrel 
+www.sssdefence.com19
+
+--- PAGE 20 ---
+•The inner shape has been engineered so that the receiver guides bolt movement. Three locking lugs of the bolt slide along the respective grooves of the receiver during bolt operations. Front part of the receiver forms the locking surface on which the locking lugs of the bolt rest, when the bolt is closed. Trailing edges of the locking lugs have been bevelled to form a locking slope, which enables closing of the bolt. •On the receiver’s right side there is milled slot for the bolt handle. Upper part of the slot has been bevelled to act as a camming slope, which helps to open the bolt after a shot. 
+Figure 6. Reciever  
+www.sssdefence.com20
+
+--- PAGE 21 ---
+3.1.3 Bolt Assembly•Recess in the bolt head is the bolt face, which, when the bolt is closed, acts a rest surface for the head of the cartridge case. •Front part of the bolt consists of three locking lugs, which guide the bolt during bolt operations and, when the bolt is closed, act as a locking surface against the receiver. •Bolt handle is welded on the rear part of the bolt. The bolt handle is a machined part. The rounding on rear part of the bolt acts a counterpart of the camming surface on the receiver , when the bolt is opened. •Between the locking lugs there is a milled slot for the extractor and a bore for the extractor plunger and the extractor spring. The extractor grips on the groove of the case head and extracts the fired case or an unfired cartridge out of the chamber , when the bolt is opened.  
+www.sssdefence.com21
+Figure 7. Bolt assembly 
+
+--- PAGE 22 ---
+•On the bolt face, opposite to the extractor, there is a bore for a spring-operated ejector and ejector spring. The ejector is fastened by a spring pin. The ejector throws the fired cartridge case or an unfired cartridge out of the receiver via the ejection port, when the bolt is approaching its rearmost position. •In the middle of the bolt face there is a hole, through which the firing pin protrudes and hits the primer, when the rifle is fired. The cocking piece is fixed on the rear part of the firing pin. The groove on the front part of the cocking piece limits the travel of the firing pin by bumping, when the rifle is fired, against the shoulder located inside the bolt. •Rear part of the cocking piece has been shaped to a cocking notch, a rounded front surface of which slides, when the bolt is opened, along the cocking surface until it at the end of the cocking stops at its resting groove located at the rear end of bolt. The inner part of the cocking piece has been shaped to a shoulder , against which the sear of the trigger mechanism cocks the rifle. •Firing pin spring assembled between the cocking piece and the bolt shroud is tensioned to its initial stage when the bolt is assembled. In the front part of the bolt shroud there are locking pin, which fasten the bolt shroud to the groove machined to the rear part of the bolt, thus enabling, during the cocking, turning of the bolt shroud relative to the bolt. 
+www.sssdefence.com22
+--- PAGE 23 ---
+4.  StockThe stock consists of three main parts: Chassis, Rear stock and Hand guard 4.1 Chassis with Picatinny rails •Chassis is manufactured from aluminium extrusion. It acts as a rifle’s framework to which the barreled receiver , the Hand guard and all other components of the rear stock are fastened. •On the rear part of the Chassis there is an opening for fastening of the rear stock. •In front of that there are openings for the trigger mechanism, the magazine and the fastening screws of the barrelled receiver. •The front guide of the magazine is fastened on the front of the magazine well with a set screw. 
+Figure 8. SABER Chassis www.sssdefence.com23
+--- PAGE 24 ---
+4.2 Hand guard•Hand guard made of aluminium. It is fastened on the Chassis by means of the Allen screws and the fastening pieces. •On the bottom surface of the Hand guard there is a rail for attaching accessories. The rail is integrally machined on the Hand guard. The sling swivel sockets are also machined on the hand guard. 
+4.3 Rear stock - Fixed type •Fixed stock is an integral part of the chassis milled from aluminium. •The fixed stock is symmetrical so it can be operated by left- or right-handed shooter. •On the bottom surface of the fixed stock there is a shoulder for the free-hand grip. 
+Figure 8. Handguard 
+www.sssdefence.com24
+--- PAGE 25 ---
+•The upper surface of the fixed stock has been designed for fastening of the adjustable cheek piece. The cheek piece is fastened with an Allen screw and a nut to the cheek piece rail, which has been fastened to the fixed stock by screws. The height of the cheek piece can be adjusted.•Rearmost surface of the fixed stock has been designed for fastening of an adjustable recoil pad. Recoil pad base is fastened with an Allen screw to a rail that has been fastened to its place using screws. •The recoil pad is fastened to recoil pad base using Allen screws and nuts. Length of pull can be adjusted between the recoil pad and its base. The recoil pad can be adjusted sideways or twisted along the longitudinal axis by plunger pin. •On both sides of the fixed stock there are the counterparts for the clips hook of the swivel. 
+Figure 9. Buttstock www.sssdefence.com25
+--- PAGE 26 ---
+4.4. Magazine Magazine of sniper rifle is a centre-feeding box magazine. The magazine box has been made of steel plate. Upper part of the magazine box forms feeding lips that hold cartridges in the magazine as well as guide them during feeding. Upper front part of the magazine box has been formed so that the magazine follower is prevented from coming out of the magazine box. On the rear wall of the magazine box there is an opening that acts a counterpart to the magazine catch located in the trigger guard. On the rear bottom corners of the magazine sides there are riveted studs which help in removal of the magazine.Cartridge follower has been designed so that it supports cartridge during chambering. Notch on the front of the cartridge follower supports the last cartridge of the magazine during chambering. Notch also serves as a support when single cartridges are chambered through the ejection port. Inside the magazine box there is a covering plate, which guides also the magazine follower spring. Magazine catch and its spring have been fastened to the front of the trigger guard with a pin. When inserting a loaded magazine push it upright into the magazine well and press the magazine until the magazine catch locks it into its position. When detaching the magazine press the magazine catch by the thumb and pull the magazine out of the rifle with the aid of the detaching studs located at the lower rear corners of the magazine. 
+www.sssdefence.com26
+--- PAGE 27 ---
+4.5 OPERATION -This weapon can only be fired with the bolt in the “bolt-closed” position (See Figure 11). Figure 10. Magazine Mechanism
+Figure 11. bolt-closed” positionwww.sssdefence.com27
+
+--- PAGE 28 ---
+•There are two possible operating modes depending on the position of the safety. •Safety ON – the safety lever in its rearmost position – the rifle cannot be fired (Figure 12). •Safety OFF – the safety lever in its foremost position – the rifle is ready to fire (Figure 13). •In order to cock the rifle the bolt handle is lifted to its topmost position, the bolt is moved to its rearmost position and then returned back to locked-position•While moving forward the bolt head picks the next cartridge from the magazine and chambers it. Simultaneously the firing pin is cocked and the rifle becomes ready to fire. •To extract a fired cartridge case, operate the bolt as described above. The cartridge case is extracted and ejected while the bolt is moving backwards.   
+Figure 13. Safety Off (Fire Mode) Figure 12. Safety On (Safe Mode) www.sssdefence.com28
+
+--- PAGE 29 ---
+SECTION TWO - TESTS AND INSPECTIONS 1. GENERAL •In order to determine the state of the individual parts or assemblies, it is necessary to perform a series of tests and inspections when carrying out maintenance or repairs. •A series of tests, inspections and adjustments should be carried out following maintenance or repair works or the replacement of any assembly and/or individual part in order to restore normal operating conditions. •This requires a set of tools and accessories, gauges and equipment as listed in Tables 1, 2, 3 and shown in the respective figures.  POS NODENOMINATION1 Bolt disassembly tool 2 Allen key set, Ø 2 mm – 6 mm3 Punch set, Ø 2 mm, 2,5 mm, 3 mm 4 Action wrench 5 Barrel vise 6 Cleaning rod 7 Cleaning rod guide 
+Table 1 – Tools required for cleaning
+www.sssdefence.com29
+--- PAGE 30 ---
+Table 2 – Tools and accessories POS NODENOMINATION1 Headspace gauge set, (GO and NO GO) 2 Firing pin protrusion gauge3 Barrel wear gauge 
+POS NODENOMINATION1 Cleaning jag2 Bore cleaning brush  3 Cotton cleaning patches
+Table 3 – Gauges
+www.sssdefence.com30
+--- PAGE 31 ---
+Fig. 14 - Gauges used for maintenance and repairs  2. INSPECTION OF TOOLS AND GAUGES Before carrying out any maintenance, repairs or checks on any parts of the weapon, make sure that the tools and gauges to be used are clean, in proper working order and not damaged in any way. 3. TESTS, INSPECTIONS AND ADJUSTMENTS This section sets out the tests, inspections and adjustments to be performed on assemblies or individual components on the sniper rifle in order to ascertain their efficiency. 3.1 Inspecting the bore The barrel wear due to the excessive amount of shooting appears as the wear of the chamber throat / free bore. The diameter of the throat will increase and, at the same time, it will lengthen towards the muzzle. www.sssdefence.com31
+
+--- PAGE 32 ---
+The throat wear usually deteriorates the accuracy of the rifle and degreases the muzzle velocity. To inspect the throat for wear barrel wear gauge can be used. If the barrel wear gauge can be pushed from the chamber end of the barrel for more than 200 mm into the bore the barrel wear can be considered as remarkable and may due to somewhat lowered muzzle velocity. The final judgment of the barrel replacement should, however, always be based on the results of test shooting. 
+3.2 Inspecting the headspace Head spacing is inspected with GO-/NO GO-gauges. With the GO-gauge inserted into the chamber the bolt must close smoothly, but with NO GO-gauge inserted into the chamber the bolt must not close at all. With NO GO-gauge inserted into the chamber, excessive force must be avoided while closing the bolt. This may result in deformation of locking surfaces, which in turns contributes to excessive wear of the headspace and the movements of the bolt become stiffer. If the bolt can be closed with the NO GO gauge inserted into the chamber , the rifle must not be used until the head spacing has been corrected by replacing the barrel or the bolt. 
+Fig. 15 –Barrel sectional view 
+www.sssdefence.com32
+--- PAGE 33 ---
+3.3 Inspecting the firing pin protrusion Guage For inspection of the firing pin protrusion the bolt must be removed from the receiver and decocked by turning the bolt shroud counter-clockwise, until the firing pin decocks. The firing pin protrusion can now be inspected using the appropriate gauge or by measuring it with a dial caliper. The firing pin protrusion should be 1.4 – 1.8 mm, when measured from the bolt face. If the test fails the firing pin assembly must be replaced. The firing pin is cocked by turning the bolt shroud clockwise with the cocking wrench, until the sear stops to its resting groove. 
+Fig. 16 – Inspecting firing pin protrusion  www.sssdefence.com33
+1.4 mm MIN        1.8 mm MAX
+
+--- PAGE 34 ---
+3.4 Inspecting the safety The functioning of the safety should be inspected periodically. 
+With the safety switched ON practically no trigger movement after the first stage should be encountered. Do not, however, use excessive force when testing the safety. Excessive force may damage the safety mechanism and lead to an unreliable operation of it. If any undue movement of the trigger is recognized after the first pull the trigger mechanism must be replaced with a spare and the faulty unit must be delivered to a qualified maintenance personal for repair.
+All inspections of the trigger mechanism and the safety must be carried out ONLY when the rifle is absolutely free of cartridges! 
+CAUTION
+www.sssdefence.com34
+--- PAGE 35 ---
+SECTION THREE - MAINTENANCE AND REPAIRS 1. GENERAL This section sets out the instructions to be followed by skilled personnel when servicing and repairing the SABER sniper rifle. The tools and gauges to be used are listed and shown in Section Two, subsection One. Tests, inspections and adjustments to perform in order to assess efficiency of the weapon are listed and described in Section T wo. Cleaning operations to be carried out during maintenance and repairs are listed and described in the subsection below. 2. MAINTENANCE AND REPAIR OPERATIONS This section covers maintenance and repair of the SABER sniper rifle. Replacement and disassembly/assembly operations described below are divided into subsections, each accompanied by a set of diagrams and/or photos illustrating sequence of operations. The small letters in alphabetical order shown in brackets identify within the procedure the type information given below. The numbers increasing order appearing next to the various steps indicate the order in which the removal/disassembly and installation/assembly procedure must be followed. All operations must be carried out in complete safety using right equipment and on completion of repairs, the aiming device(s) must be serviced following the instructions applicable for the particular aiming device. www.sssdefence.com35
+--- PAGE 36 ---
+2.1. Barrelled receiver For repair actions like bolt release repairs or barrel replacement the barreled receiver must be detached from the Chassis. 2.1.1 Removing the barrelled receiver from the Chassis1.Remove the bolt and the magazine and detach the Hand guard, the sling and the riflescope with the scope mount. 2.Using a 4 mm Allen key loosen the Hand guard fastening screws completely. 3.Detach the Hand guard by pulling it downwards. NOTE: The Chassis and Hand guard have been manufactured to a tight tolerance; therefore, detaching the Hand guard may at first require a strong pull.4.      Open the fastening screws of the receiver using a 6 mm Allen key.
+Fig. 17. Removing Barrel from Chassis
+CAUTION
+www.sssdefence.com36
+--- PAGE 37 ---
+2.2 Installing the barreled action to the Chassis 1.Ensure that the bedding surfaces of the receiver and the chassis are clean. If necessary, you may spread a light gun oil film on the bottom surface of the receiver. 
+NOTE: Thick grease or too much oil on the bedding surface of the receiver and Chassis may cause loss of accuracy potential of the weapon.
+2.Install the receiver on the Chassis and tighten the fastening screws loosely so that the receiver can still be moved.3.Install the rear stock to the Chassis and tighten upper fastening screw.4.Remove the trigger mechanism.5.Tighten the remaining fastening screws.6.Install the trigger mechanism to its slot taking care of the correct positioning of the mechanism.7.Insert the bolt and the magazine and assemble the remaining accessories.
+www.sssdefence.com37
+--- PAGE 38 ---
+2.3 Replacing the fastening screws If the heads or the threading of the fastening screws have been damaged so that the reliable tightening of them become impossible, the screws must be replaced with new spare screws.2.4 Bolt repairs 2.4.1 Replacing the bolt The bolt should be replaced with a spare bolt, if considerable pitting and/or flashes can be found on the locking or coking surfaces. Considerable corrosion on the bolt face causes also the replacement of the bolt with a spare.When headspace problems are encountered the bolt should be inspected.A defective bolt must be replaced with a spare bolt.When the bolt has been replaced the headspace must always be inspected using GO/NO GO gauges.
+2.5 Replacing the firing pin assembly The firing pin and the cocking piece are permanently fastened together. If firing pin problems are encountered, the complete firing pin assembly is to be replaced with a spare. Before assembling the bolt the protrusion of the firing pin must be checked.
+www.sssdefence.com38
+--- PAGE 39 ---
+2.5.1 The reason to replace the firing pin assembly may be for example:The firing pin is broken or cut or corroded due to primer leakage.The protrusion of the firing pin is too small, less than 1.4 mm or too much, more than 1.8 mm - The joint between the firing pin and the cocking piece has gotten loose.The surface of the cocking notch of the cocking piece has been seized against the cocking ramp.The sharp corner of the cocking shoulder has been rounded.2.6 Replacing the firing pin spring The firing pin spring should be replaced if it has lost of its strength to the extent that a reliable firing of a primer cannot be maintained. The free length of the firing pin spring must exceed 90 mm.
+2.7 Replacing the bolt shroud The bolt shroud should be replaced with a spare, if the cocking of the bolt has become stiff due to the seizing of the locking lugs of the bolt shroud.
+Figure. 18 –Firing Pin
+www.sssdefence.com39
+--- PAGE 40 ---
+2.8 Replacing the extractor Replacing of the extractor should be carried out only, if it has been broken. All the other malfunctioning is solved by cleaning the extractor bore and the extractor spring located on the bolt head and, when necessary, by replacing the extractor spring with a spare. When cleaning the bore of the extractor spring you may use a 2.5 mm bit, which is rotated by hand.2.9 Replacing the extractor spring The extractor spring should be replaced with a spare, if extraction problems have been encountered and the extractor spring has been found defective. The free length of the extractor spring must be > 4.5 mm.3.0 Removing/installing of the extractor To remove the ejector, tap out the 2.5 mm dowel pin.Take out the dowel pin carefully so that the extractor together with the spring will not fly out of the bolt.Be careful that the extractor and the extractor spring are not dropped and lost!When assembling the extractor, guide it to the correct position with the dowel pin. When the extractor is seated, tap in the dowel pin from the opposite side of the bolt.
+www.sssdefence.com40
+--- PAGE 41 ---
+4.0 Ejector 4.1 Cleaning the ejector seat The ejector seat can collect case brass as well as other dirt that may cause the ejector to stick together with other malfunctioning. Therefore, functioning of the ejector should be inspected and the ejector seat should be cleaned, when necessary. For cleaning you may use a 3 mm drill bit rotated by hand.4.2 Repairs of the ejector When repairing the ejector replace the faulty parts with spares.
+Fig. 19. Removal of extractor 
+www.sssdefence.com41
+
+--- PAGE 42 ---
+4.3 Replacing of the ejector spring An ejector spring that has lost its strength should be replaced with a spare. However, the most common reason for the ejection problems is sticking due to foreign particles in the ejector seat. The free length of the ejector spring must be > 13 mm.
+4.4 Removing / installing the ejector1.To remove the ejector, tap out the 2.0 mm spring pin.2. Take out the drift pin carefully so that the ejector together with the spring will not fly out of the bolt face.3.Be careful that the ejector and the ejector spring are not dropped and lost!4.When assembling the ejector, guide it to the correct position with the drift pin. When the ejector is seated, tap in the spring pin from the opposite side of the bolt. When assembling the ejector always use a new spring pin.
+www.sssdefence.com42
+--- PAGE 43 ---
+Fig. 21. Ejector Assembly
+Fig. 20. Ejector Spring
+www.sssdefence.com43
+
+--- PAGE 44 ---
+5.0 Receiver The receiver repairs are usually directed to the bolt release.5.1 Bolt release 5.1.1 Replacing the bolt release If the bolt release has been broken or deformed so that it causes malfunctions the bolt release must be replaced with a spare.5.1.2 Replacing the bolt release pin If the bolt release pin has been broken or bent it must be replaced with a spare. When replacing the bolt release pin the bore of the pin must be inspected for defects.5.1.3 Replacing the bolt release spring If the bolt release spring has lost its strength to the extent that it cannot reliably return the bolt release, the spring must be replaced with a spare. Ensure, however, that the malfunction is not due to a defect in the bolt release or its pin.Free length of the bolt release spring must be > 5 mm.www.sssdefence.com44
+--- PAGE 45 ---
+5.1.4 Removing/installing the bolt release 1.Detach the barreled action from the Chassis.2.Grub Screw should be removed using 2.5mm of Allen key.3.You may find the removal of the pin easier.4.Install the bolt release in reverse order.
+Fig. 22 - Removing/installing the bolt release
+www.sssdefence.com45
+--- PAGE 46 ---
+6.0 Trigger mechanism The Trigger mechanism is a modular trigger unit and can be replaced as a whole unit in the event of a failure to function7.0 Replacing and fitting the safety lever The safety lever is always individually fitted to operate in a certain trigger mechanism. Fitting is done by polishing the clutch surface of the safety lever so that the safety can be reliable turned ON, if the safety has been turned ON, the trigger does not move after the first pull. If the trigger moves after the first pull, when squeezed with a reasonable force and the safety is switched ON, the safety lever must be replaced with a spare. The spare must be fitted to operate in this particular trigger mechanism. When the safety operation is tested use of excessive force is, however, forbidden due to the risk of a damage of the trigger mechanism that may make its function unreliable.
+www.sssdefence.com46
+--- PAGE 47 ---
+7.1 Replacing the sear The sear must be replaced with a spare, if it has got broken or the cocking surface has been damaged or worn out. The defects of the sear may lead to inexact triggering or unreliable cocking of the rifle. It is advisable to let the repair action to be carried out by a qualified person. He or she has access to the special tools needed to fit the safety components.To remove the sear, first dismantle the bolt assembly as described in the previous chapter. Then, detach the sear from the firing pin by removing its retaining pin.NOTE: The pin has been secured to prevent its transverse movement. After installation, the sear the pin must be secured accordingly.Finalize the installation of the sear by verifying the function of the safety. If necessary, fit the safety with the other components to ensure the reliable functioning of the safety. 
+www.sssdefence.com47
+--- PAGE 48 ---
+8.0 Stock repairs 8.1 Hand guard A damaged Hand guard is replaced as described in previous sections: “Removing/installing the barreled action from/to the Chassis”.8.2 Hand guard fastening pieces To replace a damaged Hand guard fastening piece, the Hand guard must be detached. The fastening piece is removed by opening the respective fastening screw completely.8.3 Fixed stock The fixed stock is manufactured as part of the chassis. The fixed stock cannot be repaired and the damaged Hand guard and/or fixed stock as well as damaged fastening screws, rails and sling swivels studs must be replaced with spares.
+www.sssdefence.com48
+--- PAGE 49 ---
+8.4 Cheek piece To replace the cheek piece, begin, use the Allen key, with loosening the fastening screw until you may slide the cheek piece together with its fastening nut. In order to assemble a new cheek piece put at first the fastening nut to the rail.Fasten the cheek piece with the optional spacer using the fastening screw to the nut and finally, tighten the fastening screw.8.5 Recoil Pad 1.To replace the recoil pad assembly with a spare loosen, using a 6 mm Allen key, the fastening screw located at top and bottom of the recoil pad, until the recoil pad assembly can be removed.2.The recoil pad is assembled using the fastening screws and respective nuts taking.3.The recoil pad assembly is fastened to the rear stock / butt plate using the Allen screw.
+www.sssdefence.com49
+--- PAGE 50 ---
+8.6 Pistol Grip Assembly•    6mm Allen key is used to assemble and disassemble the pistol grip onto the chassis.
+Fig. 23 – Removing recoil pad
+Fig. 24 – Disassembling pistol gripwww.sssdefence.com50
+--- PAGE 51 ---
+8.7 Removal of cheek piece 1. Press stud catch and remove the entire cheekpiece assembly.2. Remove two screws from the top for dissembling the cheekpiece with mounting pad.3. Remove three screws for removing guiding plate.
+Fig. 25 – Disassembling cheek piece
+www.sssdefence.com51
+--- PAGE 52 ---
+• To detach the Chassis, remove first the Hand guard, rear stock and the barreled action as described in previous chapters. Assembling is done in reverse order.
+9.0 Chassis
+Fig. 26 – Detaching Chassis
+www.sssdefence.com52
+--- PAGE 53 ---
+10. Magazine The most common repairs of the magazine are those of the operation of the magazine catch or replacements of defective components. A damaged magazine should be replaced with a spare.11. Replacing the magazine catch The magazine catch is located in front of the trigger mechanism. A worn-out or damaged magazine catch is disassembled by tapping out its pin using a 2.5 mm punch. A damaged pin and / or a weakened spring are to be replaced with respective spares. The assembly of the pin is easier if a drift pin is used as a guide by placing it into the opposite side of the bore.11.1 Replacing the magazine catch spring If the magazine catch spring has lost its strength it should be replaced following the procedure described in the previous chapter. The free length of the magazine catch spring should be > 9 mm.11.2 Magazine box The dents of the magazine, especially those on the retaining lips of the magazine box are practically impossible to recover. To ensure the positive feeding, replace a dented magazine box with a new onewww.sssdefence.com53
+--- PAGE 54 ---
+11.3 Replacing the magazine spring A weakened and/or damaged magazine spring is replaced by replacing the magazine12. Barrel Condition of the barrel has a great influence to the shooting characteristics of the rifle and can reliably be determined only by shooting tests carried out by marksmen using match-grade ammunition.If the test shooting shows that the condition of the barrel is inadequate the barrel should be thoroughly cleaned and the possible metal fouling removed from the rifling. If cleaning does not correct the situation the barrel should be replaced with a spare.13. Bore cleaning 1.Remove the bolt and ensure that the chamber is empty and the magazine has been detached.2.Perform the bore cleaning from the receiver end and use a rod guide to prevent the cleaning rod to touch the throat.3.Use a sufficiently long and stiff cleaning rod that extends out of the muzzle.
+www.sssdefence.com54
+--- PAGE 55 ---
+4.  Use only high-grade bore solvents and gun oils.5.  Push a cotton patch soaked with bore solvent followed by a dry one through the barrel until the       dry patch appears as clean from the muzzle.6.  After finished the bore cleaning, push a clean patch soaked in high-grade gun oil through the barrel.7.  All the gun oil and grease must be removed from the barrel using a clean patch before firing the rifle.14. Chamber cleaning If a tendency of a fired cartridge case to stick into the chamber is noted, the chamber should be inspected. Small scratches and powder residuals can be removed from the chamber wall by polishing (very carefully!) the chamber with steel wool. A seriously scratched or eroded chamber can be corrected only by replacing the barrel.
+www.sssdefence.com55
+--- PAGE 56 ---
+14.1 Removing fouling Decrease in accuracy is often caused by bore fouling, where the gilding metal sticks to the rifling.Therefore, one should pay attention to the careful bore cleaning as well periodical removal of fouling.The erosion of the bore quite seldom effects on the accuracy but maintains easier fouling of the bore and has therefore an indirect influence on the accuracy. A barrel having severe erosion should be replaced with a spare.
+15. Muzzle crown The muzzle crown is very critical to the accuracy. The crown should cut the rifling as faultless and symmetrical as possible. Even small dents on the crown may decrease the accuracy notably. The crown can be recovered using a beveled reamer that is guided by the lands. If the muzzle crown has been badly damaged the barrel must be replaced with a spare.www.sssdefence.com56
+--- PAGE 57 ---
+16. GENERAL After any servicing and repair operations, qualified personnel must check that all replaced parts have been properly fitted in order to restore normal operating conditions of the Saber sniper rifle and guarantee the safety of the operator.To do this, perform all the tests listed and described in the section Two (sub-section 1.2). To determine the accuracy potential of the weapon, the test shoot should be carried out by a competent marksman.
+16.1 TROUBLESHOOTING – POSSIBLE CAUSES AND REMEDIES Troubleshooting consists of identifying any faulty components, through a systematic analysis of symptoms, which led to the detection of the malfunction, by means of tests carried out to determine the faulty part and remedies required to eliminate the problem.
+16.2 TROUBLESHOOTING CHART The attached table on the next page contains a list of functional faults, possible causes and the corrective actions required to rectify the problem.
+www.sssdefence.com57
+--- PAGE 58 ---
+17. Troubleshooting
+STOPPAGETEST/INSPECTIONCORRECTIVE ACTIONMisfireSelectoronSAFE.Rotatetoafireposition.Firingpin installed incorrectlyAssembleappropriatelyExcessiveoil infiring pinrecessofbolt.Cleanoutwithpipecleaner.Improper ammo.Detach/Discard.BoltFails to DisengageBolt has particles to be cleaned.Cleanandreplace.BurredBoltLugs.EvacuatetoArmorer.Feeding MishapsDirty/Corrodedammo.Cleanandreplace.Dirtymagazine.Cleanandreplace.Defectivemagazine.Replace.Overloadedmagazine.Removeexcessrounds.Magazinenotseated.Checkmagcatchadjustment.Underfunction.EvacuatetoArmorer.DoubleFeedDefectivemagazine.Replace.
+www.sssdefence.com58
+--- PAGE 59 ---
+STOPPAGETEST/INSPECTIONCORRECTIVE ACTIONUnsuccessful ChamberingGrimy/Corrodedammo.Clean/Replace.Damagedammo.Discard/Replace.Dirtychamber.Clean.BoltFailstoLockGrimyboltlugs. Cleanlugs.Extraction MishapsFrozenextractor.Detach/Clean.Brokenextractorspring.EvacuatetoArmorer.Restrictedmovementofboltcarriergroup.Detach,clean,lube.Dirty/Corrodedammo.Detach/Clean.Dirtychamber.Clean.Bolt Fails to Lock to Rear after Previous RoundFaultymagazine.Replace.BrokenboltcatchEvacuatetoArmorer.FrozenSelectorLeverNeedsoil. Lubricate.Dirt/Residueundertrigger.Clean.
+www.sssdefence.com59
+--- PAGE 60 ---
+18. MAINTENANCE UNDER SPECIAL CONDITIONS GENERAL In addition to the instructions given in the previous paragraphs, further special rules must be followed as regards cleaning, lubrication and operation of the Saber sniper rifle in particularly bad weather conditions with reference to outdoor temperature, ambient humidity and nature of the operation site.The information given below covers general instructions for use in particularly difficult ambient conditions.Cleaning and lubrication of the various parts greatly affect operation, particularly in abnormal ambient conditions, as they protect the materials against excessive wear and deterioration.The use of the weapon at temperatures well below zero will cause serious damage if maintenance is not appropriate. This is why ordinary servicing must be intensified in the situations below.
+www.sssdefence.com60
+--- PAGE 61 ---
+18.1 Using the weapon in low temperatures • Special care must be taken on overall moving parts as ice formation affects proper sliding.• After thoroughly cleaning and lubricating with lubricant following the lubrication schedule, apply a further film of oil as extra protection against corrosion.• If the moving parts are jammed due the ice, never force them. They must be warmed up to restore operation.• Remove any snow or water that might have gotten into the weapon.• Remove any rust, dirt and oil deposits, which would prevent the lubricant from functioning properly.• Never use anti-freeze.18.2 Using the weapon in very hot or humid conditions • After thoroughly cleaning and lubricating with lubricant following the lubrication schedule, apply a further film of oil as extra protection against corrosion.• Remove any water condensate immediately and clean and lubricate the weapon thoroughly.• Move all mechanical moving parts frequently.• Keep all non-painted metal parts perfectly clean and apply a film of greasewww.sssdefence.com61
+--- PAGE 62 ---
+Sandy and dusty environments •Before entering sandy or dusty environments, remove the lubricant from the sliding surfaces visible from outside to prevent the sand from sticking onto the oil and grease and causing severe wear to the moving parts.•Before entering sandy or dusty environments, service the weapon as prescribed. In particular, remove any sand and dust deposited on the sliding surfaces.
+THE USE OF STRONG SOLVENTS (ACETONE, GASOLINE, THINNER, ETC.) IS ABSOLUTELY FORBIDDEN DUE TO THE POTENTIAL RISK OF THE PLASTIC PARTS BEING DAMAGED!•Dry the trigger mechanism out by blowing with pressurized air. Use adequate eye protection.•Lubricate the trigger mechanism by soaking it in high-grade gun oil and letting the extra oil flow down or blowing it away using pressurized air.•Remove the fouling from the barrel using an approved bore cleaner.•Check the muzzle brake for the flash in the holes of the flanges. If necessary, remove the flash utilizing approved methods.•Reassemble the rifle, check the functioning and perform shooting test, if needed. - Check the operating condition of the accessories.www.sssdefence.com62
+--- PAGE 63 ---
+SECTION FOUR - STORAGE INSTRUCTIONS STORAGE INSTRUCTION If the weapon is to be stored for a long time (up to a maximum of 24 months) proceed as follows:
+•Disassemble the weapon as specified in Section Three.•All the components of the weapon requiring lubrication must first be cleaned using appropriate solvent.•Cleaned and dried components must be thoroughly lubricated with Break-Free Grade Ill oil or equivalent.
+IMPORTANT: Make sure that the entire surface of the component involved is uniformly covered with a film of lubricant.•The weapon can then be reassembled and stored without requiring any additional routine maintenance for 12 months,after which time repeat the procedure described above.www.sssdefence.com63
+--- PAGE 64 ---
+Weapons treated with Break Free Grade Ill oil can be fired directly without requiring any preventive maintenance. However, before firing it is advisable to clean the barrel using a clean dry cloth to eliminate any irregular concentration of lubricant in the barrel bore.NOTE: When using Break-Free Grade III oil, shake it well before use to restore the balance of the Teflon based component which tends to deposit on the bottom
+www.sssdefence.com64
+--- PAGE 65 ---
+APPENDIX A - VARIANTS ACESSORIES Muzzle brake The repair actions of the muzzle brake are replacement of the screws, if damaged, and cleaning of the muzzle brake, when necessary.
+Removing the muzzle brake The muzzle brake is removed by loosening its fastening screw by approximately one turn and turning the muzzle brake counter-clockwise, until it gets loose.Cleaning the muzzle brake The muzzle brake should be detached for cleaning following the procedure described above. 
+Fig. 27 – Muzzle Brake
+www.sssdefence.com65
+--- PAGE 66 ---
+Installing the muzzle brake The muzzle brake is installed by turning it by hand clockwise so far it goes and backing it then counterclockwise, until the muzzle brake openings points to a correct direction. The countersink of the muzzle brake thread must extend over the cylinder part of the barrel. Finally, the fastening screw must be tightened.If the rifle has a tendency to jump sideways under the recoil it could be compensated by pointing the muzzle brake openings to the direction of the jump.
+To remove the carbon deposit accumulated on the openings of the muzzle brake possible flash is removed from the muzzle brake flanges by rubbing it away with steel wool. The barrel thread, 5/8-24 UNEF 2A, should be cleaned whenever the muzzle brake is detached
+Sling Replacing the sling The repair actions of the sling are the replacement of the buckles and the swivels, if damaged. The sling can be used with a smaller number of attached buckles, too. If the sling or its components have been damaged they must be replaced with appropriate spares.www.sssdefence.com66
+--- PAGE 67 ---
+Assembling of the sling The sling with the buckles and the swivels are usually supplied as separate. The sling is assembled as follows:
+•Thread the sling through the swivel and the buckle so that the outer end of the sling remains approximately 20 cm longer than the inner end.•Pass the remaining buckles to the sling at equal intervals.•Pass the lower clip hook to the outer sling and the end of the sling back to the lowest buckle.
+www.sssdefence.com67
+
+--- PAGE 68 ---
+Notes:
+www.sssdefence.com68
+--- PAGE 69 ---
+Notes:
+www.sssdefence.com69
+--- PAGE 70 ---
+Notes:
+www.sssdefence.com70
+--- PAGE 71 ---
+Notes:
+www.sssdefence.com71
+--- PAGE 72 ---
+Plot # 283/b Bommasandra-Jigani Link Road, Anekal Taluk, Jigani, Bengaluru, Karnataka 560105www.sssdefence.com

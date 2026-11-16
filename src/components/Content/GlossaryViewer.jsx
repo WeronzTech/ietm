@@ -89,7 +89,7 @@ export default function GlossaryViewer({ manualId, user }) {
               setEditItem({ id: null, term: "", abbreviation: "", definition: "", category: "General" });
               setIsEditing(true);
             }}
-            className="flex items-center gap-1.5 rounded-sm bg-vector-accent text-black px-4 py-2 text-xs font-bold uppercase tracking-widest hover:brightness-110 shadow-[0_0_15px_rgba(0,245,212,0.15)]"
+            className="flex items-center gap-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 text-xs font-semibold shadow-sm transition-all"
           >
             <Plus size={14} /> Add Definition
           </button>
@@ -273,7 +273,7 @@ export default function GlossaryViewer({ manualId, user }) {
               </button>
               <button
                 onClick={handleSave}
-                className="bg-vector-accent text-black font-bold px-5 py-2 rounded-sm text-xs uppercase tracking-widest hover:brightness-110 shadow-[0_0_12px_rgba(0,245,212,0.2)]"
+                className="bg-sky-600 hover:bg-sky-500 text-white font-semibold px-5 py-2 rounded-lg text-xs shadow-sm transition-all"
               >
                 Save Term
               </button>

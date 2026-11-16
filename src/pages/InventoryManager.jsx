@@ -37,68 +37,76 @@ export default function InventoryManager({ onBack }) {
   };
 
   return (
-    <div className="min-h-full bg-vector-bg p-8 text-vector-text space-y-8 animate-fade-in">
+    <div className="min-h-full bg-vector-bg p-8 text-vector-text space-y-8 animate-fade-in font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-800 pb-4">
+      <div className="flex items-center justify-between border-b border-slate-800 pb-5">
         <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="flex h-8 w-8 items-center justify-center rounded-sm bg-gray-800 hover:bg-vector-accent hover:text-black transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800/80 border border-slate-700 hover:bg-sky-600 hover:text-white transition-colors"
           >
             <ArrowLeft size={16} />
           </button>
-          <h1 className="text-3xl font-bold tracking-tight text-white m-0 flex items-center gap-3">
-            <Box size={28} className="text-vector-accent" /> Logistics & Supply Chain
-          </h1>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-sky-500/15 text-sky-300 border border-sky-500/30">
+                Level-4 Logistics
+              </span>
+              <span className="text-xs text-slate-400">Master Defense Inventory</span>
+            </div>
+            <h1 className="text-xl font-bold tracking-wide text-white m-0 flex items-center gap-2.5 mt-0.5">
+              <Box size={22} className="text-sky-400" /> Logistics &amp; Supply Chain Repository
+            </h1>
+          </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* ADD PART FORM */}
-        <div className="lg:col-span-1 rounded-lg border border-gray-800 bg-vector-panel p-6 shadow-md h-fit">
-          <h3 className="mb-6 text-lg font-bold tracking-widest text-vector-accent uppercase border-b border-gray-800 pb-2 flex gap-2 items-center">
+        <div className="lg:col-span-1 rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-md h-fit backdrop-blur-sm">
+          <h3 className="mb-6 text-sm font-semibold tracking-wider text-sky-400 uppercase border-b border-slate-800 pb-3 flex gap-2 items-center">
             <PackagePlus size={18} /> Add Master Part
           </h3>
           
           <div className="space-y-4">
             <div>
-              <label className="text-[10px] text-vector-text-muted uppercase font-bold tracking-widest">Part Number (PN)</label>
-              <input value={newPart.partNo} onChange={e => setNewPart({...newPart, partNo: e.target.value})} className="w-full mt-1 p-2 bg-vector-bg border border-gray-700 rounded-sm font-mono text-sm focus:border-vector-accent outline-none" placeholder="e.g. 1928-A"/>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">Part Number (PN)</label>
+              <input value={newPart.partNo} onChange={e => setNewPart({...newPart, partNo: e.target.value})} className="w-full rounded-lg bg-slate-950 border border-slate-700/80 p-2.5 font-mono text-xs text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-colors" placeholder="e.g. SSS-RCV-001"/>
             </div>
             <div>
-              <label className="text-[10px] text-vector-text-muted uppercase font-bold tracking-widest">Nomenclature / Name</label>
-              <input value={newPart.nomenclature} onChange={e => setNewPart({...newPart, nomenclature: e.target.value})} className="w-full mt-1 p-2 bg-vector-bg border border-gray-700 rounded-sm text-sm focus:border-vector-accent outline-none" placeholder="Receiver Group"/>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">Nomenclature / Name</label>
+              <input value={newPart.nomenclature} onChange={e => setNewPart({...newPart, nomenclature: e.target.value})} className="w-full rounded-lg bg-slate-950 border border-slate-700/80 p-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-colors" placeholder="e.g. Upper Receiver Main Housing"/>
             </div>
             <div>
-              <label className="text-[10px] text-vector-text-muted uppercase font-bold tracking-widest">NSN / NIIN</label>
-              <input value={newPart.nsn} onChange={e => setNewPart({...newPart, nsn: e.target.value})} className="w-full mt-1 p-2 bg-vector-bg border border-gray-700 rounded-sm font-mono text-sm focus:border-vector-accent outline-none" placeholder="1005-01-XX"/>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">NSN / NIIN</label>
+              <input value={newPart.nsn} onChange={e => setNewPart({...newPart, nsn: e.target.value})} className="w-full rounded-lg bg-slate-950 border border-slate-700/80 p-2.5 font-mono text-xs text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-colors" placeholder="1005-01-XX"/>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-[10px] text-vector-text-muted uppercase font-bold tracking-widest">Current Stock</label>
-                <input type="number" value={newPart.stock} onChange={e => setNewPart({...newPart, stock: parseInt(e.target.value) || 0})} className="w-full mt-1 p-2 bg-vector-bg border border-gray-700 rounded-sm font-mono text-sm focus:border-vector-accent outline-none"/>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Current Stock</label>
+                <input type="number" value={newPart.stock} onChange={e => setNewPart({...newPart, stock: parseInt(e.target.value) || 0})} className="w-full rounded-lg bg-slate-950 border border-slate-700/80 p-2.5 font-mono text-xs text-slate-100 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-colors"/>
               </div>
               <div>
-                <label className="text-[10px] text-vector-text-muted uppercase font-bold tracking-widest">Crit. Threshold</label>
-                <input type="number" value={newPart.threshold} onChange={e => setNewPart({...newPart, threshold: parseInt(e.target.value) || 0})} className="w-full mt-1 p-2 bg-vector-bg border border-gray-700 rounded-sm font-mono text-sm text-yellow-500 focus:border-vector-accent outline-none"/>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Crit. Threshold</label>
+                <input type="number" value={newPart.threshold} onChange={e => setNewPart({...newPart, threshold: parseInt(e.target.value) || 0})} className="w-full rounded-lg bg-slate-950 border border-slate-700/80 p-2.5 font-mono text-xs text-amber-400 focus:border-sky-500 focus:ring-1 focus:ring-sky-500 outline-none transition-colors"/>
               </div>
             </div>
             
-            <button onClick={handleAddPart} className="w-full mt-6 py-3 bg-vector-accent text-black font-bold tracking-widest uppercase text-xs rounded-sm hover:brightness-110 shadow-[0_0_15px_rgba(0,245,212,0.15)] transition-all">
+            <button onClick={handleAddPart} className="w-full mt-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-lg transition-all shadow-sm">
               Commit to DB
             </button>
           </div>
         </div>
 
         {/* INVENTORY TABLE */}
-        <div className="lg:col-span-2 rounded-lg border border-gray-800 bg-vector-panel p-6 shadow-md">
-          <h3 className="mb-6 text-lg font-bold tracking-widest text-blue-400 uppercase border-b border-gray-800 pb-2 flex gap-2 items-center">
+        <div className="lg:col-span-2 rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-md backdrop-blur-sm">
+          <h3 className="mb-6 text-sm font-semibold tracking-wider text-sky-400 uppercase border-b border-slate-800 pb-3 flex gap-2 items-center">
             <Layers size={18} /> Global Parts Catalog
           </h3>
           
-          <div className="overflow-x-auto rounded-sm border border-gray-800 h-[calc(100vh-280px)]">
-            <table className="w-full text-left text-sm text-gray-300 relative">
-              <thead className="bg-gray-800 text-[10px] tracking-widest uppercase text-vector-text-muted sticky top-0 z-10 shadow-md">
+          <div className="overflow-x-auto rounded-xl border border-slate-800 h-[calc(100vh-280px)]">
+            <table className="w-full text-left text-sm text-slate-300 relative">
+              <thead className="bg-slate-800/80 text-[11px] uppercase text-slate-400 font-semibold tracking-wider sticky top-0 z-10 shadow-md">
                 <tr>
                   <th className="p-3">ID</th>
                   <th className="p-3">Part #</th>
@@ -107,25 +115,25 @@ export default function InventoryManager({ onBack }) {
                   <th className="p-3 text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800 bg-vector-panel">
+              <tbody className="divide-y divide-slate-800/60 bg-slate-900/40">
                 {inventory.map(part => {
                   const isCritical = part.stock_level <= part.critical_threshold;
                   return (
-                    <tr key={part.id} className="hover:bg-gray-800 transition-colors">
-                      <td className="p-3 font-mono text-xs opacity-50">{part.id}</td>
-                      <td className="p-3 font-mono text-vector-accent font-bold">{part.part_number}</td>
+                    <tr key={part.id} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="p-3 font-mono text-xs text-slate-500">#{part.id}</td>
+                      <td className="p-3 font-mono text-sky-400 font-semibold">{part.part_number}</td>
                       <td className="p-3">
-                        <div className="font-bold text-white mb-1">{part.nomenclature}</div>
-                        <div className="font-mono text-xs text-gray-500">{part.nsn_niin || "NO-NSN"}</div>
+                        <div className="font-semibold text-white mb-0.5">{part.nomenclature}</div>
+                        <div className="font-mono text-xs text-slate-500">{part.nsn_niin || "NO-NSN"}</div>
                       </td>
-                      <td className="p-3 text-right font-mono text-lg">{part.stock_level}</td>
+                      <td className="p-3 text-right font-mono font-bold text-base text-white">{part.stock_level}</td>
                       <td className="p-3 text-center">
                         {isCritical ? (
-                          <span className="flex items-center justify-center gap-1 text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded bg-red-900/40 border border-red-500/50 text-red-400">
+                          <span className="inline-flex items-center justify-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-rose-900/30 border border-rose-500/40 text-rose-300">
                             <AlertTriangle size={12}/> Critical
                           </span>
                         ) : (
-                          <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-1 rounded bg-green-900/40 border border-green-500/50 text-green-400">
+                          <span className="inline-flex items-center justify-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-emerald-900/30 border border-emerald-500/40 text-emerald-300">
                             Optimal
                           </span>
                         )}
@@ -135,7 +143,7 @@ export default function InventoryManager({ onBack }) {
                 })}
                 {inventory.length === 0 && (
                   <tr>
-                    <td colSpan="5" className="p-10 text-center text-gray-500 italic">No parts registered in Global Catalog.</td>
+                    <td colSpan="5" className="p-10 text-center text-slate-500 italic text-xs">No parts registered in Global Catalog.</td>
                   </tr>
                 )}
               </tbody>

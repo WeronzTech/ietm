@@ -7,6 +7,7 @@ export default function PdfViewer({ manualId, onOpenPdfSearch }) {
   const [zoom, setZoom] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(12);
+  const [viewMode, setViewMode] = useState("embed");
 
   useEffect(() => {
     loadPdfs();
@@ -158,91 +159,110 @@ export default function PdfViewer({ manualId, onOpenPdfSearch }) {
             >
               <RotateCcw size={14} />
             </button>
+            {selectedPdf?.file_path?.endsWith(".pdf") && (
+              <button
+                onClick={() => setViewMode(viewMode === "embed" ? "canvas" : "embed")}
+                className="ml-2 px-2.5 py-1 text-[11px] font-mono rounded bg-gray-800 hover:bg-gray-700 text-vector-accent border border-gray-700 flex items-center gap-1.5 transition-colors"
+                title="Toggle between Native PDF Embed and Formatted Text Page"
+              >
+                {viewMode === "embed" ? "📄 Formatted View" : "📑 Native PDF Viewer"}
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Document Rendering Canvas / Simulated High-Fidelity PDF Page */}
-        <div className="flex-1 overflow-auto p-8 flex justify-center bg-gray-950/80">
-          <div
-            style={{ transform: `scale(${zoom / 100})`, transformOrigin: "top center", transition: "transform 0.15s ease" }}
-            className="w-[720px] min-h-[960px] bg-white text-gray-900 shadow-2xl p-12 border border-gray-400 rounded-sm font-sans flex flex-col justify-between select-text"
-          >
-            {/* PDF Header */}
-            <div>
-              <div className="flex justify-between border-b-2 border-black pb-3 mb-6 text-xs font-mono font-bold tracking-wider">
-                <span>MIL-STD-3048A S1000D</span>
-                <span className="text-red-700 uppercase">SECURITY: RESTRICTED</span>
-                <span>DATA MODULE: DMC-00{currentPage}</span>
-              </div>
-              <h1 className="text-2xl font-black text-center uppercase tracking-wide mb-2">
-                {selectedPdf?.title || "Technical Manual Publication"}
-              </h1>
-              <h3 className="text-xs font-mono text-center text-gray-600 mb-8 uppercase tracking-widest">
-                Section 4.{currentPage}: System Assembly and Technical Verification
-              </h3>
-
-              {/* Sample Document Body Content */}
-              <div className="space-y-4 text-xs leading-relaxed text-gray-800 font-serif">
-                <p className="font-bold uppercase tracking-wider text-black">1.1 Scope & Purpose</p>
-                <p>
-                  This manual provides procedural instructions for operation, routine servicing, and field maintenance of the
-                  designated defense platform. All operating personnel must observe standard safety protocols and check
-                  applicability before commencing operations.
-                </p>
-
-                <div className="p-4 bg-amber-50 border-l-4 border-amber-600 my-4 text-amber-950 font-sans">
-                  <p className="font-bold text-xs uppercase tracking-wider">⚠️ Mandatory Safety Check</p>
-                  <p className="text-[11px] mt-1">
-                    Verify that weapon chamber is clear and weapon safety lever is placed in SAFE position before initiating any
-                    tear-down procedure.
-                  </p>
+        {/* Document Rendering Canvas or Native PDF Iframe */}
+        {viewMode === "embed" && selectedPdf?.file_path?.endsWith(".pdf") ? (
+          <div className="flex-1 w-full h-full bg-slate-900 flex flex-col relative overflow-hidden">
+            <iframe
+              src={`${selectedPdf.file_path}#page=${currentPage}`}
+              title={selectedPdf.title}
+              className="w-full h-full border-none"
+            />
+          </div>
+        ) : (
+          <div className="flex-1 overflow-auto p-8 flex justify-center bg-gray-950/80">
+            <div
+              style={{ transform: `scale(${zoom / 100})`, transformOrigin: "top center", transition: "transform 0.15s ease" }}
+              className="w-[720px] min-h-[960px] bg-white text-gray-900 shadow-2xl p-12 border border-gray-400 rounded-sm font-sans flex flex-col justify-between select-text"
+            >
+              {/* PDF Header */}
+              <div>
+                <div className="flex justify-between border-b-2 border-black pb-3 mb-6 text-xs font-mono font-bold tracking-wider">
+                  <span>MIL-STD-3048A S1000D</span>
+                  <span className="text-red-700 uppercase">SECURITY: RESTRICTED</span>
+                  <span>DATA MODULE: DMC-00{currentPage}</span>
                 </div>
+                <h1 className="text-2xl font-black text-center uppercase tracking-wide mb-2">
+                  {selectedPdf?.title || "Technical Manual Publication"}
+                </h1>
+                <h3 className="text-xs font-mono text-center text-gray-600 mb-8 uppercase tracking-widest">
+                  Section 4.{currentPage}: System Assembly and Technical Verification
+                </h3>
 
-                <p className="font-bold uppercase tracking-wider text-black mt-6">1.2 Technical Specifications (Table {currentPage}.1)</p>
-                <table className="w-full border border-gray-400 text-[11px] font-sans my-3">
-                  <thead className="bg-gray-200 border-b border-gray-400">
-                    <tr>
-                      <th className="p-2 border-r border-gray-400 text-left">Parameter</th>
-                      <th className="p-2 border-r border-gray-400 text-left">Specification</th>
-                      <th className="p-2 text-left">Tolerance</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-300">
-                      <td className="p-2 border-r border-gray-300 font-mono">Chamber Pressure Max</td>
-                      <td className="p-2 border-r border-gray-300">3,450 Bar</td>
-                      <td className="p-2">± 50 Bar</td>
-                    </tr>
-                    <tr className="border-b border-gray-300">
-                      <td className="p-2 border-r border-gray-300 font-mono">Muzzle Velocity</td>
-                      <td className="p-2 border-r border-gray-300">890 m/s</td>
-                      <td className="p-2">± 15 m/s</td>
-                    </tr>
-                    <tr>
-                      <td className="p-2 border-r border-gray-300 font-mono">Trigger Pull Resistance</td>
-                      <td className="p-2 border-r border-gray-300">22.5 N</td>
-                      <td className="p-2">± 2.0 N</td>
-                    </tr>
-                  </tbody>
-                </table>
+                {/* Sample Document Body Content */}
+                <div className="space-y-4 text-xs leading-relaxed text-gray-800 font-serif">
+                  <p className="font-bold uppercase tracking-wider text-black">1.1 Scope & Purpose</p>
+                  <p>
+                    This manual provides procedural instructions for operation, routine servicing, and field maintenance of the
+                    designated defense platform. All operating personnel must observe standard safety protocols and check
+                    applicability before commencing operations.
+                  </p>
 
-                <p className="font-bold uppercase tracking-wider text-black mt-6">1.3 Step-by-Step Execution</p>
-                <ol className="list-decimal pl-5 space-y-2 text-[11px]">
-                  <li>Disengage primary latch pin by depressing release collar located on rear assembly.</li>
-                  <li>Rotate upper housing clockwise 45 degrees until alignment guide marks coincide.</li>
-                  <li>Extract bolt carrier subassembly carefully, avoiding spring tension release.</li>
-                  <li>Clean mating guide rails with solvent (Mil-Spec MIL-PRF-680) and inspect for micro-cracks.</li>
-                </ol>
+                  <div className="p-4 bg-amber-50 border-l-4 border-amber-600 my-4 text-amber-950 font-sans">
+                    <p className="font-bold text-xs uppercase tracking-wider">⚠️ Mandatory Safety Check</p>
+                    <p className="text-[11px] mt-1">
+                      Verify that weapon chamber is clear and weapon safety lever is placed in SAFE position before initiating any
+                      tear-down procedure.
+                    </p>
+                  </div>
+
+                  <p className="font-bold uppercase tracking-wider text-black mt-6">1.2 Technical Specifications (Table {currentPage}.1)</p>
+                  <table className="w-full border border-gray-400 text-[11px] font-sans my-3">
+                    <thead className="bg-gray-200 border-b border-gray-400">
+                      <tr>
+                        <th className="p-2 border-r border-gray-400 text-left">Parameter</th>
+                        <th className="p-2 border-r border-gray-400 text-left">Specification</th>
+                        <th className="p-2 text-left">Tolerance</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-300">
+                        <td className="p-2 border-r border-gray-300 font-mono">Chamber Pressure Max</td>
+                        <td className="p-2 border-r border-gray-300">3,450 Bar</td>
+                        <td className="p-2">± 50 Bar</td>
+                      </tr>
+                      <tr className="border-b border-gray-300">
+                        <td className="p-2 border-r border-gray-300 font-mono">Muzzle Velocity</td>
+                        <td className="p-2 border-r border-gray-300">890 m/s</td>
+                        <td className="p-2">± 15 m/s</td>
+                      </tr>
+                      <tr>
+                        <td className="p-2 border-r border-gray-300 font-mono">Trigger Pull Resistance</td>
+                        <td className="p-2 border-r border-gray-300">22.5 N</td>
+                        <td className="p-2">± 2.0 N</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <p className="font-bold uppercase tracking-wider text-black mt-6">1.3 Step-by-Step Execution</p>
+                  <ol className="list-decimal pl-5 space-y-2 text-[11px]">
+                    <li>Disengage primary latch pin by depressing release collar located on rear assembly.</li>
+                    <li>Rotate upper housing clockwise 45 degrees until alignment guide marks coincide.</li>
+                    <li>Extract bolt carrier subassembly carefully, avoiding spring tension release.</li>
+                    <li>Clean mating guide rails with solvent (Mil-Spec MIL-PRF-680) and inspect for micro-cracks.</li>
+                  </ol>
+                </div>
+              </div>
+
+              {/* PDF Footer */}
+              <div className="border-t border-gray-400 pt-3 flex justify-between text-[10px] font-mono text-gray-500">
+                <span>AUTHORIZED DEFENCE DISTRIBUTION ONLY</span>
+                <span>Page {currentPage} of {totalPages}</span>
               </div>
             </div>
-
-            {/* PDF Footer */}
-            <div className="border-t border-gray-400 pt-3 flex justify-between text-[10px] font-mono text-gray-500">
-              <span>AUTHORIZED DEFENCE DISTRIBUTION ONLY</span>
-              <span>Page {currentPage} of {totalPages}</span>
-            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

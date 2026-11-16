@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-acc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050a16" />
+      <stop offset="100%" stop-color="#0c162d" />
+    </linearGradient>
+    <pattern id="grid-acc" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.75" />
+    </pattern>
+  </defs>
+
+  <rect width="1000" height="600" fill="url(#bg-grad-acc)" />
+  <rect width="1000" height="600" fill="url(#grid-acc)" />
+  <rect x="15" y="15" width="970" height="570" fill="none" stroke="#00F5D4" stroke-width="1.5" opacity="0.4" />
+
+  <!-- Header -->
+  <g transform="translate(40, 48)">
+    <text font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#00F5D4" letter-spacing="2">
+      MIL-STD-JSG-0852 // AUTHORIZED ACCESSORIES &amp; ATTACHMENTS (FIG 48-57)
+    </text>
+    <text y="22" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="3">
+      AK-47 FIELD KIT, BAYONET, BLANK DEVICE &amp; NIGHT SIGHTS
+    </text>
+    <text y="40" font-family="'Courier New', monospace" font-size="11" fill="#94a3b8" letter-spacing="1">
+      ANCILLARY ITEMS AUTHORIZED UNDER TM-9-1005-AK47-10 SECTION VI
+    </text>
+  </g>
+
+  <!-- Panel 1: Cleaning / Tool Kit (FIG 48) -->
+  <g transform="translate(40, 110)">
+    <rect width="280" height="210" fill="#0b172a" stroke="#38bdf8" stroke-width="1.2" rx="6" opacity="0.9" />
+    <text x="15" y="24" font-family="monospace" font-size="11" font-weight="bold" fill="#38bdf8">FIG 48: COMBINATION TOOL KIT</text>
+
+    <!-- Cylindrical Case & Tools -->
+    <g transform="translate(30, 45)">
+      <!-- Case tube -->
+      <rect x="10" y="15" width="180" height="24" rx="4" fill="#082f49" stroke="#38bdf8" stroke-width="1.8" />
+      <text x="100" y="31" font-family="monospace" font-size="9" fill="#00F5D4" text-anchor="middle">TOOL CANISTER / HANDLE</text>
+      <!-- Cap -->
+      <rect x="190" y="12" width="20" height="30" rx="3" fill="#0284c7" stroke="#38bdf8" />
+
+      <!-- Cleaning Jag / Slotted tip -->
+      <g transform="translate(10, 60)">
+        <line x1="0" y1="10" x2="160" y2="10" stroke="#94a3b8" stroke-width="2" />
+        <rect x="160" y="6" width="30" height="8" rx="2" fill="#475569" stroke="#94a3b8" />
+        <line x1="168" y1="10" x2="182" y2="10" stroke="#00F5D4" stroke-width="2" />
+        <text x="0" y="26" font-family="monospace" font-size="8" fill="#94a3b8">Slotted Cleaning Jag</text>
+      </g>
+
+      <!-- Drift / Punch & Brush -->
+      <g transform="translate(10, 95)">
+        <line x1="0" y1="10" x2="100" y2="10" stroke="#cbd5e1" stroke-width="3" />
+        <polygon points="100,10 120,6 120,14" fill="#cbd5e1" />
+        <text x="0" y="26" font-family="monospace" font-size="8" fill="#94a3b8">Pin Punch / Drift</text>
+        <!-- Bore Bristle Brush -->
+        <rect x="130" y="5" width="60" height="10" rx="2" fill="#78350f" stroke="#fbbf24" stroke-dasharray="2,2" />
+        <text x="130" y="26" font-family="monospace" font-size="8" fill="#fbbf24">Bore Brush</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Panel 2: Blank Firing Device (FIG 51-52) -->
+  <g transform="translate(340, 110)">
+    <rect width="290" height="210" fill="#0b172a" stroke="#fbbf24" stroke-width="1.2" rx="6" opacity="0.9" />
+    <text x="15" y="24" font-family="monospace" font-size="11" font-weight="bold" fill="#fbbf24">FIG 51-52: BLANK FIRING ADAPTER</text>
+
+    <!-- Muzzle Threaded Device -->
+    <g transform="translate(45, 55)">
+      <!-- Left 14x1mm LH threads -->
+      <rect x="0" y="20" width="35" height="40" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5" />
+      <line x1="5" y1="20" x2="5" y2="60" stroke="#fbbf24" stroke-dasharray="2,2" />
+      <line x1="15" y1="20" x2="15" y2="60" stroke="#fbbf24" stroke-dasharray="2,2" />
+      <line x1="25" y1="20" x2="25" y2="60" stroke="#fbbf24" stroke-dasharray="2,2" />
+
+      <!-- Constricted Nozzle Body -->
+      <path d="M 35 20 L 120 30 L 145 35 L 145 45 L 120 50 L 35 60 Z" fill="#78350f" stroke="#fbbf24" stroke-width="2" />
+      <!-- Gas Restriction Orifice (creates backpressure for cycling) -->
+      <circle cx="145" cy="40" r="4" fill="#00F5D4" stroke="#ffffff" />
+
+      <!-- Spring Detent Notch -->
+      <rect x="0" y="14" width="8" height="6" fill="#00F5D4" />
+      <text x="10" y="12" font-family="monospace" font-size="8" fill="#00F5D4">Detent Pin Interlock</text>
+    </g>
+
+    <g transform="translate(15, 150)">
+      <text x="0" y="15" font-family="monospace" font-size="9" fill="#e2e8f0">• Screws onto 14x1 mm LH muzzle threads.</text>
+      <text x="0" y="30" font-family="monospace" font-size="9" fill="#e2e8f0">• Traps gas to cycle bolt with blank rounds.</text>
+      <text x="0" y="45" font-family="monospace" font-size="9" fill="#ef4444" font-weight="bold">⚠️ NEVER FIRE LIVE AMMO WITH ADAPTER!</text>
+    </g>
+  </g>
+
+  <!-- Panel 3: Night Sight Attachment (FIG 49-50) -->
+  <g transform="translate(650, 110)">
+    <rect width="310" height="210" fill="#0b172a" stroke="#a78bfa" stroke-width="1.2" rx="6" opacity="0.9" />
+    <text x="15" y="24" font-family="monospace" font-size="11" font-weight="bold" fill="#c084fc">FIG 49-50: LUMINESCENT NIGHT SIGHTS</text>
+
+    <!-- Clip on Radium / Tritium Luminous Vials -->
+    <g transform="translate(30, 45)">
+      <!-- Front Sight Clip-on -->
+      <g transform="translate(0, 10)">
+        <path d="M 0 35 L 0 5 C 0 0, 30 0, 30 5 L 30 35 Z" fill="#1e1b4b" stroke="#a78bfa" stroke-width="1.5" />
+        <circle cx="15" cy="18" r="6" fill="#22c55e" stroke="#86efac" stroke-width="1.5" />
+        <circle cx="15" cy="18" r="3" fill="#ffffff" />
+        <text x="38" y="20" font-family="monospace" font-size="9" fill="#86efac">Front Tritium Dot</text>
+      </g>
+
+      <!-- Rear Sight Clip-on with Twin Green Dots -->
+      <g transform="translate(140, 10)">
+        <rect x="0" y="5" width="70" height="30" rx="3" fill="#1e1b4b" stroke="#a78bfa" stroke-width="1.5" />
+        <circle cx="18" cy="18" r="5" fill="#22c55e" stroke="#86efac" />
+        <circle cx="52" cy="18" r="5" fill="#22c55e" stroke="#86efac" />
+        <line x1="35" y1="5" x2="35" y2="15" stroke="#a78bfa" stroke-width="2" />
+        <text x="0" y="48" font-family="monospace" font-size="9" fill="#86efac">Twin Rear Notches</text>
+      </g>
+    </g>
+
+    <g transform="translate(15, 145)">
+      <text x="0" y="15" font-family="monospace" font-size="9" fill="#e2e8f0">• Snaps over standard iron sights.</text>
+      <text x="0" y="30" font-family="monospace" font-size="9" fill="#e2e8f0">• 3-dot green alignment for night combat.</text>
+      <text x="0" y="45" font-family="monospace" font-size="9" fill="#00F5D4">• Flip-down stowage when using day sights.</text>
+    </g>
+  </g>
+
+  <!-- Bottom Panel: M-1959 Knife-Bayonet & Wire Cutter (FIG 55-56) -->
+  <g transform="translate(40, 340)">
+    <rect width="920" height="215" fill="#0b172a" stroke="#00F5D4" stroke-width="1.5" rx="6" opacity="0.9" />
+    <text x="20" y="28" font-family="monospace" font-size="12" font-weight="bold" fill="#00F5D4">
+      FIG 55-56: COMBAT KNIFE-BAYONET WITH WIRE-CUTTING SCABBARD (6X2 / 6X3)
+    </text>
+
+    <!-- Detailed Bayonet Vector Drawing -->
+    <g transform="translate(30, 45)">
+      <!-- Blade with hole for wire-cutter stud -->
+      <path d="M 0 35 L 240 35 C 265 35, 290 45, 305 60 L 260 60 L 0 52 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+      <!-- Sawtooth spine along top -->
+      <path d="M 50 35 L 55 30 L 60 35 L 65 30 L 70 35 L 75 30 L 80 35 L 85 30 L 90 35 L 95 30 L 100 35" stroke="#38bdf8" stroke-width="1.5" />
+      <!-- Wire-cutter pivot hole in blade -->
+      <circle cx="210" cy="45" r="7" fill="#050a16" stroke="#fbbf24" stroke-width="2" />
+
+      <!-- Crossguard with barrel muzzle ring -->
+      <g transform="translate(-15, 10)">
+        <rect x="0" y="0" width="16" height="65" rx="3" fill="#0f172a" stroke="#00F5D4" stroke-width="2" />
+        <!-- Muzzle ring at top -->
+        <circle cx="8" cy="-5" r="12" fill="none" stroke="#00F5D4" stroke-width="2.5" />
+      </g>
+
+      <!-- Bakelite / polymer ribbed handle -->
+      <g transform="translate(-130, 25)">
+        <rect x="0" y="0" width="115" height="35" rx="4" fill="#7c2d12" stroke="#ea580c" stroke-width="2" />
+        <line x1="25" y1="0" x2="25" y2="35" stroke="#c2410c" stroke-width="2" />
+        <line x1="50" y1="0" x2="50" y2="35" stroke="#c2410c" stroke-width="2" />
+        <line x1="75" y1="0" x2="75" y2="35" stroke="#c2410c" stroke-width="2" />
+        <!-- Pommel with spring-loaded catch for bayonet lug -->
+        <rect x="-25" y="0" width="25" height="35" rx="3" fill="#0f172a" stroke="#00F5D4" stroke-width="2" />
+        <circle cx="-12" cy="18" r="5" fill="#38bdf8" />
+      </g>
+    </g>
+
+    <!-- Scabbard with Wire-Cutter Stud Attached -->
+    <g transform="translate(420, 60)">
+      <!-- Steel scabbard body with rubber insulator sleeve -->
+      <rect x="0" y="15" width="240" height="30" rx="3" fill="#0c1e38" stroke="#38bdf8" stroke-width="2" />
+      <!-- Rubber insulation (rated 220V electrical barrier) -->
+      <rect x="20" y="12" width="120" height="36" rx="4" fill="#020617" stroke="#94a3b8" stroke-dasharray="3,3" />
+      <text x="80" y="34" font-family="monospace" font-size="8" fill="#94a3b8" text-anchor="middle">RUBBER INSULATOR (220V)</text>
+      <!-- Wire cutter stud and shear edge at scabbard tip -->
+      <path d="M 240 15 L 275 22 L 285 30 L 275 38 L 240 45 Z" fill="#1e293b" stroke="#fbbf24" stroke-width="2" />
+      <circle cx="260" cy="30" r="5" fill="#f59e0b" stroke="#fff" />
+    </g>
+
+    <!-- Operational Wire Cutting Legend -->
+    <g transform="translate(720, 55)">
+      <rect width="180" height="135" fill="#040d1a" stroke="#334155" rx="4" />
+      <text x="10" y="20" font-family="monospace" font-size="10" font-weight="bold" fill="#00F5D4">WIRE CUTTER ASSEMBLY:</text>
+      <text x="10" y="38" font-family="monospace" font-size="9" fill="#e2e8f0">1. Align hole in blade with</text>
+      <text x="10" y="50" font-family="monospace" font-size="9" fill="#e2e8f0">   scabbard pivot stud.</text>
+      <text x="10" y="66" font-family="monospace" font-size="9" fill="#e2e8f0">2. Slip wire between shear</text>
+      <text x="10" y="78" font-family="monospace" font-size="9" fill="#e2e8f0">   notch &amp; blade edge.</text>
+      <text x="10" y="94" font-family="monospace" font-size="9" fill="#e2e8f0">3. Squeeze handles to</text>
+      <text x="10" y="106" font-family="monospace" font-size="9" fill="#e2e8f0">   cut barbed wire/cables.</text>
+      <text x="10" y="122" font-family="monospace" font-size="9" fill="#00F5D4">Cuts up to 3mm high-tensile.</text>
+    </g>
+
+  </g>
+
+</svg>
+

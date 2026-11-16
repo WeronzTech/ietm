@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-z" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#040914" />
+      <stop offset="100%" stop-color="#0b1730" />
+    </linearGradient>
+    <pattern id="grid-z" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" stroke-width="0.75" />
+    </pattern>
+  </defs>
+
+  <rect width="1000" height="600" fill="url(#bg-grad-z)" />
+  <rect width="1000" height="600" fill="url(#grid-z)" />
+  <rect x="15" y="15" width="970" height="570" fill="none" stroke="#00F5D4" stroke-width="1.5" opacity="0.4" />
+
+  <!-- Header -->
+  <g transform="translate(40, 50)">
+    <text font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="#00F5D4" letter-spacing="2">
+      MIL-STD-JSG-0852 // ZEROING &amp; SIGHT ALIGNMENT PROCEDURE (FIG 17-19)
+    </text>
+    <text y="22" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="3">
+      AK-47 FRONT SIGHT ELEVATION &amp; WINDAGE ADJUSTMENT
+    </text>
+    <text y="40" font-family="'Courier New', monospace" font-size="11" fill="#94a3b8" letter-spacing="1">
+      ZEROING DISTANCE: 100 METERS // BATTLE SIGHT SETTING: 'П' (POINT BLANK TO 300m)
+    </text>
+  </g>
+
+  <!-- Left Panel: Front Sight Post Adjustment (Elevation & Windage) -->
+  <g transform="translate(60, 110)">
+    <rect width="420" height="440" fill="#0b172a" stroke="#38bdf8" stroke-width="1.5" rx="6" opacity="0.85" />
+    <text x="20" y="32" font-family="monospace" font-size="13" font-weight="bold" fill="#38bdf8">FIG 18-19: FRONT SIGHT POST &amp; DRUM</text>
+
+    <!-- Front Sight Hood & Post Detail -->
+    <g transform="translate(110, 60)">
+      <!-- Outer protective ears / hood -->
+      <path d="M 30 180 L 30 90 C 30 20, 170 20, 170 90 L 170 180 Z" fill="#09182a" stroke="#00F5D4" stroke-width="3" />
+      <path d="M 50 180 L 50 95 C 50 45, 150 45, 150 95 L 150 180 Z" fill="#040d1a" stroke="#38bdf8" stroke-width="2" />
+
+      <!-- Horizontal Windage Cylindrical Drum (slides left/right) -->
+      <rect x="15" y="130" width="170" height="40" rx="4" fill="#1e293b" stroke="#fbbf24" stroke-width="2" />
+      <line x1="100" y1="125" x2="100" y2="175" stroke="#f59e0b" stroke-width="2" stroke-dasharray="2,2" />
+
+      <!-- Threaded Post (screws up/down for elevation) -->
+      <rect x="94" y="65" width="12" height="70" fill="#fbbf24" stroke="#f59e0b" stroke-width="1.5" />
+      <!-- Post tip with glowing dot -->
+      <circle cx="100" cy="65" r="5" fill="#00F5D4" />
+
+      <!-- Elevation adjustment arrows (Vertical) -->
+      <g transform="translate(200, 50)">
+        <line x1="0" y1="10" x2="0" y2="60" stroke="#00F5D4" stroke-width="2" />
+        <polygon points="0,0 -5,12 5,12" fill="#00F5D4" />
+        <polygon points="0,70 -5,58 5,58" fill="#00F5D4" />
+        <text x="12" y="25" font-family="monospace" font-size="10" fill="#00F5D4">ELEVATION</text>
+        <text x="12" y="40" font-family="monospace" font-size="9" fill="#94a3b8">Turn Tool CW</text>
+        <text x="12" y="52" font-family="monospace" font-size="9" fill="#94a3b8">= Post DOWN</text>
+        <text x="12" y="64" font-family="monospace" font-size="9" fill="#00F5D4">= STRIKE UP</text>
+      </g>
+
+      <!-- Windage adjustment arrows (Horizontal) -->
+      <g transform="translate(0, 190)">
+        <line x1="20" y1="0" x2="180" y2="0" stroke="#f59e0b" stroke-width="2" />
+        <polygon points="10,0 22,-5 22,5" fill="#f59e0b" />
+        <polygon points="190,0 178,-5 178,5" fill="#f59e0b" />
+        <text x="100" y="20" font-family="monospace" font-size="10" fill="#f59e0b" text-anchor="middle">WINDAGE (DRIFT DRUM)</text>
+        <text x="100" y="34" font-family="monospace" font-size="9" fill="#e2e8f0" text-anchor="middle">Push Drum Left = Strike Left</text>
+        <text x="100" y="46" font-family="monospace" font-size="9" fill="#e2e8f0" text-anchor="middle">Push Drum Right = Strike Right</text>
+      </g>
+    </g>
+
+    <!-- Adjustment Rules Reference -->
+    <g transform="translate(20, 345)">
+      <rect width="380" height="80" fill="#050e1c" stroke="#334155" rx="4" />
+      <text x="12" y="20" font-family="monospace" font-size="10" font-weight="bold" fill="#38bdf8">BALLISTIC RULE OF SIGHT ADJUSTMENT:</text>
+      <text x="12" y="38" font-family="monospace" font-size="9" fill="#e2e8f0">• 1 full turn of front sight post = 20 cm (7.9 in) at 100m.</text>
+      <text x="12" y="54" font-family="monospace" font-size="9" fill="#e2e8f0">• 1 mm lateral drift of sight drum = 26 cm (10.2 in) at 100m.</text>
+      <text x="12" y="70" font-family="monospace" font-size="9" fill="#00F5D4">• Always move front sight IN THE DIRECTION of bullet error!</text>
+    </g>
+  </g>
+
+  <!-- Right Panel: Rear Tangent Sight Leaf (FIG 17) -->
+  <g transform="translate(510, 110)">
+    <rect width="430" height="440" fill="#0b172a" stroke="#a78bfa" stroke-width="1.5" rx="6" opacity="0.85" />
+    <text x="20" y="32" font-family="monospace" font-size="13" font-weight="bold" fill="#c084fc">FIG 17: REAR TANGENT SIGHT LEAF</text>
+
+    <!-- Sight Leaf Drawing -->
+    <g transform="translate(70, 60)">
+      <!-- Base pivot -->
+      <rect x="40" y="240" width="120" height="30" fill="#1e293b" stroke="#64748b" />
+      <!-- Leaf body -->
+      <path d="M 60 240 L 70 30 L 130 30 L 140 240 Z" fill="#09182a" stroke="#a78bfa" stroke-width="2" />
+      <!-- Notch notch at top -->
+      <polygon points="95,30 100,38 105,30" fill="#0b172a" stroke="#c084fc" />
+
+      <!-- Elevation Range Hashmarks (1 to 8 hundreds of meters) -->
+      <!-- Battle sight 'П' mark at bottom -->
+      <text x="85" y="225" font-family="monospace" font-size="11" font-weight="bold" fill="#00F5D4">П</text>
+      <line x1="75" y1="222" x2="82" y2="222" stroke="#00F5D4" stroke-width="1.5" />
+      <line x1="118" y1="222" x2="125" y2="222" stroke="#00F5D4" stroke-width="1.5" />
+
+      <!-- Mark 1 (100m) -->
+      <text x="85" y="195" font-family="monospace" font-size="10" fill="#e2e8f0">1</text>
+      <line x1="76" y1="192" x2="82" y2="192" stroke="#cbd5e1" stroke-width="1.2" />
+
+      <!-- Mark 2 (200m) -->
+      <text x="85" y="170" font-family="monospace" font-size="10" fill="#e2e8f0">2</text>
+      <line x1="77" y1="167" x2="82" y2="167" stroke="#cbd5e1" stroke-width="1.2" />
+
+      <!-- Mark 3 (300m) -->
+      <text x="85" y="145" font-family="monospace" font-size="10" fill="#e2e8f0">3</text>
+      <line x1="78" y1="142" x2="82" y2="142" stroke="#cbd5e1" stroke-width="1.2" />
+
+      <!-- Mark 4 (400m) -->
+      <text x="85" y="120" font-family="monospace" font-size="10" fill="#e2e8f0">4</text>
+      <line x1="79" y1="117" x2="82" y2="117" stroke="#cbd5e1" stroke-width="1.2" />
+
+      <!-- Mark 5 to 8 -->
+      <text x="85" y="95" font-family="monospace" font-size="10" fill="#e2e8f0">5</text>
+      <text x="85" y="70" font-family="monospace" font-size="10" fill="#e2e8f0">6</text>
+      <text x="85" y="50" font-family="monospace" font-size="10" fill="#e2e8f0">8</text>
+
+      <!-- Sliding Sight Slider / Catch Lock -->
+      <rect x="52" y="132" width="96" height="18" rx="2" fill="#3b0764" stroke="#e879f9" stroke-width="2" />
+      <rect x="42" y="134" width="10" height="14" rx="2" fill="#a21caf" stroke="#e879f9" />
+      <rect x="148" y="134" width="10" height="14" rx="2" fill="#a21caf" stroke="#e879f9" />
+      <circle cx="100" cy="141" r="3" fill="#ffffff" />
+    </g>
+
+    <!-- Battle Sight Note -->
+    <g transform="translate(240, 70)">
+      <rect width="170" height="130" fill="#040d1a" stroke="#c084fc" stroke-width="1" rx="4" />
+      <text x="10" y="20" font-family="monospace" font-size="10" font-weight="bold" fill="#00F5D4">SETTING 'П' (BATTLE)</text>
+      <text x="10" y="38" font-family="monospace" font-size="9" fill="#94a3b8">Cyrillic letter 'П' stands</text>
+      <text x="10" y="50" font-family="monospace" font-size="9" fill="#94a3b8">for постоянная (constant).</text>
+      <text x="10" y="68" font-family="monospace" font-size="9" fill="#e2e8f0">Equivalent to 300m range.</text>
+      <text x="10" y="84" font-family="monospace" font-size="9" fill="#e2e8f0">Maximum trajectory rise</text>
+      <text x="10" y="96" font-family="monospace" font-size="9" fill="#e2e8f0">is 35 cm (14 in) along</text>
+      <text x="10" y="108" font-family="monospace" font-size="9" fill="#00F5D4">entire 300m engagement.</text>
+    </g>
+
+    <!-- Slider operation instruction -->
+    <g transform="translate(20, 345)">
+      <rect width="390" height="80" fill="#050e1c" stroke="#334155" rx="4" />
+      <text x="12" y="20" font-family="monospace" font-size="10" font-weight="bold" fill="#c084fc">OPERATING THE SIGHT SLIDER:</text>
+      <text x="12" y="38" font-family="monospace" font-size="9" fill="#e2e8f0">1. Squeeze both spring-loaded catch buttons inward.</text>
+      <text x="12" y="54" font-family="monospace" font-size="9" fill="#e2e8f0">2. Slide forward to desired range notch (1 = 100m ... 8 = 800m).</text>
+      <text x="12" y="70" font-family="monospace" font-size="9" fill="#00F5D4">3. Release catch buttons to lock into ramp notches.</text>
+    </g>
+  </g>
+
+</svg>
+

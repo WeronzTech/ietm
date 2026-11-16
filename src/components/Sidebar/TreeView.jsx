@@ -1,130 +1,88 @@
-// // import React, { useState } from "react";
-
-// // // Recursive Component
-// // const TreeNode = ({ node, onSelect }) => {
-// //   const [isOpen, setIsOpen] = useState(false);
-// //   const hasChildren = node.children && node.children.length > 0;
-
-// //   return (
-// //     <div style={{ marginLeft: "15px", borderLeft: "1px solid #444" }}>
-// //       <div
-// //         className="tree-item"
-// //         onClick={() => {
-// //           if (hasChildren) setIsOpen(!isOpen);
-// //           onSelect(node.id);
-// //         }}
-// //         style={{ cursor: "pointer", padding: "5px", color: "#fff" }}
-// //       >
-// //         {hasChildren ? (isOpen ? "📂 " : "📁 ") : "📄 "}
-// //         {node.title}
-// //       </div>
-
-// //       {isOpen && hasChildren && (
-// //         <div className="tree-children">
-// //           {node.children.map((child) => (
-// //             <TreeNode key={child.id} node={child} onSelect={onSelect} />
-// //           ))}
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default function TreeView({ data, onSelectModule }) {
-// //   if (!data) return <div style={{ color: "white" }}>Loading Manual...</div>;
-// //   return (
-// //     <div
-// //       className="sidebar"
-// //       style={{
-// //         width: "250px",
-// //         background: "#222",
-// //         height: "100vh",
-// //         overflowY: "auto",
-// //       }}
-// //     >
-// //       <h3 style={{ color: "#0f0", padding: "10px" }}>IETM NAVIGATOR</h3>
-// //       {data.map((rootNode) => (
-// //         <TreeNode key={rootNode.id} node={rootNode} onSelect={onSelectModule} />
-// //       ))}
-// //     </div>
-// //   );
-// // }
-// import TreeNode from "./TreeNode";
-
-// export default function TreeView({ data, onSelectModule, activeModuleId }) {
-//   if (!data || data.length === 0)
-//     return (
-//       <div style={{ padding: 20, color: "#888" }}>No Manual Structure</div>
-//     );
-
-//   return (
-//     <div style={{ padding: "10px", overflowY: "auto", height: "100%" }}>
-//       {data.map((node) => (
-//         <TreeNode
-//           key={node.id}
-//           node={node}
-//           onSelect={onSelectModule}
-//           activeId={activeModuleId}
-//         />
-//       ))}
-//     </div>
-//   );
-// }
 import { useState } from "react";
 import TreeNode from "./TreeNode";
+import { FolderTree, Bookmark, BookmarkCheck } from "lucide-react";
 
 export default function TreeView({ data, bookmarks, onSelectModule, activeModuleId }) {
   const [tab, setTab] = useState("structure"); // "structure" or "bookmarks"
-  if (!data || data.length === 0)
+
+  if (!data || data.length === 0) {
     return (
-      <div className="p-5 text-sm text-gray-500 italic">No modules found.</div>
+      <div className="p-6 text-xs text-slate-500 italic text-center">
+        No technical data modules loaded.
+      </div>
     );
+  }
+
+  const bookmarkCount = bookmarks?.length || 0;
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex border-b border-gray-800 bg-vector-panel">
+    <div className="flex h-full flex-col bg-slate-900/90 text-slate-200">
+      {/* Tab Switcher */}
+      <div className="flex border-b border-slate-800 bg-slate-950/60 p-1.5 gap-1 shrink-0">
         <button
-          className={`flex-1 py-3 text-[10px] uppercase font-bold tracking-widest transition-colors ${
-            tab === "structure" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"
+          className={`flex-1 py-1.5 px-2 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+            tab === "structure"
+              ? "bg-slate-800 text-sky-400 font-semibold shadow-sm"
+              : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
           }`}
           onClick={() => setTab("structure")}
         >
-          Structure
+          <FolderTree size={13} />
+          <span>Hierarchy</span>
         </button>
         <button
-          className={`flex-1 py-3 text-[10px] uppercase font-bold tracking-widest transition-colors ${
-            tab === "bookmarks" ? "border-b-2 border-vector-accent text-vector-accent" : "text-vector-text-muted hover:text-white"
+          className={`flex-1 py-1.5 px-2 rounded-md text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+            tab === "bookmarks"
+              ? "bg-slate-800 text-sky-400 font-semibold shadow-sm"
+              : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
           }`}
           onClick={() => setTab("bookmarks")}
         >
-          Bookmarks
+          <Bookmark size={13} />
+          <span>Bookmarks</span>
+          {bookmarkCount > 0 && (
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-sky-500/20 text-sky-400 font-mono">
+              {bookmarkCount}
+            </span>
+          )}
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-600">
-        {tab === "structure" && data.map((node) => (
-          <TreeNode
-            key={node.id}
-            node={node}
-            onSelect={onSelectModule}
-            activeId={activeModuleId}
-          />
-        ))}
+      {/* Tree / Bookmarks Content */}
+      <div className="flex-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-slate-700">
+        {tab === "structure" && (
+          <div className="space-y-0.5">
+            {data.map((node) => (
+              <TreeNode
+                key={node.id}
+                node={node}
+                onSelect={onSelectModule}
+                activeId={activeModuleId}
+              />
+            ))}
+          </div>
+        )}
 
         {tab === "bookmarks" && (
-          <div className="space-y-1 mt-2">
+          <div className="space-y-1 mt-1">
             {!bookmarks || bookmarks.length === 0 ? (
-              <div className="text-xs text-gray-500 italic p-4 text-center block">No bookmarks pinned.</div>
+              <div className="p-6 text-center text-xs text-slate-500 italic">
+                <Bookmark className="mx-auto text-slate-600 mb-2 opacity-60" size={20} />
+                No modules bookmarked. Click the bookmark icon in the viewer header to save quick references.
+              </div>
             ) : (
               bookmarks.map((bm) => (
                 <div
-                  key={bm.bookmark_id}
+                  key={bm.bookmark_id || bm.id}
                   onClick={() => onSelectModule(bm.id)}
-                  className={`cursor-pointer px-3 py-2 text-sm border-l-2 font-mono truncate transition-colors ${
-                    activeModuleId === bm.id ? "border-vector-accent bg-vector-bg text-white" : "border-transparent text-gray-400 hover:bg-gray-800"
+                  className={`cursor-pointer px-3 py-2 text-xs rounded-lg transition-colors flex items-center gap-2 ${
+                    activeModuleId === bm.id
+                      ? "bg-sky-500/15 text-sky-300 font-medium border-l-2 border-sky-400"
+                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
                   }`}
                 >
-                  📍 {bm.title}
+                  <BookmarkCheck size={13} className="text-sky-400 shrink-0" />
+                  <span className="truncate">{bm.title}</span>
                 </div>
               ))
             )}

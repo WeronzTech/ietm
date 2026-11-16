@@ -26,3 +26,7 @@ dist-ssr
 
 # Database
 ietm_core_secure.db
+
+# Release and Build outputs
+release/
+
